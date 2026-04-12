@@ -1,3 +1,92 @@
 {
-    
+  "Footer": {
+    "socialMediaLinks": "Social Media Links",
+    "copyright": "Copyright © {{year}} by Echo Soft"
+  },
+  "Header": {
+    "menu": "Menu",
+    "login": "Login",
+    "english": "English",
+    "profile": "Profile",
+    "logout": "Logout"
+  },
+  "Dashboard": {
+    "pageTitle": "Elite Status - Find Your Dream Chalet",
+    "escapeTheNoise": "Escape the Noise, Find Your Chalet.",
+    "findYourChalet": "Discover premium chalets in beautiful locations",
+    "searchDestinations": "Search destinations",
+    "selectDates": "Select dates",
+    "addGuests": "Add guests",
+    "search": "Search",
+    "bestDealsForRent": "Best Deals For Rent!",
+    "discoverOurTopProperties": "Handpicked luxury chalets with sea view",
+    "bestOffer": "Best Offer",
+    "startFrom": "Start From",
+    "day": "Day",
+    "person": "Person",
+    "viewAll": "View All",
+    "home": "Home",
+    "chalets": "Chalets",
+    "pricingPlan": "Pricing Plan",
+    "ownerServices": "Owner Services",
+    "contactUs": "Contact Us",
+    "followUsOn": "Follow Us On",
+    "eliteStatus": "Elite Status",
+    "natureAwaits": "Nature Awaits",
+    "natureAwaitsDescription": "Discover a world of luxury and relaxation with our carefully curated chalet offers, designed to enhance your stay and create lasting memories. Whether you're planning a romantic getaway, a family vacation, or a business trip, we have the perfect offer to suit your needs and elevate your experience.",
+    "discoverMore": "Discover More",
+    "Pricing": {
+      "title": "Best Subscribe Plan For You",
+      "billedAnnually": "Billed annually.",
+      "getStarted": "Get Started"
+    },
+    "Newsletter": {
+      "title": "Join The Inner Circle",
+      "subtitle": "Unlock unforgettable escapes and elevate every stay with Elite Status.",
+      "emailPlaceholder": "enter your email ...",
+      "subscribe": "Subscribe Now"
+    },
+    "Services": {
+      "growTitle": "Grow Your Rental Income",
+      "growSubtitle": "Keep your chalet in perfect condition with our trusted repair and maintenance solutions",
+      "bookNow": "Book Now"
+    }
+  },
+  "Auth": {
+    "loginTitle": "Sign Into Your Account",
+    "email": "Type your email ...",
+    "password": "Type Your Password ...",
+    "forgetPassword": "Forget Password?",
+    "login": "Login",
+    "or": "OR",
+    "createAccount": "Create a New Account!",
+    "signupTitle": "Create an Account!",
+    "firstName": "First name",
+    "lastName": "Last name",
+    "mobileNumber": "Mobile Number",
+    "confirmPassword": "Confirm Password",
+    "idVerification": "ID Verification",
+    "idFront": "ID Front",
+    "idBack": "ID Back",
+    "register": "Register",
+    "registering": "Registering...",
+    "alreadyHaveAccount": "Already have an account? Login",
+    "agreeTerms": "I agree Terms & Conditions",
+    "welcome-1": "Welcome To",
+    "welcome-2": "Elite Status Company",
+    "uploadError": "Failed to upload ID images. Please try again.",
+    "registerError": "Registration failed. Please try again.",
+    "loginSuccess": "Login successful!",
+    "loginError": "Login failed. Please check your credentials and try again.",
+    "validation": {
+      "required": "This field is required",
+      "emailInvalid": "Invalid email address",
+      "passwordMin": "Password must be at least 6 characters",
+      "passwordMatch": "Passwords do not match",
+      "phoneInvalid": "Invalid phone number",
+      "acceptTerms": "You must accept terms",
+      "fileTooLarge": "File must be under 10MB",
+      "fileInvalidType": "Only JPG, PNG, WebP, or PDF allowed"
+    }
+  }
 }

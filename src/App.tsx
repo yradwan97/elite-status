@@ -1,33 +1,42 @@
 import { Routes, Route, Navigate } from 'react-router-dom';
 import { Header } from '@/components/layout/Header';
-import { Sidebar } from '@/components/layout/Sidebar';
 import { Footer } from '@/components/layout/Footer';
+import "./i18n";
+import Dashboard from './features/dashboard/Dashboard';
+import { clearCredentials, selectAccessToken } from './store/slices/authSlice';
+import { isTokenValid } from './lib/tokenHelper';
+import { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 
 function App() {
+
+  const accessToken = useSelector(selectAccessToken);
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    if (!isTokenValid(accessToken)) {
+      dispatch(clearCredentials());
+    }
+  }, [accessToken, dispatch]);
+
   return (
-    <div className="flex h-screen overflow-hidden bg-background">
-      {/* Sidebar - Desktop only */}
-      <Sidebar />
+    <div className="min-h-screen bg-background flex flex-col">
+      {/* Header */}
+      <Header />
 
-      {/* Main Content Area */}
-      <div className="flex flex-1 flex-col overflow-hidden">
-        {/* Header/Navbar */}
-        <Header />
+      {/* Main Content Area - This will grow naturally */}
+      <main className="flex-1 overflow-auto">
+        <Routes>
+          <Route path="/" element={<Dashboard />} />
+          <Route path="/users" element={<div>Users Page</div>} />
+          <Route path="/analytics" element={<div>Analytics Page</div>} />
+          <Route path="/settings" element={<div>Settings Page</div>} />
+          <Route path="*" element={<Navigate to="/" />} />
+        </Routes>
+      </main>
 
-        {/* Page Content */}
-        <main className="flex-1 overflow-auto p-4 md:p-6">
-          <Routes>
-            <Route path="/" element={<div className="text-3xl font-bold">Welcome to Elite Status Dashboard</div>} />
-            <Route path="/users" element={<div>Users Page</div>} />
-            <Route path="/analytics" element={<div>Analytics Page</div>} />
-            <Route path="/settings" element={<div>Settings Page</div>} />
-            <Route path="*" element={<Navigate to="/" />} />
-          </Routes>
-        </main>
-
-        {/* Footer */}
-        <Footer />
-      </div>
+      {/* Footer - Now sits naturally at the bottom only when content is short */}
+      <Footer />
     </div>
   );
 }
