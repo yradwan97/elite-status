@@ -1,6 +1,4 @@
 'use client';
-
-import { useState } from 'react';
 import { PropertyCard } from '@/features/dashboard/components/property-card';
 import { useTranslation } from 'react-i18next';
 import eliteHomepageBg from '@/assets/elite-homepage-bg.png';
@@ -23,92 +21,173 @@ import poolIcon from '@/assets/pool-icon.png'
 import acIcon from '@/assets/ac-icon.png'
 import laundryIcon from '@/assets/laundry-icon.png'
 import gardenIcon from '@/assets/garden-icon.png'
+import { Property } from '../properties/api/propertiesApi';
 
-const mockProperties = [
-  {
-    id: 1,
-    title: "Chalet In Khiran - Sea View",
-    location: "Raw 3, Khiran, Kuwait",
-    price: 80,
-    originalPrice: 100,
-    discountPercentage: 20,
-    discountValidFrom: "2026-04-01",
-    discountValidTo: "2026-04-30",
-    rating: 4.6,
-    isBestOffer: true,
-    image: "https://images.unsplash.com/photo-1613490493576-7fde63acd811?w=800",
-    capacity: 10,
-  },
-  {
-    id: 2,
-    title: "Luxury Chalet In Khiran - Sea View",
-    location: "Raw 3, Khiran, Kuwait",
-    price: 100,
-    originalPrice: null,
-    discountPercentage: null,
-    discountValidFrom: null,
-    discountValidTo: null,
-    rating: 4.8,
-    isBestOffer: false,
-    image: "https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=800",
-    capacity: 12,
-  },
-  {
-    id: 3,
-    title: "Beachfront Chalet In Khiran",
-    location: "Raw 3, Khiran, Kuwait",
-    price: 95,
-    originalPrice: 120,
-    discountPercentage: 21,
-    discountValidFrom: "2026-04-10",
-    discountValidTo: "2026-04-25",
-    rating: 4.5,
-    isBestOffer: true,
-    image: "https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?w=800",
-    capacity: 8,
-  },
-  {
-    id: 4,
-    title: "Modern Chalet With Private Pool",
-    location: "Raw 3, Khiran, Kuwait",
-    price: 120,
-    originalPrice: null,
-    discountPercentage: null,
-    discountValidFrom: null,
-    discountValidTo: null,
-    rating: 4.9,
-    isBestOffer: false,
-    image: "https://images.unsplash.com/photo-1600585154340-be6161a56a9c?w=800",
-    capacity: 10,
-  },
-  {
-    id: 5,
-    title: "Cozy Sea View Chalet",
-    location: "Raw 3, Khiran, Kuwait",
-    price: 75,
-    originalPrice: 90,
-    discountPercentage: 17,
-    discountValidFrom: "2026-04-05",
-    discountValidTo: "2026-04-20",
-    rating: 4.3,
-    isBestOffer: false,
-    image: "https://images.unsplash.com/photo-1600047509807-ba8f99d2cdde?w=800",
-    capacity: 6,
-  },
-  {
-    id: 6,
-    title: "Premium Waterfront Chalet",
-    location: "Raw 3, Khiran, Kuwait",
-    price: 110,
-    originalPrice: null,
-    discountPercentage: null,
-    discountValidFrom: null,
-    discountValidTo: null,
-    rating: 4.7,
-    isBestOffer: true,
-    image: "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=800",
-    capacity: 14,
-  },
+
+
+const mockProperties: Property[] = [
+    {
+        _id: '69dd29999936da19fceaa2e1',
+        titleAr: 'شاليه في خيران - إطلالة على البحر',
+        titleEn: 'Chalet In Khiran - Sea View',
+        address: 'Raw 3, Khiran, Kuwait',
+        lat: '28.95',
+        long: '48.37',
+        images: [
+            'https://images.unsplash.com/photo-1613490493576-7fde63acd811?w=800',
+        ],
+        propertyType: 'CHALET',
+        guests: 10,
+        bedrooms: 3,
+        bathrooms: 2,
+        lounges: 1,
+        descriptionAr: '<p>شاليه فاخر بإطلالة رائعة على البحر.</p>',
+        descriptionEn: '<p>Luxurious chalet with stunning sea view.</p>',
+        documents: [],
+        weekdaysPrice: 80,
+        weekendPrice: 100,
+        wholeWeekPrice: 500,
+        dailyPrice: 80,
+        dayUsePrice: 50,
+        facilities: ['69dcfc93483d105055092434', '69dcf54a483d10505509242a'],
+        createdAt: '2026-04-13T17:36:25.379Z',
+        updatedAt: '2026-04-13T17:36:25.379Z',
+    },
+    {
+        _id: '69dd29999936da19fceaa2e2',
+        titleAr: 'شاليه فاخر في خيران - إطلالة على البحر',
+        titleEn: 'Luxury Chalet In Khiran - Sea View',
+        address: 'Raw 3, Khiran, Kuwait',
+        lat: '28.95',
+        long: '48.37',
+        images: [
+            'https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=800',
+        ],
+        propertyType: 'CHALET',
+        guests: 12,
+        bedrooms: 4,
+        bathrooms: 3,
+        lounges: 2,
+        descriptionAr: '<p>شاليه فاخر مع مسبح خاص.</p>',
+        descriptionEn: '<p>Luxury chalet with private pool.</p>',
+        documents: [],
+        weekdaysPrice: 100,
+        weekendPrice: 130,
+        wholeWeekPrice: 700,
+        dailyPrice: 100,
+        dayUsePrice: 70,
+        facilities: ['69dcfc93483d105055092434'],
+        createdAt: '2026-04-13T17:36:25.379Z',
+        updatedAt: '2026-04-13T17:36:25.379Z',
+    },
+    {
+        _id: '69dd29999936da19fceaa2e3',
+        titleAr: 'شاليه على الشاطئ في خيران',
+        titleEn: 'Beachfront Chalet In Khiran',
+        address: 'Raw 3, Khiran, Kuwait',
+        lat: '28.95',
+        long: '48.37',
+        images: [
+            'https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?w=800',
+        ],
+        propertyType: 'CHALET',
+        guests: 8,
+        bedrooms: 2,
+        bathrooms: 2,
+        lounges: 1,
+        descriptionAr: '<p>شاليه مباشر على الشاطئ.</p>',
+        descriptionEn: '<p>Direct beachfront chalet.</p>',
+        documents: [],
+        weekdaysPrice: 95,
+        weekendPrice: 120,
+        wholeWeekPrice: 600,
+        dailyPrice: 95,
+        dayUsePrice: 60,
+        facilities: ['69dcfcde483d10505509243b'],
+        createdAt: '2026-04-13T17:36:25.379Z',
+        updatedAt: '2026-04-13T17:36:25.379Z',
+    },
+    {
+        _id: '69dd29999936da19fceaa2e4',
+        titleAr: 'شاليه حديث مع مسبح خاص',
+        titleEn: 'Modern Chalet With Private Pool',
+        address: 'Raw 3, Khiran, Kuwait',
+        lat: '28.95',
+        long: '48.37',
+        images: [
+            'https://images.unsplash.com/photo-1600585154340-be6161a56a9c?w=800',
+        ],
+        propertyType: 'CHALET',
+        guests: 10,
+        bedrooms: 3,
+        bathrooms: 2,
+        lounges: 2,
+        descriptionAr: '<p>شاليه عصري مع مسبح خاص فاخر.</p>',
+        descriptionEn: '<p>Modern chalet with a luxury private pool.</p>',
+        documents: [],
+        weekdaysPrice: 120,
+        weekendPrice: 150,
+        wholeWeekPrice: 800,
+        dailyPrice: 120,
+        dayUsePrice: 80,
+        facilities: ['69dcfc93483d105055092434', '69dcfcde483d10505509243b'],
+        createdAt: '2026-04-13T17:36:25.379Z',
+        updatedAt: '2026-04-13T17:36:25.379Z',
+    },
+    {
+        _id: '69dd29999936da19fceaa2e5',
+        titleAr: 'شاليه مريح بإطلالة بحرية',
+        titleEn: 'Cozy Sea View Chalet',
+        address: 'Raw 3, Khiran, Kuwait',
+        lat: '28.95',
+        long: '48.37',
+        images: [
+            'https://images.unsplash.com/photo-1600047509807-ba8f99d2cdde?w=800',
+        ],
+        propertyType: 'CHALET',
+        guests: 6,
+        bedrooms: 2,
+        bathrooms: 1,
+        lounges: 1,
+        descriptionAr: '<p>شاليه مريح مع إطلالة بحرية هادئة.</p>',
+        descriptionEn: '<p>Cozy chalet with a calm sea view.</p>',
+        documents: [],
+        weekdaysPrice: 75,
+        weekendPrice: 90,
+        wholeWeekPrice: 450,
+        dailyPrice: 75,
+        dayUsePrice: 45,
+        facilities: ['69dcf54a483d10505509242a'],
+        createdAt: '2026-04-13T17:36:25.379Z',
+        updatedAt: '2026-04-13T17:36:25.379Z',
+    },
+    {
+        _id: '69dd29999936da19fceaa2e6',
+        titleAr: 'شاليه بريميوم على الواجهة المائية',
+        titleEn: 'Premium Waterfront Chalet',
+        address: 'Raw 3, Khiran, Kuwait',
+        lat: '28.95',
+        long: '48.37',
+        images: [
+            'https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=800',
+        ],
+        propertyType: 'CHALET',
+        guests: 14,
+        bedrooms: 5,
+        bathrooms: 3,
+        lounges: 2,
+        descriptionAr: '<p>شاليه فاخر على الواجهة المائية مع جميع الخدمات.</p>',
+        descriptionEn: '<p>Premium waterfront chalet with full amenities.</p>',
+        documents: [],
+        weekdaysPrice: 110,
+        weekendPrice: 140,
+        wholeWeekPrice: 750,
+        dailyPrice: 110,
+        dayUsePrice: 75,
+        facilities: ['69dcfc93483d105055092434', '69dcf54a483d10505509242a', '69dcfcde483d10505509243b'],
+        createdAt: '2026-04-13T17:36:25.379Z',
+        updatedAt: '2026-04-13T17:36:25.379Z',
+    },
 ];
 
 const mockPlans: Plan[] = [
@@ -211,16 +290,8 @@ const mockServices: Service[] = [
 
 export default function Dashboard() {
   const { t } = useTranslation();
-  const [favorites, setFavorites] = useState<number[]>([]);
   const isArabic = i18next.language === 'ar';
 
-  const toggleFavorite = (id: number) => {
-    setFavorites(prev =>
-      prev.includes(id)
-        ? prev.filter(favId => favId !== id)
-        : [...prev, id]
-    );
-  };
 
   return (
     <>
@@ -266,33 +337,22 @@ export default function Dashboard() {
         </div>
 
         {/* Best Deals Section */}
-        <div className="max-w-7xl mx-auto px-6 py-16">
-          <div className={`flex items-center justify-between mb-10 ${isArabic ? 'flex-row-reverse' : ''}`}>
-            <h2 className={`text-4xl font-bold text-navy ${isArabic ? 'text-right' : 'text-left'}`}>
-              {t('Dashboard.bestDealsForRent')}
-            </h2>
-            <img src={pattern} alt="Best Deals Icon" className="h-12 w-auto" />
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-8">
-            {mockProperties.map((property) => (
-              <PropertyCard
-                key={property.id}
-                id={property.id}
-                title={property.title}
-                location={property.location}
-                price={property.price}
-                discountPercentage={property.discountPercentage}
-                originalPrice={property.originalPrice}
-                discountValidFrom={property.discountValidFrom}
-                discountValidTo={property.discountValidTo}
-                rating={property.rating}
-                isBestOffer={property.isBestOffer}
-                image={property.image}
-                capacity={property.capacity}
-                isFavorited={favorites.includes(property.id)}
-                onFavorite={toggleFavorite}
-              />
-            ))}
+        <div className='w-full bg-white'>
+          <div className="max-w-7xl  mx-auto px-6 py-16">
+            <div className={`flex items-center justify-between mb-10 ${isArabic ? 'flex-row-reverse' : ''}`}>
+              <h2 className={`text-4xl font-bold text-navy ${isArabic ? 'text-right' : 'text-left'}`}>
+                {t('Dashboard.bestDealsForRent')}
+              </h2>
+              <img src={pattern} alt="Best Deals Icon" className="h-12 w-auto" />
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-8">
+              {mockProperties.map((property) => (
+                <PropertyCard
+                  property={property}
+                  key={property._id}
+                />
+              ))}
+            </div>
           </div>
         </div>
 
@@ -353,7 +413,7 @@ export default function Dashboard() {
               {t('Dashboard.natureAwaitsDescription')}
             </p>
             <a
-              href="/property-search"
+              href="/properties"
               className={`inline-flex items-center gap-3 text-navy rounded-full px-6 py-3 font-medium hover:bg-navy hover:text-white transition-colors mt-2 ${isArabic ? 'flex-row-reverse' : ''}`}
             >
               <span className="w-8 h-8 rounded-full border border-current flex items-center justify-center shrink-0">

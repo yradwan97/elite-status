@@ -7,6 +7,7 @@ import { clearCredentials, selectAccessToken } from './store/slices/authSlice';
 import { isTokenValid } from './lib/tokenHelper';
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import PropertiesSection from './features/properties/components/PropertiesSection';
 
 function App() {
 
@@ -28,6 +29,7 @@ function App() {
       <main className="flex-1 overflow-auto">
         <Routes>
           <Route path="/" element={<Dashboard />} />
+          <Route path="/properties" element={<PropertiesSection />} />
           <Route path="/users" element={<div>Users Page</div>} />
           <Route path="/analytics" element={<div>Analytics Page</div>} />
           <Route path="/settings" element={<div>Settings Page</div>} />

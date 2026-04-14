@@ -33,6 +33,10 @@
     "followUsOn": "تابعنا على",
     "eliteStatus": "مقام النخبة",
     "natureAwaits": "الطبيعة تنتظرك",
+    "weekdays": "سعر ايام الأسبوع",
+    "weekend": "سعر الأجازة",
+    "dayUse": "سعر اليوم (بدون مبيت)",
+    "wholeWeek": "سعر الأسبوع",
     "natureAwaitsDescription": "اكتشف عالماً من الرفاهية والاسترخاء مع عروض الشاليهات المختارة بعناية، المصممة لتعزيز إقامتك وخلق ذكريات لا تُنسى. سواء كنت تخطط لعطلة رومانسية أو إجازة عائلية أو رحلة عمل، لدينا العرض المثالي الذي يناسب احتياجاتك.",
     "discoverMore": "اكتشف المزيد",
     "Pricing": {
@@ -87,6 +91,31 @@
       "acceptTerms": "يجب الموافقة على الشروط",
       "fileTooLarge": "الملف يجب أن يكون أقل من 10MB",
       "fileInvalidType": "يُسمح فقط بملفات JPG, PNG, WebP, أو PDF"
+    }
+  },
+  "Properties": {
+    "heading": "أفضل الشاليهات للإيجار في الكويت!",
+    "searchPlaceholder": "ابحث هنا...",
+    "search": "بحث",
+    "noResults": "لا توجد عقارات",
+    "tryDifferent": "حاول تعديل الفلاتر",
+    "priceBreakdown": "تفاصيل الأسعار",
+    "wholeWeek": "الأسبوع كامل",
+    "dayUse": "استخدام يومي",
+    "dailyPrice": "<value>{{price}}</value> <currency>.د.ك</currency> <divider>/</divider> <day>يوم</day>",
+    "filter": {
+      "title": "تصفية حسب",
+      "guests": "عدد الضيوف",
+      "bedrooms": "غرف النوم",
+      "bathrooms": "دورات المياه",
+      "lounges": "الصالات",
+      "facilities": "المرافق",
+      "reset": "إعادة تعيين",
+      "apply": "تطبيق"
+    },
+    "nav": {
+      "home": "الرئيسية",
+      "chalet": "شاليه"
     }
   }
 }

@@ -33,6 +33,10 @@
     "followUsOn": "Follow Us On",
     "eliteStatus": "Elite Status",
     "natureAwaits": "Nature Awaits",
+    "weekdays": "Weekdays price",
+    "weekend": "Weekends price",
+    "dayUse": "Day use price",
+    "wholeWeek": "Whole week price",
     "natureAwaitsDescription": "Discover a world of luxury and relaxation with our carefully curated chalet offers, designed to enhance your stay and create lasting memories. Whether you're planning a romantic getaway, a family vacation, or a business trip, we have the perfect offer to suit your needs and elevate your experience.",
     "discoverMore": "Discover More",
     "Pricing": {
@@ -87,6 +91,31 @@
       "acceptTerms": "You must accept terms",
       "fileTooLarge": "File must be under 10MB",
       "fileInvalidType": "Only JPG, PNG, WebP, or PDF allowed"
+    }
+  },
+  "Properties": {
+    "heading": "Best Chalets For Rent In Kuwait!",
+    "searchPlaceholder": "Search here...",
+    "search": "Search",
+    "noResults": "No properties found",
+    "tryDifferent": "Try adjusting your filters",
+    "priceBreakdown": "Price Breakdown",
+    "wholeWeek": "Whole Week",
+    "dayUse": "Day Use",
+    "dailyPrice": "<value>{{price}}</value> <currency>KWD</currency> <divider>/</divider> <day>day</day>",
+    "filter": {
+      "title": "Filter by",
+      "guests": "No Of Guest",
+      "bedrooms": "Bedrooms",
+      "bathrooms": "Bathrooms",
+      "lounges": "Lounge",
+      "facilities": "Facilities",
+      "reset": "Reset",
+      "apply": "Apply"
+    },
+    "nav": {
+      "home": "Home",
+      "chalet": "Chalet"
     }
   }
 }
