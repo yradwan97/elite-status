@@ -14,6 +14,11 @@ import { queryClient } from "@/lib/query-client";
 import { store } from "@/store";
 import { initAuth } from "@/lib/initAuth.ts";
 import { initLanguage } from "@/lib/initLanguage.ts";
+import { clearCredentials } from "./store/slices/authSlice.ts";
+
+window.addEventListener('auth:logout', () => {
+  store.dispatch(clearCredentials())
+})
 
 initAuth();
 initLanguage();

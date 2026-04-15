@@ -15,7 +15,7 @@ export interface Property {
     lat: string;
     long: string;
     images: string[];
-    propertyType: 'APARTMENT' | 'CHALET' | 'VILLA' | string;
+    propertyType: {key: string, title: string} | string;
     guests: number;
     bedrooms: number;
     bathrooms: number;
@@ -28,7 +28,7 @@ export interface Property {
     wholeWeekPrice: number;
     dailyPrice: number;
     dayUsePrice: number;
-    facilities: string[];   // array of facility IDs
+    facilities: Facility[];   // array of facility IDs
     createdAt: string;
     updatedAt: string;
 }
@@ -51,6 +51,10 @@ export interface PropertiesResponse {
     itemsCount: number;
     page?: number;
     pages: number;
+}
+
+export interface PropertyResponse {
+    data: Property
 }
 
 export interface FacilitiesResponse {
@@ -80,6 +84,14 @@ export const propertiesApi = {
 
         const response = await axios.get<PropertiesResponse>(
             `/properties?${params.toString()}`
+        );
+
+        return response.data;
+    },
+
+    getProperty: async (id: string): Promise<PropertyResponse> => {
+        const response = await axios.get<PropertyResponse>(
+            `/properties/${id}`
         );
 
         return response.data;

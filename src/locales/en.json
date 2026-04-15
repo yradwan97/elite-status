@@ -116,6 +116,140 @@
     "nav": {
       "home": "Home",
       "chalet": "Chalet"
+    },
+    "Details": {
+      "breadcrumb": {
+        "home": "Home",
+        "properties": "Properties",
+        "details": "Chalets Details"
+      },
+      "gallery": {
+        "seeAll": "See all photos",
+        "allPhotos": "All Photos"
+      },
+      "meta": {
+        "type": "type",
+        "guests": "Guests",
+        "person": "Person",
+        "bedrooms": "Bedrooms",
+        "bathrooms": "Bathrooms",
+        "lounges": "Lounges",
+        "bigLounge": "Big Lounge"
+      },
+      "propertyType": {
+        "APARTMENT": "Chalet",
+        "VILLA": "Villa",
+        "STUDIO": "Studio"
+      },
+      "section": {
+        "description": "Description",
+        "facilities": "Facilities",
+        "documents": "Documents",
+        "location": "Location"
+      },
+      "description": {
+        "seeMore": "see more",
+        "seeLess": "see less"
+      },
+      "facility": {
+        "carParking": "Car Parking",
+        "wifi": "WI-FI",
+        "grill": "Grill",
+        "beach": "Beach",
+        "hairDryer": "Hair dryer"
+      },
+      "facilities": {
+        "seeMore": "See More"
+      },
+      "doc": {
+        "cancellation": "Cancelation Policy",
+        "refund": "Refund Policy",
+        "terms": "Terms Condition"
+      },
+      "map": {
+        "navigate": "Start Navigation"
+      },
+      "rent": {
+        "startFrom": "Rent Start From"
+      },
+      "tour": {
+        "title": "Schedule a Tour !",
+        "name": "Name",
+        "namePlaceholder": "Type your name",
+        "email": "Email",
+        "emailPlaceholder": "Type your email",
+        "phone": "Phone",
+        "phonePlaceholder": "Type your mobile number",
+        "message": "Message",
+        "messagePlaceholder": "Write your message",
+        "submit": "Reserve a Tour",
+        "or": "OR",
+        "whatsapp": "Reserve on Whatsapp"
+      },
+      "error": "Failed to load property.",
+      "retry": "Retry"
+    },
+    "Reservation": {
+      "pricing": {
+        "title": "Pricing Plan"
+      },
+      "calendar": {
+        "title": "Select Dates",
+        "selectDates": "Select your dates",
+        "accept": "Accept",
+        "refundPolicy": "Refund Policy",
+        "cancellationPolicy": "Cancellation Policy",
+        "terms": "Terms & Conditions",
+        "and": "and",
+        "days": {
+          "mo": "Mo",
+          "tu": "Tu",
+          "we": "We",
+          "th": "Th",
+          "fr": "Fr",
+          "sa": "Sa",
+          "su": "Su"
+        }
+      },
+      "services": {
+        "title": "Extra Services"
+      },
+      "confirmation": {
+        "title": "Confirmation",
+        "dates": "Check In & Out Date",
+        "time": "Check In & Out Time",
+        "rentType": "Rent Type",
+        "rentAmount": "Rent Amount",
+        "insurance": "Insurance Amount",
+        "location": "Location",
+        "chalet": "Chalet",
+        "total": "Total Amount",
+        "packageDiscount": "Package Subscription Discount",
+        "goldPackage": "Gold Package",
+        "net": "Net Amount",
+        "deposit": "50% (Deposit)",
+        "totalPayment": "100% (Total)",
+        "pay": "Pay & Reservation"
+      },
+      "plan": {
+        "weekdays": "Weekdays",
+        "weekdaysSub": "Sunday - Wednesday",
+        "weekend": "Weekend",
+        "weekendSub": "Thursday - Saturday",
+        "wholeWeek": "Whole Week",
+        "wholeWeekSub": "Sunday - Saturday",
+        "dailyStay": "Daily (With Stay)",
+        "dailyStaySub": "Sunday - Wednesday",
+        "dayUse": "Daily (Day Use)",
+        "dayUseSub": "Sunday - Wednesday"
+      },
+      "info": "Info",
+      "next": "Next",
+      "back": "Back",
+      "breadcrumb": {
+        "details": "Chalet Details",
+        "reservation": "Reservation"
+      }
     }
   }
 }

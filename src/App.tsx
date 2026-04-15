@@ -8,6 +8,8 @@ import { isTokenValid } from './lib/tokenHelper';
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import PropertiesSection from './features/properties/components/PropertiesSection';
+import PropertyDetails from './features/properties/components/PropertyDetails';
+import ReservationPage from './features/properties/reservation/ReservationPage';
 
 function App() {
 
@@ -30,7 +32,8 @@ function App() {
         <Routes>
           <Route path="/" element={<Dashboard />} />
           <Route path="/properties" element={<PropertiesSection />} />
-          <Route path="/users" element={<div>Users Page</div>} />
+          <Route path="/properties/:id" element={<PropertyDetails />} />
+          <Route path="/properties/:id/reservation" element={<ReservationPage />} />
           <Route path="/analytics" element={<div>Analytics Page</div>} />
           <Route path="/settings" element={<div>Settings Page</div>} />
           <Route path="*" element={<Navigate to="/" />} />

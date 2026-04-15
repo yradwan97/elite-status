@@ -1,12 +1,14 @@
 import { StarIcon } from '@/components/icons/StarIcon';
 import { Property } from '@/features/properties/api/propertiesApi';
-import { Heart, MapPin, Users, CircleDollarSign, Info } from 'lucide-react';
+import { Heart, MapPin, Users, CircleDollarSign } from 'lucide-react';
 import { Trans, useTranslation } from 'react-i18next';
 import {
     HoverCard,
     HoverCardContent,
     HoverCardTrigger,
 } from '@/components/ui/hover-card';
+import { useNavigate } from 'react-router-dom';
+import { OptimizedImage } from '@/components/shared/OptimizedImage';
 
 interface PropertyCardProps {
     property: Property;
@@ -16,6 +18,8 @@ interface PropertyCardProps {
 export function PropertyCard({ property, isFavorited = false }: PropertyCardProps) {
     const { t, i18n } = useTranslation();
     const isArabic = i18n.language === 'ar';
+
+    const navigate = useNavigate()
 
     if (!property) return
 
@@ -30,15 +34,21 @@ export function PropertyCard({ property, isFavorited = false }: PropertyCardProp
         { label: t('Dashboard.dayUse', 'Day Use'), value: property.dayUsePrice },
     ];
 
+    const handleGoToDetails = () => {
+        const id = property._id
+        if (!id) return
+
+        navigate(`/properties/${id}`)
+    }
+
     return (
-        <div className="group bg-white rounded-3xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 border border-gray-100">
+        <div onClick={handleGoToDetails} className="group bg-white cursor-pointer rounded-3xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 border border-gray-100">
             {/* Image */}
             <div className="relative h-56 overflow-hidden">
-                <img
+                <OptimizedImage
                     src={image}
                     alt={title}
-                    crossOrigin={''}
-                    className="w-full h-full object-contain group-hover:scale-105 transition-transform duration-500"
+                    className="w-full h-full object-cover p-2 group-hover:scale-105 transition-transform duration-500"
                 />
 
                 {/* Rating badge */}
@@ -67,34 +77,31 @@ export function PropertyCard({ property, isFavorited = false }: PropertyCardProp
                 </h3>
 
                 {/* Location */}
-                <div className={`flex items-center gap-1.5 text-gray-600 text-sm mb-4 ${isArabic ? 'flex-row-reverse' : ''}`}>
+                <div className={`flex items-center gap-1.5 text-gray-600 text-sm mb-4 ${isArabic ? 'text-start' : 'text-end'}`}>
                     <MapPin className="w-4 h-4 shrink-0" />
                     <span>{property.address}</span>
                 </div>
 
                 {/* Price — dailyPrice is the display price */}
-                <div className={`mb-4 ${isArabic ? 'text-right' : 'text-left'}`}>
-                    <div className={`flex items-center gap-1 mb-1 ${isArabic ? 'flex-row-reverse' : ''}`}>
+                <div className={`flex mb-4 ${isArabic ? 'text-start' : ''}`}>
+                    <div className={`flex items-center gap-1 mb-1 `}>
                         <CircleDollarSign className="w-4 h-4 text-gray-400 shrink-0" />
-                        <span className="text-gray-600 text-lg">{t('Dashboard.startFrom')}</span>
-                        <div className={`flex items-baseline gap-1 ms-1 ${isArabic ? 'flex-row-reverse' : ''}`}>
-                            <Trans
-                                i18nKey="Properties.dailyPrice"
-                                values={{ price }}
-                                components={{
-                                    value: <span className="text-3xl font-bold text-amber-500" />,
-                                    currency: <span className="text-lg text-gray-500" />,
-                                    divider: <span className="text-lg text-gray-400" />,
-                                    day: <span className="text-lg text-gray-400" />,
-                                }}
-                            >
-                                <span className="text-3xl font-bold text-amber-500" />
-                            </Trans>
-                        </div>
+                        <span className="text-gray-600 text-sm">{t('Dashboard.startFrom')}</span>
                         <HoverCard openDelay={100} closeDelay={100}>
                             <HoverCardTrigger asChild>
-                                <button className="ms-1 text-gray-400 hover:text-navy transition-colors">
-                                    <Info className="w-3.5 h-3.5" />
+                                <button className="ms-1 text-gray-400 hover:text-navy transition-colors cursor-pointer">
+                                    <Trans
+                                        i18nKey="Properties.dailyPrice"
+                                        values={{ price }}
+                                        components={{
+                                            value: <span className="text-2xl font-bold text-amber-500" />,
+                                            currency: <span className="text-lg text-gray-500" />,
+                                            divider: <span className="text-lg text-gray-400" />,
+                                            day: <span className="text-lg text-gray-400" />,
+                                        }}
+                                    >
+                                        <span className="text-3xl font-bold text-amber-500" />
+                                    </Trans>
                                 </button>
                             </HoverCardTrigger>
                             <HoverCardContent
@@ -121,7 +128,7 @@ export function PropertyCard({ property, isFavorited = false }: PropertyCardProp
                 </div>
 
                 {/* Capacity */}
-                <div className={`flex items-center gap-1.5 text-gray-600 ${isArabic ? 'flex-row-reverse' : ''}`}>
+                <div className={`flex items-center gap-1.5 text-gray-600`}>
                     <Users className="w-4 h-4 shrink-0" />
                     <span>{property.guests} {t('Dashboard.person')}</span>
                 </div>

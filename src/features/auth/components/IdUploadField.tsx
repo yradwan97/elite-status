@@ -1,3 +1,4 @@
+import { OptimizedImage } from "@/components/shared/OptimizedImage";
 import { useCallback, useState } from "react";
 import { useDropzone } from "react-dropzone";
 
@@ -49,7 +50,7 @@ export function IDUploadField({ label, value, onChange, error }: IDUploadFieldPr
             >
               ✕
             </button>
-            <img src={preview} alt="ID preview" className="w-full rounded-xl shadow-2xl" />
+            <OptimizedImage src={preview} alt="ID preview" className="w-full rounded-xl shadow-2xl" />
           </div>
         </div>
       )}
@@ -67,7 +68,7 @@ export function IDUploadField({ label, value, onChange, error }: IDUploadFieldPr
 
           {preview ? (
             <>
-              <img
+              <OptimizedImage
                 src={preview}
                 alt="ID thumbnail"
                 onClick={(e) => { e.stopPropagation(); setLightboxOpen(true); }}

@@ -2,6 +2,7 @@ import { Mail, Phone } from "lucide-react";
 import logo from "@/assets/elite-status-logo.png";
 import { SocialIcon } from 'react-social-icons';
 import { useTranslation } from "react-i18next";
+import { OptimizedImage } from "../shared/OptimizedImage";
 
 export function Footer() {
   const { t } = useTranslation();
@@ -23,7 +24,7 @@ export function Footer() {
 
           {/* Center - Logo + Social */}
           <div className="flex flex-col items-center gap-6">
-            <img
+            <OptimizedImage
               src={logo}
               alt="Elite Status"
               className="h-28 object-contain"

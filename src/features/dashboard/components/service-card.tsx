@@ -1,6 +1,7 @@
 import { LucideIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useTranslation } from "react-i18next";
+import { OptimizedImage } from "@/components/shared/OptimizedImage";
 
 export interface Service {
   key: string;
@@ -27,7 +28,7 @@ export default function ServiceCard({ service, className }: ServiceCardProps) {
       {/* Icon */}
       <div className="w-16 h-16 rounded-2xl  flex items-center justify-center group-hover:bg-navy/10 transition-colors">
         {isImageIcon ? (
-          <img src={service.icon as string} alt={service.title} className="w-10 h-10 object-contain" />
+          <OptimizedImage src={service.icon as string} alt={service.title} className="w-10 h-10 object-contain" />
         ) : (
           (() => {
             const Icon = service.icon as LucideIcon;

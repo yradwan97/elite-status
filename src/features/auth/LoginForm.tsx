@@ -8,6 +8,7 @@ import InputField from "./components/InputField";
 import loginLogo from "@/assets/login-icon.png";
 import { toast } from "sonner";
 import { useLogin } from "./api/hooks/useLogin";
+import { OptimizedImage } from "@/components/shared/OptimizedImage";
 
 export function LoginForm({ onSwitch, onClose }: { onSwitch: () => void; onClose: () => void }) {
   const { t } = useTranslation();
@@ -51,7 +52,7 @@ export function LoginForm({ onSwitch, onClose }: { onSwitch: () => void; onClose
 
 
       <div className="w-full flex items-center justify-center">
-        <img src={loginLogo} alt="login-logo" className="w-16 h-16" />
+        <OptimizedImage src={loginLogo} alt="login-logo" className="w-16 h-16" />
       </div>
 
       <h2 className="text-2xl font-semibold text-center my-4">

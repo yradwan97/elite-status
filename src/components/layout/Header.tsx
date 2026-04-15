@@ -13,6 +13,7 @@ import { setLanguage } from '@/store/slices/language-slice';
 import { clearCredentials, selectUser } from '@/store/slices/authSlice';
 import AuthModal from '@/features/auth/AuthModal';
 import { useNavigate } from 'react-router-dom';
+import { OptimizedImage } from '../shared/OptimizedImage';
 
 export function Header() {
   const dispatch = useDispatch();
@@ -67,7 +68,7 @@ export function Header() {
 
                 <SheetContent side={isArabic ? "right" : "left"} className="pt-8">
                   <div className="flex flex-col gap-8">
-                    <img src={logo} alt="Elite Status" className="h-26 object-contain mx-auto" />
+                    <OptimizedImage src={logo} alt="Elite Status" className="h-26 object-contain mx-auto" />
 
                     <nav className="flex flex-col gap-6 text-lg font-medium text-center">
                       <a href="#" className="text-navy font-semibold transition-colors">{t("Dashboard.home")}</a>
@@ -100,7 +101,7 @@ export function Header() {
 
             {/* Center Logo */}
             <div className="flex justify-center">
-              <img src={logo} alt="Elite Status" className="h-12 md:h-14 object-contain" />
+              <OptimizedImage src={logo} alt="Elite Status" className="h-12 md:h-14 object-contain" />
             </div>
 
             {/* Right Side */}

@@ -1,6 +1,7 @@
 import { Check, X } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { cn } from "@/lib/utils";
+import { OptimizedImage } from "@/components/shared/OptimizedImage";
 
 export interface Plan {
   key: string;
@@ -37,7 +38,7 @@ export default function PlanCard({ plan }: { plan: Plan }) {
         {/* Icon */}
         <div className="flex justify-center mb-4">
           {plan.icon && (
-            <img src={plan.icon} alt={`${plan.name} icon`} className="w-14 h-14 object-contain" />
+            <OptimizedImage src={plan.icon} alt={`${plan.name} icon`} className="w-14 h-14 object-contain" />
           )}
         </div>
 

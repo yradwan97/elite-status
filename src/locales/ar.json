@@ -116,6 +116,140 @@
     "nav": {
       "home": "الرئيسية",
       "chalet": "شاليه"
+    },
+    "Details": {
+      "breadcrumb": {
+        "home": "الرئيسية",
+        "properties": "العقارات",
+        "details": "تفاصيل الشاليه"
+      },
+      "gallery": {
+        "seeAll": "عرض جميع الصور",
+        "allPhotos": "جميع الصور"
+      },
+      "meta": {
+        "type": "النوع",
+        "guests": "الضيوف",
+        "person": "شخص",
+        "bedrooms": "غرف النوم",
+        "bathrooms": "الحمامات",
+        "lounges": "الصالات",
+        "bigLounge": "صالة كبيرة"
+      },
+      "propertyType": {
+        "APARTMENT": "شاليه",
+        "VILLA": "فيلا",
+        "STUDIO": "استوديو"
+      },
+      "section": {
+        "description": "الوصف",
+        "facilities": "المرافق",
+        "documents": "المستندات",
+        "location": "الموقع"
+      },
+      "description": {
+        "seeMore": "...المزيد",
+        "seeLess": "...أقل"
+      },
+      "facility": {
+        "carParking": "موقف السيارات",
+        "wifi": "واي فاي",
+        "grill": "شواية",
+        "beach": "شاطئ",
+        "hairDryer": "مجفف شعر"
+      },
+      "facilities": {
+        "seeMore": "عرض المزيد"
+      },
+      "doc": {
+        "cancellation": "سياسة الإلغاء",
+        "refund": "سياسة الاسترداد",
+        "terms": "الشروط والأحكام"
+      },
+      "map": {
+        "navigate": "ابدأ الملاحة"
+      },
+      "rent": {
+        "startFrom": "الإيجار يبدأ من"
+      },
+      "tour": {
+        "title": "احجز جولة !",
+        "name": "الاسم",
+        "namePlaceholder": "أدخل اسمك",
+        "email": "البريد الإلكتروني",
+        "emailPlaceholder": "أدخل بريدك الإلكتروني",
+        "phone": "الهاتف",
+        "phonePlaceholder": "أدخل رقم هاتفك",
+        "message": "الرسالة",
+        "messagePlaceholder": "اكتب رسالتك",
+        "submit": "احجز جولة",
+        "or": "أو",
+        "whatsapp": "احجز عبر واتساب"
+      },
+      "error": "فشل تحميل العقار.",
+      "retry": "إعادة المحاولة"
+    },
+    "Reservation": {
+      "pricing": {
+        "title": "خطة التسعير"
+      },
+      "calendar": {
+        "title": "اختر التواريخ",
+        "selectDates": "اختر تواريخ إقامتك",
+        "accept": "أوافق على",
+        "refundPolicy": "سياسة الاسترداد",
+        "cancellationPolicy": "سياسة الإلغاء",
+        "terms": "الشروط والأحكام",
+        "and": "و",
+        "days": {
+          "mo": "الإثنين",
+          "tu": "الثلاثاء",
+          "we": "الأربعاء",
+          "th": "الخميس",
+          "fr": "الجمعة",
+          "sa": "السبت",
+          "su": "الأحد"
+        }
+      },
+      "services": {
+        "title": "خدمات إضافية"
+      },
+      "confirmation": {
+        "title": "تأكيد الحجز",
+        "dates": "تاريخ الوصول والمغادرة",
+        "time": "وقت الوصول والمغادرة",
+        "rentType": "نوع الإيجار",
+        "rentAmount": "مبلغ الإيجار",
+        "insurance": "مبلغ التأمين",
+        "location": "الموقع",
+        "chalet": "الشاليه",
+        "total": "المبلغ الإجمالي",
+        "packageDiscount": "خصم اشتراك الباقة",
+        "goldPackage": "الباقة الذهبية",
+        "net": "المبلغ الصافي",
+        "deposit": "٥٠٪ (دفعة أولى)",
+        "totalPayment": "١٠٠٪ (المجموع)",
+        "pay": "الدفع والحجز"
+      },
+      "plan": {
+        "weekdays": "أيام الأسبوع",
+        "weekdaysSub": "الأحد - الأربعاء",
+        "weekend": "عطلة نهاية الأسبوع",
+        "weekendSub": "الخميس - السبت",
+        "wholeWeek": "الأسبوع كاملاً",
+        "wholeWeekSub": "الأحد - السبت",
+        "dailyStay": "يومي (مع الإقامة)",
+        "dailyStaySub": "الأحد - الأربعاء",
+        "dayUse": "يومي (استخدام اليوم)",
+        "dayUseSub": "الأحد - الأربعاء"
+      },
+      "info": "معلومات",
+      "next": "التالي",
+      "back": "رجوع",
+      "breadcrumb": {
+        "details": "تفاصيل الشاليه",
+        "reservation": "الحجز"
+      }
     }
   }
 }
