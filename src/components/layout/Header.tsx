@@ -14,6 +14,7 @@ import { clearCredentials, selectUser } from '@/store/slices/authSlice';
 import AuthModal from '@/features/auth/AuthModal';
 import { useNavigate } from 'react-router-dom';
 import { OptimizedImage } from '../shared/OptimizedImage';
+import { useInfo } from '@/common/api/hooks/useInfo';
 
 export function Header() {
   const dispatch = useDispatch();
@@ -24,6 +25,8 @@ export function Header() {
   const [isOpen, setIsOpen] = useState(false);
   const [authOpen, setAuthOpen] = useState(false);
   const [popoverOpen, setPopoverOpen] = useState(false);
+
+  const {info} = useInfo();
 
   useEffect(function adjustLanguage() {
     if (i18n.language !== currentLanguage) {
@@ -43,17 +46,20 @@ export function Header() {
   };
 
   const handleProfile = () => {
-    navigate('/profile');
+    navigate('/account');
     setPopoverOpen(false);
   };
 
   const isArabic = i18n.language === 'ar';
 
+  const goToHome = () => {
+    navigate('/');
+  }
+
   return (
     <>
       <header className={`sticky top-0 z-50 w-full bg-white border-b shadow-sm`}>
         <div className="max-w-7xl mx-auto">
-          <div className="h-1.5 bg-[#0A1229]" />
 
           <div className={`flex h-16 items-center justify-between px-6 ${isArabic ? 'flex-row-reverse' : ''}`}>
 
@@ -71,7 +77,7 @@ export function Header() {
                     <OptimizedImage src={logo} alt="Elite Status" className="h-26 object-contain mx-auto" />
 
                     <nav className="flex flex-col gap-6 text-lg font-medium text-center">
-                      <a href="#" className="text-navy font-semibold transition-colors">{t("Dashboard.home")}</a>
+                      <a href="/" className="text-navy font-semibold transition-colors">{t("Dashboard.home")}</a>
                       <a href="#" className="text-navy font-semibold transition-colors">{t("Dashboard.chalets")}</a>
                       <a href="#" className="text-navy font-semibold transition-colors">{t("Dashboard.pricingPlan")}</a>
                       <a href="#" className="text-navy font-semibold transition-colors">{t("Dashboard.ownerServices")}</a>
@@ -79,13 +85,23 @@ export function Header() {
                     </nav>
 
                     <div className="pt-8 border-t">
-                      <p className="font-bold text-xl text-navy text-gray-500 mb-4 text-center">{t("Dashboard.followUsOn")}</p>
+                      <p className="font-bold text-xl text-navy mb-4 text-center">{t("Dashboard.followUsOn")}</p>
                       <div className="flex gap-5 justify-center">
-                        <SocialIcon url="https://wa.me/96522234567" style={{ height: 38, width: 38, border: '2px solid #000', borderRadius: '100%' }} network="whatsapp" bgColor="#fff" borderRadius='100%' fgColor="#2DC3C1" />
-                        <SocialIcon url="https://www.facebook.com/elitestatuskw" style={{ height: 38, width: 38, border: '2px solid #000', borderRadius: '100%' }} network="facebook" bgColor="#fff" fgColor="#000" />
-                        <SocialIcon url="https://www.tiktok.com/@elitestatuskw" style={{ height: 38, width: 38, border: '2px solid #000', borderRadius: '100%' }} network="tiktok" bgColor="#fff" fgColor="#2DC3C1" />
-                        <SocialIcon url="https://www.instagram.com/elitestatuskw" style={{ height: 38, width: 38, border: '2px solid #000', borderRadius: '100%' }} network="instagram" bgColor="#fff" fgColor="#000" />
-                        <SocialIcon url="https://www.snapchat.com/@elitestatuskw" style={{ height: 38, width: 38, border: '2px solid #000', borderRadius: '100%' }} network="snapchat" bgColor="#fff" fgColor="#2DC3C1" />
+                        {info?.socialMedia?.whatsapp && (
+                          <SocialIcon url={`https://wa.me/${info.socialMedia.whatsapp}`} target="_blank" style={{ height: 38, width: 38, border: '2px solid #000', borderRadius: '100%' }} network="whatsapp" bgColor="#fff" borderRadius='100%' fgColor="#2DC3C1" />
+                        )}
+                        {info?.socialMedia?.facebook && (
+                          <SocialIcon url={info.socialMedia.facebook} target="_blank" style={{ height: 38, width: 38, border: '2px solid #000', borderRadius: '100%' }} network="facebook" bgColor="#fff" fgColor="#000" />
+                        )}
+                        {info?.socialMedia?.tiktok && (
+                          <SocialIcon url={info.socialMedia.tiktok} target="_blank" style={{ height: 38, width: 38, border: '2px solid #000', borderRadius: '100%' }} network="tiktok" bgColor="#fff" fgColor="#2DC3C1" />
+                        )}
+                        {info?.socialMedia?.instagram && (
+                          <SocialIcon url={info.socialMedia.instagram} target="_blank" style={{ height: 38, width: 38, border: '2px solid #000', borderRadius: '100%' }} network="instagram" bgColor="#fff" fgColor="#000" />
+                        )}
+                        {info?.socialMedia?.snapchat && (
+                          <SocialIcon url={info.socialMedia.snapchat} target="_blank" style={{ height: 38, width: 38, border: '2px solid #000', borderRadius: '100%' }} network="snapchat" bgColor="#fff" fgColor="#2DC3C1" />
+                        )}
                       </div>
                     </div>
                   </div>
@@ -100,7 +116,7 @@ export function Header() {
             </div>
 
             {/* Center Logo */}
-            <div className="flex justify-center">
+            <div className="flex justify-center cursor-pointer" onClick={goToHome}>
               <OptimizedImage src={logo} alt="Elite Status" className="h-12 md:h-14 object-contain" />
             </div>
 
@@ -151,7 +167,7 @@ export function Header() {
               ) : (
                 <button
                   onClick={() => setAuthOpen(true)}
-                  className="flex items-center gap-2 text-base font-medium hover:text-blue-600 transition-colors"
+                  className="flex items-center gap-2 text-base font-medium hover:text-navy cursor-pointer transition-colors"
                 >
                   {t("Header.login")}
                   <User className="h-5 w-5" />

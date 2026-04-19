@@ -3,9 +3,12 @@ import logo from "@/assets/elite-status-logo.png";
 import { SocialIcon } from 'react-social-icons';
 import { useTranslation } from "react-i18next";
 import { OptimizedImage } from "../shared/OptimizedImage";
+import { useInfo } from "@/common/api/hooks/useInfo";
 
 export function Footer() {
   const { t } = useTranslation();
+  const { info } = useInfo();
+  console.log(info)
 
   return (
     <footer className="bg-[#0A1229] text-white rounded-3xl mx-6 my-10 overflow-hidden border border-white/5">
@@ -14,12 +17,17 @@ export function Footer() {
 
           {/* Left - Email */}
           <div className="flex flex-col items-center gap-5">
-            <div className="border border-white/30 rounded-full p-5">
-              <Mail size={26} strokeWidth={1.8} />
-            </div>
-            <p className="text-lg tracking-wide text-white/90">
-              info@elitestatuskw.com
-            </p>
+            {info?.email && (
+              <>
+                <div className="border border-white/30 rounded-full p-5">
+                  <Mail size={26} strokeWidth={1.8} />
+                </div>
+
+                <p className="text-lg tracking-wide text-white/90">
+                  {info?.email || ''}
+                </p>
+              </>
+            )}
           </div>
 
           {/* Center - Logo + Social */}
@@ -29,7 +37,7 @@ export function Footer() {
               alt="Elite Status"
               className="h-28 object-contain"
             />
-            
+
             <div className="w-64 h-px bg-white/20 my-2" />
 
             <p className="text-sm tracking-widest text-white/70 uppercase">
@@ -37,11 +45,21 @@ export function Footer() {
             </p>
 
             <div className="flex gap-6">
-              <SocialIcon url="https://wa.me/96522234567" style={{ height: 40, width: 40 }} network="whatsapp" bgColor="inherit" fgColor="#fff" />
-              <SocialIcon url="https://www.facebook.com/elitestatuskw" style={{ height: 40, width: 40 }} network="facebook" bgColor="inherit" fgColor="#fff" />
-              <SocialIcon url="https://www.tiktok.com/@elitestatuskw" style={{ height: 40, width: 40 }} network="tiktok" bgColor="inherit" fgColor="#fff" />
-              <SocialIcon url="https://www.instagram.com/elitestatuskw" style={{ height: 40, width: 40 }} network="instagram" bgColor="inherit" fgColor="#fff" />
-              <SocialIcon url="https://www.snapchat.com/@elitestatuskw" style={{ height: 40, width: 40 }} network="snapchat" bgColor="inherit" fgColor="#fff" />
+              {info?.socialMedia?.whatsapp && (
+                <SocialIcon url={`https://wa.me/${info.socialMedia.whatsapp}`} target="_blank" style={{ height: 40, width: 40 }} network="whatsapp" bgColor="inherit" fgColor="#fff" />
+              )}
+              {info?.socialMedia?.facebook && (
+                <SocialIcon url={info.socialMedia.facebook} target="_blank" style={{ height: 40, width: 40 }} network="facebook" bgColor="inherit" fgColor="#fff" />
+              )}
+              {info?.socialMedia?.tiktok && (
+                <SocialIcon url={info.socialMedia.tiktok} target="_blank" style={{ height: 40, width: 40 }} network="tiktok" bgColor="inherit" fgColor="#fff" />
+              )}
+              {info?.socialMedia?.instagram && (
+                <SocialIcon url={info.socialMedia.instagram} target="_blank" style={{ height: 40, width: 40 }} network="instagram" bgColor="inherit" fgColor="#fff" />
+              )}
+              {info?.socialMedia?.snapchat && (
+                <SocialIcon url={info.socialMedia.snapchat} target="_blank" style={{ height: 40, width: 40 }} network="snapchat" bgColor="inherit" fgColor="#fff" />
+              )}
             </div>
           </div>
 

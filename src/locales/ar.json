@@ -1,4 +1,7 @@
 {
+  "General": {
+    "clear": "مسح"
+  },
   "Footer": {
     "socialMediaLinks": "روابط وسائل التواصل الاجتماعي",
     "copyright": "حقوق النشر © {{year}} بواسطة Echo Soft"
@@ -80,6 +83,7 @@
     "agreeTerms": "أوافق على الشروط والأحكام",
     "uploadError": "فشل في تحميل صور الهوية. يرجى المحاولة مرة أخرى.",
     "registerError": "فشل التسجيل. يرجى المحاولة مرة أخرى.",
+    "registerSuccess": "تم التسجيل بنجاح!",
     "loginSuccess": "تم تسجيل الدخول بنجاح!",
     "loginError": "فشل تسجيل الدخول. يرجى التحقق من بيانات الاعتماد الخاصة بك والمحاولة مرة أخرى.",
     "validation": {
@@ -159,7 +163,8 @@
         "hairDryer": "مجفف شعر"
       },
       "facilities": {
-        "seeMore": "عرض المزيد"
+        "seeMore": "عرض المزيد",
+        "none": "لا توجد مرافق مدرجة"
       },
       "doc": {
         "cancellation": "سياسة الإلغاء",
@@ -184,10 +189,23 @@
         "messagePlaceholder": "اكتب رسالتك",
         "submit": "احجز جولة",
         "or": "أو",
-        "whatsapp": "احجز عبر واتساب"
+        "whatsapp": "احجز عبر واتساب",
+        "success": "تم إرسال طلب الجولة بنجاح!",
+        "error": "فشل في إرسال طلب الجولة. يرجى المحاولة مرة أخرى.",
+        "whatsappMessage": "أود جدولة جولة لعقارك، '{{title}}'. يرجى إعلامي بالتواريخ والأوقات المتاحة. شكراً!"
       },
       "error": "فشل تحميل العقار.",
-      "retry": "إعادة المحاولة"
+      "retry": "إعادة المحاولة",
+      "Share": {
+        "err": "فشل في نسخ الرابط.",
+        "copyLink": "نسخ الرابط",
+        "copied": "تم نسخ الرابط!"
+      },
+      "Favorite": {
+        "success": "تمت الإضافة إلى المفضلة!",
+        "removeSuccess": "تمت الإزالة من المفضلة!",
+        "error": "فشل في تحديث المفضلة. يرجى المحاولة مرة أخرى."
+      }
     },
     "Reservation": {
       "pricing": {
@@ -250,6 +268,55 @@
         "details": "تفاصيل الشاليه",
         "reservation": "الحجز"
       }
+    }
+  },
+  "Account": {
+    "Header": {
+      "Title": "حسابي"
+    },
+    "Sidebar": {
+      "MyProfile": "ملفي الشخصي",
+      "MyBooking": "حجوزاتي",
+      "MyPricePlan": "خطتي السعرية",
+      "MyFavourite": "المفضلة",
+      "Logout": "تسجيل الخروج",
+      "DeleteAccount": "حذف الحساب"
+    },
+    "Profile": {
+      "Title": "ملفي الشخصي",
+      "Subtitle": "إدارة معلوماتك الشخصية",
+      "Edit": "تعديل",
+      "SaveChanges": "حفظ التغييرات",
+      "Cancel": "إلغاء",
+      "FirstName": "الاسم الأول",
+      "LastName": "اسم العائلة",
+      "Email": "البريد الإلكتروني",
+      "MobileNumber": "رقم الجوال",
+      "Gender": {
+        "male": "ذكر",
+        "female": "أنثى",
+        "select": "اختر الجنس"
+      },
+      "Nationality": "الجنسية",
+      "IdFront": "الهوية (الأمامي)",
+      "IdBack": "الهوية (الخلفي)"
+    },
+    "PricePlan": {
+      "Title": "خطتي السعرية",
+      "GoldPlan": "الخطة الذهبية",
+      "Upgrade": "ترقية",
+      "YourPlanTracking": "تتبع خطتك",
+      "No": "رقم",
+      "Date": "التاريخ",
+      "Action": "الإجراء",
+      "TitleColumn": "العنوان",
+      "Discount": "الخصم",
+      "InvoiceLink": "رابط الفاتورة"
+    },
+    "Favourites": {
+      "Title": "المفضلة",
+      "ViewDetails": "عرض التفاصيل",
+      "NoFavourites": "لا توجد مفضلات مضافة"
     }
   }
 }

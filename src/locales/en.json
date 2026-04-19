@@ -1,4 +1,7 @@
 {
+  "General": {
+    "clear": "Clear"
+  },
   "Footer": {
     "socialMediaLinks": "Social Media Links",
     "copyright": "Copyright © {{year}} by Echo Soft"
@@ -80,6 +83,7 @@
     "welcome-2": "Elite Status Company",
     "uploadError": "Failed to upload ID images. Please try again.",
     "registerError": "Registration failed. Please try again.",
+    "registerSuccess": "Registration successful!",
     "loginSuccess": "Login successful!",
     "loginError": "Login failed. Please check your credentials and try again.",
     "validation": {
@@ -159,7 +163,8 @@
         "hairDryer": "Hair dryer"
       },
       "facilities": {
-        "seeMore": "See More"
+        "seeMore": "See More",
+        "none": "No facilities listed"
       },
       "doc": {
         "cancellation": "Cancelation Policy",
@@ -184,10 +189,23 @@
         "messagePlaceholder": "Write your message",
         "submit": "Reserve a Tour",
         "or": "OR",
-        "whatsapp": "Reserve on Whatsapp"
+        "whatsapp": "Reserve on Whatsapp",
+        "success": "Tour request sent successfully!",
+        "error": "Failed to send tour request. Please try again.",
+        "whatsappMessage": "I would like to schedule a tour for your property, '{{title}}'. Please let me know the available dates and times. Thank you!"
       },
       "error": "Failed to load property.",
-      "retry": "Retry"
+      "retry": "Retry",
+      "Share": {
+        "err": "Failed to copy link.",
+        "copyLink": "Copy Link",
+        "copied": "Link Copied!"
+      },
+      "Favorite":{
+        "success": "Added to favorites!",
+        "removeSuccess": "Removed from favorites!",
+        "error": "Failed to update favorites. Please try again."
+      }
     },
     "Reservation": {
       "pricing": {
@@ -250,6 +268,56 @@
         "details": "Chalet Details",
         "reservation": "Reservation"
       }
+    }
+  },
+  "Account": {
+    "Header": {
+      "Title": "My Account",
+      "pageTitle": "Elite Status - My Account"
+    },
+    "Sidebar": {
+      "MyProfile": "My Profile",
+      "MyBooking": "My Booking",
+      "MyPricePlan": "My Price Plan",
+      "MyFavourite": "My Favorite",
+      "Logout": "Logout",
+      "DeleteAccount": "Delete Account"
+    },
+    "Profile": {
+      "Title": "My Profile",
+      "Subtitle": "Manage your personal information",
+      "Edit": "Edit Profile",
+      "SaveChanges": "Save Changes",
+      "Cancel": "Cancel",
+      "FirstName": "First Name",
+      "LastName": "Last Name",
+      "Email": "Email",
+      "MobileNumber": "Mobile Number",
+      "Nationality": "Nationality",
+      "IdFront": "ID (front)",
+      "IdBack": "ID (back)",
+      "Gender": {
+        "male": "Male",
+        "female": "Female",
+        "select": "Select Gender"
+      }
+    },
+    "PricePlan": {
+      "Title": "My Price Plan",
+      "GoldPlan": "Gold Plan",
+      "Upgrade": "Upgrade",
+      "YourPlanTracking": "Your Plan Tracking",
+      "No": "No",
+      "Date": "Date",
+      "Action": "Action",
+      "TitleColumn": "Title",
+      "Discount": "Discount",
+      "InvoiceLink": "Invoice Link"
+    },
+    "Favourites": {
+      "Title": "My Favorites",
+      "ViewDetails": "View Details",
+      "NoFavourites": "No favorites added"
     }
   }
 }

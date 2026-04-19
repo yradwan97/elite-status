@@ -12,7 +12,7 @@ interface UsePropertyReturn {
 export function useProperty(id: string): UsePropertyReturn {
 
     const { data, isFetching, isError, refetch: queryRefetch } = useQuery({
-        queryKey: ['properties', id],
+        queryKey: ['property', id],
         queryFn:  () => propertiesApi.getProperty(id),
     });
 

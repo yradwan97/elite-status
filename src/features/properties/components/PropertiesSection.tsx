@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Search, SlidersHorizontal, ChevronDown, ChevronRight } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
-import { PropertyCard } from '@/features/dashboard/components/property-card';
+import { PropertyCard } from '@/features/properties/components/property-card';
 import { useProperties } from '@/features/properties/api/hooks/useProperties';
 import i18next from 'i18next';
 import { useFacilities } from '../api/hooks/useFacilities';
@@ -92,7 +92,8 @@ export default function PropertiesSection() {
 
     useEffect(function readSearchParamsFromRoutingEvent() {
         if (passedSearch && (passedSearch.destination || passedSearch.noOfGuests || passedSearch.date)) {
-
+            
+            // eslint-disable-next-line react-hooks/set-state-in-effect
             setDraft(prev => ({
                 ...prev,
                 search: passedSearch.destination || prev.search,

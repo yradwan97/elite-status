@@ -1,11 +1,16 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
-interface User {
-    id: string;
+export interface User {
+    _id?: string;
     firstName: string;
     lastName: string;
     email: string;
     mobileNumber: string;
+    IDFront: string;
+    IDBack: string;
+    gender?: "male" | "female";
+    nationality?: string;
+    image?: File | string | null;
 }
 
 interface AuthState {
@@ -24,13 +29,20 @@ const authSlice = createSlice({
     name: "auth",
     initialState,
     reducers: {
-        setCredentials: (state, action: PayloadAction<{ user: User; accessToken: string; refreshToken: string | null }>) => {
-            localStorage.setItem('accessToken', action.payload.accessToken);
-            localStorage.setItem('refreshToken', action.payload.refreshToken!);
+        setCredentials: (state, action: PayloadAction<{ user: User; accessToken?: string; refreshToken?: string | null }>) => {
             localStorage.setItem('user', JSON.stringify(action.payload.user));
 
+            if (action.payload.accessToken) {
+                localStorage.setItem('accessToken', action.payload.accessToken);
+            }
+            if (action.payload.refreshToken) {
+                localStorage.setItem('refreshToken', action.payload.refreshToken);
+            }
+
             state.user = action.payload.user;
-            state.accessToken = action.payload.accessToken;
+            if (action.payload.accessToken)
+                state.accessToken = action.payload.accessToken;
+            
             state.refreshToken = action.payload.refreshToken ?? null;
         },
         clearCredentials: (state) => {

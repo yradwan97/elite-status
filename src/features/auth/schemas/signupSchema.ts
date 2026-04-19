@@ -44,3 +44,56 @@ export const getSignupSchema = (t: TFunction<"translation", undefined>) =>
       message: t("Auth.validation.passwordMatch"),
       path: ["confirmPassword"],
     });
+
+// getProfileSchema
+export function getProfileSchema(t: TFunction) {
+  return z.object({
+    firstName: z.string().min(1, t("Auth.validation.required")),
+    lastName: z.string().min(1, t("Auth.validation.required")),
+    email: z
+      .string()
+      .min(1, t("Auth.validation.required"))
+      .email(t("Auth.validation.emailInvalid")),
+    mobileNumber: z.string().refine(isValidPhoneNumber, {
+      message: t("Auth.validation.phoneInvalid"),
+    }),
+    terms: z.boolean().optional(),
+    gender: z
+      .enum(["male", "female"], {
+        error: t("Auth.validation.required"),
+      })
+      .nullable()
+      .optional(),
+    nationality: z.string().nullable().optional(),
+    image: z
+      .union([
+        z.string(),
+        z
+          .instanceof(File)
+          .refine((f) => f.size <= MAX_FILE_SIZE, t("Auth.validation.fileTooLarge"))
+          .refine((f) => ACCEPTED_TYPES.includes(f.type), t("Auth.validation.fileInvalidType")),
+      ])
+      .nullable()
+      .optional(),
+    IDFront: z
+      .union([
+        z.string(),
+        z
+          .instanceof(File)
+          .refine((f) => f.size <= MAX_FILE_SIZE, t("Auth.validation.fileTooLarge"))
+          .refine((f) => ACCEPTED_TYPES.includes(f.type), t("Auth.validation.fileInvalidType")),
+      ])
+      .nullable()
+      .optional(),
+    IDBack: z
+      .union([
+        z.string(),
+        z
+          .instanceof(File)
+          .refine((f) => f.size <= MAX_FILE_SIZE, t("Auth.validation.fileTooLarge"))
+          .refine((f) => ACCEPTED_TYPES.includes(f.type), t("Auth.validation.fileInvalidType")),
+      ])
+      .nullable()
+      .optional(),
+  });
+}

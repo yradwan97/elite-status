@@ -1,4 +1,3 @@
-
 import i18next from "i18next";
 import { Eye, EyeOff } from "lucide-react";
 import { useState } from "react";
@@ -13,6 +12,7 @@ type InputFieldProps<T extends FieldValues> = {
   error?: string;
   isPassword?: boolean;
   dir?: "ltr" | "rtl";
+  disabled?: boolean;
 };
 
 export default function InputField<T extends FieldValues>({
@@ -23,18 +23,17 @@ export default function InputField<T extends FieldValues>({
   name,
   error,
   isPassword,
+  disabled = false,
 }: InputFieldProps<T>) {
   const [show, setShow] = useState(false);
 
   const inputType = isPassword ? (show ? "text" : "password") : type;
   const dir = i18next.language === "ar" ? "rtl" : "ltr";
-
   const isRTL = dir === "rtl";
 
   return (
     <div className="w-full" dir={dir}>
       <div className="relative">
-        {/* LEFT ICON (LTR) / RIGHT ICON (RTL) */}
         {Icon && (
           <Icon
             className={`absolute top-1/2 -translate-y-1/2 text-gray-400
@@ -47,17 +46,18 @@ export default function InputField<T extends FieldValues>({
           type={inputType}
           {...register(name)}
           placeholder={placeholder}
+          disabled={disabled}
           dir={dir}
           className={`
             w-full py-3 rounded-lg border border-gray-200
             focus:outline-none focus:ring-2 focus:ring-navy
             ${isRTL ? "text-right pr-10 pl-10" : "text-left pl-10 pr-10"}
+            ${disabled ? "bg-gray-100 text-gray-500 cursor-default" : "bg-white"}
           `}
-          style={{fontSize: "1.05rem"}}
+          style={{ fontSize: "1.05rem" }}
         />
 
-        {/* PASSWORD TOGGLE */}
-        {isPassword && (
+        {isPassword && !disabled && (
           <button
             type="button"
             onClick={() => setShow((s) => !s)}

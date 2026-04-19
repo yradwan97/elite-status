@@ -2,7 +2,7 @@ import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { PricingPlan } from "../types/types";
 import { useTranslation } from "react-i18next";
-
+import { Switch } from "@/components/ui/switch";
 interface PricingStepProps {
   plans: PricingPlan[];
   selectedPlanKey: string | null;
@@ -21,16 +21,16 @@ export function PricingStep({
   const { t } = useTranslation();
 
   return (
-    <div className="w-full max-w-2xl mx-auto">
+    <div className="w-full max-w-2xl mx-auto" dir={isRTL ? "rtl" : "ltr"}>
       <h2 className="text-lg font-bold text-navy text-center mb-6">
         {t("Properties.Reservation.pricing.title")}
       </h2>
 
       <div className="space-y-3">
         {plans.map((plan) => (
-          <button
+          <div
             key={plan.key}
-            onClick={() => onPlanSelect(plan.key, plan.price)}
+            // onClick={() => onPlanSelect(plan.key, plan.price)}
             className={cn(
               "w-full flex items-center justify-between rounded-2xl p-4 border transition-all text-left",
               selectedPlanKey === plan.key
@@ -43,23 +43,16 @@ export function PricingStep({
                 {t(plan.labelKey)}
               </p>
               <p className="text-sm text-gray-400 mt-0.5">{t(plan.subtitleKey)}</p>
-              <span className="text-xs text-blue-500 hover:underline cursor-pointer mt-1 block">
+              <span className="text-xs text-navy hover:underline cursor-pointer mt-1 block">
                 {t("Properties.Reservation.info")}
               </span>
             </div>
 
-            <div className="flex items-center gap-3 shrink-0">
+            <div className="flex flex-col items-center gap-3 shrink-0">
               <span className="text-navy font-bold text-base">{plan.price} KWD</span>
-              <div
-                className={cn(
-                  "w-5 h-5 rounded-full border-2 flex items-center justify-center",
-                  selectedPlanKey === plan.key ? "border-navy bg-navy" : "border-gray-300 bg-white"
-                )}
-              >
-                {selectedPlanKey === plan.key && <div className="w-2 h-2 rounded-full bg-white" />}
-              </div>
+              <Switch className="shrink-0" checked={selectedPlanKey === plan.key} onCheckedChange={() => onPlanSelect(plan.key, plan.price)} />
             </div>
-          </button>
+          </div>
         ))}
       </div>
 

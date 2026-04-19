@@ -31,8 +31,8 @@ export default function ReservationPage() {
   const [booking, setBooking] = useState<BookingState>({
     planKey: null,
     planPrice: 0,
-    startDate: null,
-    endDate: null,
+    startDate: undefined,
+    endDate: undefined,
     acceptedTerms: false,
     selectedServices: [],
   });
@@ -72,38 +72,36 @@ export default function ReservationPage() {
 
   const plans: PricingPlan[] = [
     {
-      key: "Weekdays",
+      key: "weekdays",
       labelKey: "Properties.Reservation.plan.weekdays",
       subtitleKey: "Properties.Reservation.plan.weekdaysSub",
       price: property.weekdaysPrice ?? 0,
     },
     {
-      key: "Weekend",
+      key: "weekends",
       labelKey: "Properties.Reservation.plan.weekend",
       subtitleKey: "Properties.Reservation.plan.weekendSub",
       price: property.weekendPrice ?? 0,
     },
     {
-      key: "Whole Week",
+      key: "wholeWeek",
       labelKey: "Properties.Reservation.plan.wholeWeek",
       subtitleKey: "Properties.Reservation.plan.wholeWeekSub",
       price: property.wholeWeekPrice ?? 0,
     },
     {
-      key: "Daily (With Stay)",
+      key: "dailyStay",
       labelKey: "Properties.Reservation.plan.dailyStay",
       subtitleKey: "Properties.Reservation.plan.dailyStaySub",
       price: property.dailyPrice ?? 0,
     },
     {
-      key: "Daily (Day Use)",
+      key: "dayUse",
       labelKey: "Properties.Reservation.plan.dayUse",
       subtitleKey: "Properties.Reservation.plan.dayUseSub",
       price: property.dayUsePrice ?? 0,
     },
   ].filter((p) => p.price > 0);
-
-//   const extraServices: ExtraService[] = property.extraServices ?? [];
 
   return (
     <>
@@ -143,9 +141,13 @@ export default function ReservationPage() {
             <PricingStep
               plans={plans}
               selectedPlanKey={booking.planKey}
-              onPlanSelect={(key, price) =>
-                setBooking((b) => ({ ...b, planKey: key, planPrice: price }))
-              }
+              onPlanSelect={(key, price) => {
+                if (!booking.planKey || booking.planKey !== key) {
+                  setBooking((b) => ({ ...b, planKey: key, planPrice: price }))
+                } else if (booking.planKey === key) {
+                  setBooking((b) => ({ ...b, planKey: null, planPrice: 0, startDate: undefined, endDate: undefined, acceptedTerms: false }))
+                }
+              }}
               onNext={goNext}
               isRTL={isRTL}
             />
@@ -153,8 +155,7 @@ export default function ReservationPage() {
 
           {currentStep === "calendar" && (
             <CalendarStep
-              selectedPlan={booking.planKey}
-              planPrice={booking.planPrice}
+              selectedPlan={plans.find((p) => p.key === booking.planKey) ?? null}
               startDate={booking.startDate}
               endDate={booking.endDate}
               acceptedTerms={booking.acceptedTerms}
@@ -162,7 +163,7 @@ export default function ReservationPage() {
               onTermsChange={(v) => setBooking((b) => ({ ...b, acceptedTerms: v }))}
               onNext={goNext}
               onBack={goBack}
-              isRTL={isRTL}
+            // isRTL={isRTL}
             />
           )}
 

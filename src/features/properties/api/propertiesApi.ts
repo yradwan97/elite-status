@@ -1,3 +1,4 @@
+import { ApiResponse } from '@/common/api/commonApi';
 import axios from '@/lib/axios';
 
 export interface Facility {
@@ -22,7 +23,7 @@ export interface Property {
     lounges: number;
     descriptionAr: string;
     descriptionEn: string;
-    documents: string[];
+    documents: {key: string, path: string}[];
     weekdaysPrice: number;
     weekendPrice: number;
     wholeWeekPrice: number;
@@ -31,6 +32,8 @@ export interface Property {
     facilities: Facility[];   // array of facility IDs
     createdAt: string;
     updatedAt: string;
+    rate?: number;
+    isFavourite?: boolean;
 }
 
 export interface PropertiesFilters {
@@ -53,12 +56,37 @@ export interface PropertiesResponse {
     pages: number;
 }
 
+export interface FavouritesResponse {
+  data: Favourite[]
+  itemsCount: number
+  pages: number
+}
+
+export interface Favourite {
+  _id: string
+  item: Property
+  user: string
+  createdAt: string
+  updatedAt: string
+  __v: number
+}
+
+
+
 export interface PropertyResponse {
     data: Property
 }
 
 export interface FacilitiesResponse {
     data: Facility[];
+}
+
+export interface CreateTourPayload {
+    name: string;
+    email: string;
+    phone: string;
+    message: string;
+    property: string;
 }
 
 export const propertiesApi = {
@@ -105,4 +133,21 @@ export const propertiesApi = {
         const response = await axios.get<FacilitiesResponse>(`/properties/facilities`);
         return response.data;
     },
+
+    toggleFavourite: async (propertyId: string, isFavourite: boolean): Promise<void> => {
+        if (!isFavourite) {
+            await axios.post(`/favourites`, { item: propertyId });
+        } else {
+            await axios.delete(`/favourites/${propertyId}`);
+        }
+    },
+
+    createTour: async (payload: CreateTourPayload): Promise<void> => {
+        await axios.post(`/tours`, payload);
+    },
+
+    getFavouriteProperties: async (page: number): Promise<ApiResponse<FavouritesResponse>> => {
+        const response = await axios.get<ApiResponse<FavouritesResponse>>(`/favourites?page=${page}&limit=9`);
+        return response.data;
+    }
 };

@@ -1,5 +1,5 @@
 'use client';
-import { PropertyCard } from '@/features/dashboard/components/property-card';
+import { PropertyCard } from '@/features/properties/components/property-card';
 import { useTranslation } from 'react-i18next';
 import eliteHomepageBg from '@/assets/elite-homepage-bg.png';
 import { ArrowLeftIcon, ArrowRightIcon, Search } from 'lucide-react';
@@ -22,7 +22,7 @@ import acIcon from '@/assets/ac-icon.png'
 import laundryIcon from '@/assets/laundry-icon.png'
 import gardenIcon from '@/assets/garden-icon.png'
 import { useProperties } from '../properties/api/hooks/useProperties';
-import { PropertyCardSkeleton } from './components/property-card-skeleton';
+import { PropertyCardSkeleton } from '../properties/components/property-card-skeleton';
 import { OptimizedImage } from '@/components/shared/OptimizedImage';
 import { useState } from 'react';
 import Counter from '@/components/shared/Counter';

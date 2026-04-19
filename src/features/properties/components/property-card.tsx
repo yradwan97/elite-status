@@ -9,17 +9,33 @@ import {
 } from '@/components/ui/hover-card';
 import { useNavigate } from 'react-router-dom';
 import { OptimizedImage } from '@/components/shared/OptimizedImage';
+import useToggleFavourite from '../api/hooks/useToggleFavourite';
+import { useLayoutEffect, useState } from 'react';
+import { RootState } from '@/store';
+import { useSelector } from 'react-redux';
 
 interface PropertyCardProps {
     property: Property;
-    isFavorited?: boolean;
+    isFromFavourites?: boolean; // Optional prop to indicate if the card is rendered in the favorites section
 }
 
-export function PropertyCard({ property, isFavorited = false }: PropertyCardProps) {
+export function PropertyCard({ property, isFromFavourites = false }: PropertyCardProps) {
     const { t, i18n } = useTranslation();
     const isArabic = i18n.language === 'ar';
+    const user = useSelector((state: RootState) => state.auth.user);    
 
     const navigate = useNavigate()
+
+    const [isFavourite, setIsFavourite] = useState(isFromFavourites ? true :property?.isFavourite || false);
+    const toggleFavourite = useToggleFavourite(property?._id || "");
+
+
+    useLayoutEffect(() => {
+        if (property && !isFromFavourites) {
+            // eslint-disable-next-line react-hooks/set-state-in-effect
+            setIsFavourite(!!property.isFavourite);
+        }
+    }, [property, isFromFavourites]);
 
     if (!property) return
 
@@ -41,6 +57,16 @@ export function PropertyCard({ property, isFavorited = false }: PropertyCardProp
         navigate(`/properties/${id}`)
     }
 
+    const handleFavouriteToggle = (e: React.MouseEvent<HTMLButtonElement>) => {
+        if (!user) return;
+        e.stopPropagation();
+        toggleFavourite.mutate(isFavourite, {
+            onSuccess: () => {
+                setIsFavourite(!isFavourite);
+            }
+        });
+    };
+
     return (
         <div onClick={handleGoToDetails} className="group bg-white cursor-pointer rounded-3xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 border border-gray-100">
             {/* Image */}
@@ -53,21 +79,21 @@ export function PropertyCard({ property, isFavorited = false }: PropertyCardProp
 
                 {/* Rating badge */}
                 <div className="absolute top-4 left-4 flex gap-2">
-                    <div className="flex items-center gap-1 bg-black/70 text-white text-xs font-medium px-3 py-1 rounded-md">
+                    {(property.rate && property.rate > 0) ? <div className="flex items-center gap-1 bg-black/70 text-white text-xs font-medium px-3 py-1 rounded-md">
                         <StarIcon size={16} color="#FACC15" />
-                        {/* rating not in API yet — placeholder */}
-                        5.0
-                    </div>
+                        {(property.rate && property.rate > 0) && property.rate.toFixed(1)}
+                    </div> : null}
                 </div>
 
                 {/* Favorite */}
-                <button
-                    className="absolute top-4 right-4 w-9 h-9 bg-white/90 hover:bg-white rounded-full flex items-center justify-center transition-all hover:scale-110 shadow-sm"
-                >
-                    <Heart
-                        className={`w-5 h-5 transition-colors ${isFavorited ? 'fill-red-500 text-red-500' : 'text-gray-600'}`}
-                    />
-                </button>
+                {user && (
+                    <button 
+                        className="absolute top-4 right-4 cursor-pointer rounded-full flex items-center justify-center transition-all hover:scale-110 shadow-sm"
+                        onClick={handleFavouriteToggle}
+                    >
+                        <Heart className={`w-5 h-5 transition-colors ${isFavourite ? 'fill-red-500 text-red-500' : 'text-gray-600'}`} />
+                    </button>
+                )}
             </div>
 
             {/* Content */}

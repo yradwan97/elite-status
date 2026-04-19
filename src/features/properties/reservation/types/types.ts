@@ -15,8 +15,8 @@ export interface ExtraService {
 export interface BookingState {
   planKey: string | null;
   planPrice: number;
-  startDate: Date | null;
-  endDate: Date | null;
+  startDate: Date | undefined;
+  endDate: Date | undefined;
   acceptedTerms: boolean;
   selectedServices: string[];
 }
