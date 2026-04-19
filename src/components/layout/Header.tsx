@@ -78,10 +78,10 @@ export function Header() {
 
                     <nav className="flex flex-col gap-6 text-lg font-medium text-center">
                       <a href="/" className="text-navy font-semibold transition-colors">{t("Dashboard.home")}</a>
-                      <a href="#" className="text-navy font-semibold transition-colors">{t("Dashboard.chalets")}</a>
-                      <a href="#" className="text-navy font-semibold transition-colors">{t("Dashboard.pricingPlan")}</a>
-                      <a href="#" className="text-navy font-semibold transition-colors">{t("Dashboard.ownerServices")}</a>
-                      <a href="#" className="text-navy font-semibold transition-colors">{t("Dashboard.contactUs")}</a>
+                      <a href="/properties" className="text-navy font-semibold transition-colors">{t("Dashboard.chalets")}</a>
+                      <a href="/pricing" className="text-navy font-semibold transition-colors">{t("Dashboard.pricingPlan")}</a>
+                      <a href="/owner-services" className="text-navy font-semibold transition-colors">{t("Dashboard.ownerServices")}</a>
+                      <a href="/contact" className="text-navy font-semibold transition-colors">{t("Dashboard.contactUs")}</a>
                     </nav>
 
                     <div className="pt-8 border-t">

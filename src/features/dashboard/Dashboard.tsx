@@ -5,7 +5,7 @@ import eliteHomepageBg from '@/assets/elite-homepage-bg.png';
 import { ArrowLeftIcon, ArrowRightIcon, Search } from 'lucide-react';
 import i18next from 'i18next';
 import { PageTitle } from '@/components/shared/PageTitle';
-import ServiceCard, { Service } from "./components/service-card";
+import ServiceCard, { ServiceCardSkeleton } from "./components/service-card";
 import PlanCard, { Plan } from './components/plan-card';
 
 import carouselLast from '@/assets/carousel-last.png';
@@ -17,10 +17,6 @@ import goldPlanIcon from '@/assets/gold-plan-icon.png';
 import platinumPlanIcon from '@/assets/platinum-plan-icon.png';
 import diamondPlanIcon from '@/assets/diamond-plan-icon.png';
 import newsletterVector from '@/assets/newsletter-vector.png';
-import poolIcon from '@/assets/pool-icon.png'
-import acIcon from '@/assets/ac-icon.png'
-import laundryIcon from '@/assets/laundry-icon.png'
-import gardenIcon from '@/assets/garden-icon.png'
 import { useProperties } from '../properties/api/hooks/useProperties';
 import { PropertyCardSkeleton } from '../properties/components/property-card-skeleton';
 import { OptimizedImage } from '@/components/shared/OptimizedImage';
@@ -28,6 +24,7 @@ import { useState } from 'react';
 import Counter from '@/components/shared/Counter';
 import { DatePicker } from '@/components/shared/DatePicker';
 import { useNavigate } from 'react-router-dom';
+import { useOwnerServices } from './owner-services/api/hooks/useOwnerServices';
 
 const mockPlans: Plan[] = [
   {
@@ -96,42 +93,12 @@ const mockPlans: Plan[] = [
   },
 ];
 
-const mockServices: Service[] = [
-  {
-    key: "ac",
-    title: "Air Conditioning",
-    description: "Stay cool and comfortable with fast, reliable AC repair and maintenance tailored for your chalet.",
-    icon: acIcon,
-    onBook: () => console.log("Book AC"),
-  },
-  {
-    key: "pool",
-    title: "Swimming Pool",
-    description: "Crystal-clear water, always ready—professional pool care to keep your space fresh and inviting.",
-    icon: poolIcon,
-    onBook: () => console.log("Book Pool"),
-  },
-  {
-    key: "laundry",
-    title: "Laundry",
-    description: "Impeccable cleaning and perfectly pressed linens—because every detail matters for a flawless stay.",
-    icon: laundryIcon,
-    onBook: () => console.log("Book Laundry"),
-  },
-  {
-    key: "garden",
-    title: "Garden",
-    description: "Lush and well-kept outdoor spaces—professional garden care to keep your chalet looking its best.",
-    icon: gardenIcon,
-    onBook: () => console.log("Book Garden"),
-  },
-];
-
 export default function Dashboard() {
   const { t } = useTranslation();
   const isArabic = i18next.language === 'ar';
 
   const { properties, isLoading } = useProperties()
+  const {services, isLoading: servicesLoading} = useOwnerServices(1, undefined)
   const navigate = useNavigate()
 
   const [destination, setDestination] = useState("")
@@ -152,6 +119,8 @@ export default function Dashboard() {
     }
     navigate('/properties', {state: {params: searchData}})
   }
+
+  
 
 
   return (
@@ -374,11 +343,17 @@ export default function Dashboard() {
           </p>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-          {mockServices.map((service) => (
-            <ServiceCard key={service.key} service={service} />
-          ))}
-        </div>
+        <section className="flex-1 min-w-0" dir={isArabic ? 'rtl' : 'ltr'}>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            {servicesLoading ? (
+              Array.from({ length: 4 }).map((_, i) => <ServiceCardSkeleton key={i} />)
+            ) : (
+              services.map((service) => (
+                <ServiceCard key={service._id} service={service} />
+              ))
+            )}
+          </div>
+        </section>
       </div>
     </div >
     </>

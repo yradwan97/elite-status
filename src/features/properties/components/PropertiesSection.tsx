@@ -12,9 +12,6 @@ import Counter from '@/components/shared/Counter';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { cn } from '@/lib/utils';
 
-// ── Counter control ───────────────────────────────────────────────────────────
-
-
 // ── Skeleton card ─────────────────────────────────────────────────────────────
 function SkeletonCard() {
     return (
@@ -92,7 +89,7 @@ export default function PropertiesSection() {
 
     useEffect(function readSearchParamsFromRoutingEvent() {
         if (passedSearch && (passedSearch.destination || passedSearch.noOfGuests || passedSearch.date)) {
-            
+
             // eslint-disable-next-line react-hooks/set-state-in-effect
             setDraft(prev => ({
                 ...prev,
@@ -101,7 +98,7 @@ export default function PropertiesSection() {
                 // date: passedSearch.date || prev.date,
             }));
 
-            handleApply();        // ← your apply function
+            handleApply();
         }
     }, []);
 

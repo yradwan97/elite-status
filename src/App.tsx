@@ -11,6 +11,7 @@ import PropertiesSection from './features/properties/components/PropertiesSectio
 import PropertyDetails from './features/properties/components/PropertyDetails';
 import ReservationPage from './features/properties/reservation/ReservationPage';
 import AccountPage from './features/profile/AccountPage';
+import OwnerServices from './features/dashboard/owner-services/OwnerServices';
 
 function App() {
 
@@ -36,6 +37,7 @@ function App() {
           <Route path="/properties/:id" element={<PropertyDetails />} />
           <Route path="/properties/:id/reservation" element={<ReservationPage />} />
           <Route path="/account" element={<AccountPage />} />
+          <Route path="/owner-services" element={<OwnerServices />} />
           <Route path="/settings" element={<div>Settings Page</div>} />
           <Route path="*" element={<Navigate to="/" />} />
         </Routes>

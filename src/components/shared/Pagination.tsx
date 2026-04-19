@@ -9,7 +9,7 @@ export default function Pagination({
     total: number;
     onPageChange: (p: number) => void;
 }) {
-    if (total <= 1) return null;
+    // if (total <= 1) return null;
 
     const pages: (number | '…')[] = [];
 

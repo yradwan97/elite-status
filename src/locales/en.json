@@ -13,6 +13,12 @@
     "profile": "Profile",
     "logout": "Logout"
   },
+  "OwnerServices": {
+    "heading": "Get All Service In One Place!",
+    "searchPlaceholder": "Search services...",
+    "noResults": "No services found",
+    "bookNow": "Book Now"
+  },
   "Dashboard": {
     "pageTitle": "Elite Status - Find Your Dream Chalet",
     "escapeTheNoise": "Escape the Noise, Find Your Chalet.",
@@ -56,7 +62,8 @@
     "Services": {
       "growTitle": "Grow Your Rental Income",
       "growSubtitle": "Keep your chalet in perfect condition with our trusted repair and maintenance solutions",
-      "bookNow": "Book Now"
+      "bookNow": "Book Now",
+      "whatsappMessage": "Hi, I'm interested in booking the {{title}} service. Please provide me with more details and availability. Thank you!"
     }
   },
   "Auth": {
