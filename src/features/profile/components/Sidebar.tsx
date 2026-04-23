@@ -1,3 +1,4 @@
+import i18next from 'i18next';
 import { User, Calendar, CreditCard, Heart, LogOut, Trash2 } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 
@@ -12,6 +13,7 @@ interface SidebarProps {
 
 export default function Sidebar({ activeTab, onTabChange, isMobile = false, onClose }: SidebarProps) {
   const { t } = useTranslation();
+  const isArabic = i18next.language === 'ar';
 
   const tabsConfig = [
     { id: 'profile' as TabId, icon: User, key: "Account.Sidebar.MyProfile" },
@@ -35,7 +37,7 @@ export default function Sidebar({ activeTab, onTabChange, isMobile = false, onCl
                   onTabChange(tab.id);
                   if (isMobile && onClose) onClose();
                 }}
-                className={`w-full flex items-center gap-3 px-5 py-3.5 rounded-2xl text-left transition-all ${isActive ? 'bg-navy text-white' : 'hover:bg-gray-100 text-gray-700'
+                className={`w-full flex ${isArabic ? 'flex-row-reverse' : 'flex-row'} items-center gap-3 px-5 py-3.5 rounded-2xl text-left transition-all ${isActive ? 'bg-navy text-white' : 'hover:bg-gray-100 text-gray-700'
                   }`}
               >
                 <Icon className="w-5 h-5" />

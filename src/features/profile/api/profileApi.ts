@@ -13,6 +13,11 @@ export type ProfileUpdateData = {
     image?: File | string | null;
 };
 
+export type ChangePasswordData = {
+    currentPassword: string;
+    newPassword: string;
+};
+
 export const profileApi = {
     updateProfile: async (data: ProfileUpdateData) => {
         let IDFrontUrl: string | undefined;
@@ -79,6 +84,15 @@ export const profileApi = {
 
         const response = await api.put("/users", payload);
 
+        return response.data;
+    },
+
+    changePassword: async (data: ChangePasswordData) => {
+        const response = await api.post("/auth/change-password", {
+            currentPassword: data.currentPassword,
+            newPassword: data.newPassword,
+        });
+ 
         return response.data;
     },
 };

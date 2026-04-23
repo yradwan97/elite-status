@@ -6,6 +6,7 @@ import { PropertyCard } from '@/features/properties/components/property-card';
 import noFavourites from '@/assets/no-favourites.png';
 import { OptimizedImage } from '@/components/shared/OptimizedImage';
 import Pagination from '@/components/shared/Pagination';
+import i18next from '@/i18n';
 
 function SkeletonCard() {
   return (
@@ -28,34 +29,35 @@ export default function AccountFavourites() {
 
   const [currentPage, setCurrentPage] = React.useState(1);
   const { properties, pages, isLoading } = useFavouriteProperties(currentPage);
-
-  console.log(pages)
+  const isArabic = i18next.language === 'ar';
 
   return (
     <div className="max-w-5xl mx-auto p-6 lg:p-8">
-      <h1 className="text-2xl font-semibold mb-8">{t("Account.Favourites.Title")}</h1>
-      <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6">
-        {isLoading
-          ? Array.from({ length: 9 }).map((_, i) => <SkeletonCard key={i} />)
-          : properties?.length > 0
-            ? properties.map(property => (
-              <PropertyCard
-                key={property._id}
-                isFromFavourites
-                property={property.item}
-              />
-            ))
-            : (
-              <div className="col-span-3 text-center py-20 text-gray-400">
-                <OptimizedImage src={noFavourites} alt="No favourites" className="mx-auto my-6 w-64 h-64 opacity-70 object-contain" />
-                <p className="text-lg font-medium">{t('Account.Favourites.NoFavourites')}</p>
-              </div>
-            )
-        }
-      </div>
+      <h1 className={`text-2xl ${isArabic ? 'text-right' : 'text-left'} font-semibold mb-8`}>{t("Account.Favourites.Title")}</h1>
+      <section className="flex-1 min-w-0" dir={isArabic ? 'rtl' : 'ltr'}>
+        <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6">
+          {isLoading
+            ? Array.from({ length: 9 }).map((_, i) => <SkeletonCard key={i} />)
+            : properties?.length > 0
+              ? properties.map(property => (
+                <PropertyCard
+                  key={property._id}
+                  isFromFavourites
+                  property={property.item}
+                />
+              ))
+              : (
+                <div className="col-span-3 text-center py-20 text-gray-400">
+                  <OptimizedImage src={noFavourites} alt="No favourites" className="mx-auto my-6 w-64 h-64 opacity-70 object-contain" />
+                  <p className="text-lg font-medium">{t('Account.Favourites.NoFavourites')}</p>
+                </div>
+              )
+          }
+        </div>
+      </section>
         <Pagination
           current={currentPage}
-          total={2}
+          total={pages || 1}
           onPageChange={setCurrentPage}
         />
       

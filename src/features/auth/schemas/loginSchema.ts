@@ -12,5 +12,5 @@ export const getLoginSchema = (t: TFunction<"translation", undefined>) =>
     password: z
       .string()
       .min(1, t("Auth.validation.required"))
-      .min(6, t("Auth.validation.passwordMin")),
+      .min(8, t("Auth.validation.passwordMin")),
   });

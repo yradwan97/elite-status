@@ -96,7 +96,7 @@
     "validation": {
       "required": "هذا الحقل مطلوب",
       "emailInvalid": "بريد إلكتروني غير صالح",
-      "passwordMin": "يجب أن تكون كلمة المرور 6 أحرف على الأقل",
+      "passwordMin": "يجب أن تكون كلمة المرور 8 أحرف على الأقل",
       "passwordMatch": "كلمات المرور غير متطابقة",
       "phoneInvalid": "رقم الهاتف غير صالح",
       "acceptTerms": "يجب الموافقة على الشروط",
@@ -299,6 +299,13 @@
       "LastName": "اسم العائلة",
       "Email": "البريد الإلكتروني",
       "MobileNumber": "رقم الجوال",
+      "ChangePassword": "تغيير كلمة المرور",
+      "CurrentPassword": "كلمة المرور الحالية",
+      "NewPassword": "كلمة المرور الجديدة",
+      "ConfirmNewPassword": "تأكيد كلمة المرور الجديدة",
+      "Saving": "جارٍ الحفظ…",
+      "UpdateSuccess": "تم تحديث الملف الشخصي بنجاح!",
+      "ChangePasswordSuccess": "تم تغيير كلمة المرور بنجاح!",
       "Gender": {
         "male": "ذكر",
         "female": "أنثى",
@@ -318,10 +325,12 @@
       "Action": "الإجراء",
       "TitleColumn": "العنوان",
       "Discount": "الخصم",
-      "InvoiceLink": "رابط الفاتورة"
+      "InvoiceLink": "رابط الفاتورة",
+      "SubscribedOn": "مشترك في: {{date}}",
+      "ExpiresOn": "تنتهي في: {{date}}"
     },
     "Favourites": {
-      "Title": "المفضلة",
+      "Title": "الوحدات المفضلة",
       "ViewDetails": "عرض التفاصيل",
       "NoFavourites": "لا توجد مفضلات مضافة"
     }

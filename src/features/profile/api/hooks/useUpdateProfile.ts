@@ -3,9 +3,11 @@ import { profileApi, ProfileUpdateData } from '../profileApi'; // adjust path as
 import { toast } from 'sonner';
 import { setCredentials } from '@/store/slices/authSlice';
 import { useDispatch } from 'react-redux';
+import { useTranslation } from 'react-i18next';
 
 export const useUpdateProfile = () => {
     const dispatch = useDispatch();
+    const {t} = useTranslation();
 
     return useMutation({
         mutationFn: (data: ProfileUpdateData) => profileApi.updateProfile(data),
@@ -14,7 +16,7 @@ export const useUpdateProfile = () => {
             dispatch(setCredentials({
                 user: data.data,
             }));
-            toast.success('Profile updated successfully!');
+            toast.success(t('Account.Profile.UpdateSuccess'));
         },
 
         onError: (error: unknown) => {

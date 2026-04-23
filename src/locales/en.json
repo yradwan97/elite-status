@@ -96,7 +96,7 @@
     "validation": {
       "required": "This field is required",
       "emailInvalid": "Invalid email address",
-      "passwordMin": "Password must be at least 6 characters",
+      "passwordMin": "Password must be at least 8 characters",
       "passwordMatch": "Passwords do not match",
       "phoneInvalid": "Invalid phone number",
       "acceptTerms": "You must accept terms",
@@ -208,7 +208,7 @@
         "copyLink": "Copy Link",
         "copied": "Link Copied!"
       },
-      "Favorite":{
+      "Favorite": {
         "success": "Added to favorites!",
         "removeSuccess": "Removed from favorites!",
         "error": "Failed to update favorites. Please try again."
@@ -293,9 +293,6 @@
     "Profile": {
       "Title": "My Profile",
       "Subtitle": "Manage your personal information",
-      "Edit": "Edit Profile",
-      "SaveChanges": "Save Changes",
-      "Cancel": "Cancel",
       "FirstName": "First Name",
       "LastName": "Last Name",
       "Email": "Email",
@@ -303,6 +300,16 @@
       "Nationality": "Nationality",
       "IdFront": "ID (front)",
       "IdBack": "ID (back)",
+      "ChangePassword": "Change Password",
+      "CurrentPassword": "Current Password",
+      "NewPassword": "New Password",
+      "ConfirmNewPassword": "Confirm New Password",
+      "Saving": "Saving…",
+      "SaveChanges": "Save Changes",
+      "Cancel": "Cancel",
+      "Edit": "Edit",
+      "UpdateSuccess": "Profile updated successfully!",
+      "ChangePasswordSuccess": "Password changed successfully!",
       "Gender": {
         "male": "Male",
         "female": "Female",
@@ -319,7 +326,9 @@
       "Action": "Action",
       "TitleColumn": "Title",
       "Discount": "Discount",
-      "InvoiceLink": "Invoice Link"
+      "InvoiceLink": "Invoice Link",
+      "SubscribedOn": "Subscribed on: {{date}}",
+      "ExpiresOn": "Expires on: {{date}}"
     },
     "Favourites": {
       "Title": "My Favorites",

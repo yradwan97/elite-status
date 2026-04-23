@@ -22,7 +22,7 @@ export default function PlanCard({ plan }: { plan: Plan }) {
 
       {/* Badge */}
       {plan.badge ? (
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 z-10">
+        <div className="absolute top-3 left-1/2 -translate-x-1/2 z-10">
           <span className={cn("text-xs font-medium px-4 py-1.5 rounded-full whitespace-nowrap", plan.badge.className)}>
             {plan.badge.label}
           </span>
