@@ -43,7 +43,6 @@ api.interceptors.request.use(
       config.headers.Authorization = `Bearer ${token}`
     }
     if (language) {
-      console.log(language)
       config.headers['Accept-Language'] = language
     }
     return config

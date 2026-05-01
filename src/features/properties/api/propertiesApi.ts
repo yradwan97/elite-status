@@ -34,6 +34,7 @@ export interface Property {
     updatedAt: string;
     rate?: number;
     isFavourite?: boolean;
+    insurance: number
 }
 
 export interface PropertiesFilters {

@@ -1,5 +1,5 @@
 // src/pages/reservation/ReservationPage.tsx
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import i18next from "i18next";
@@ -16,6 +16,17 @@ import { ConfirmationStep } from "./components/ConfirmationStep";
 
 import type { Step, BookingState, PricingPlan } from "./types/types";
 import { Button } from "@/components/ui/button";
+import useReservationMutation from "./api/hooks/useReservationMutation";
+import { CreateReservationPayload } from "./api/reservationApi";
+import { usePaymentMethods } from "./api/hooks/usePaymentMethods";
+
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { toast } from "sonner";
 
 const STEPS: Step[] = ["pricing", "calendar", "services", "confirmation"];
 
@@ -27,6 +38,11 @@ export default function ReservationPage() {
 
   const { property, isLoading, error } = useProperty(id);
 
+  const [paymentModalOpen, setPaymentModalOpen] = useState(false);
+
+  const { paymentMethods, isLoading: isPaymentMethodsLoading } =
+    usePaymentMethods();
+
   const [currentStep, setCurrentStep] = useState<Step>("pricing");
   const [booking, setBooking] = useState<BookingState>({
     planKey: null,
@@ -34,8 +50,16 @@ export default function ReservationPage() {
     startDate: undefined,
     endDate: undefined,
     acceptedTerms: false,
-    selectedServices: [],
+    services: [],
+    paymentMethod: "1",
+    paymentOption: "50",
   });
+
+  useEffect(() => {
+    console.log(booking)
+  }, [booking])
+
+  const createReservation = useReservationMutation()
 
   const goNext = useCallback(() => {
     const idx = STEPS.indexOf(currentStep);
@@ -72,36 +96,126 @@ export default function ReservationPage() {
 
   const plans: PricingPlan[] = [
     {
-      key: "weekdays",
+      key: "WEEK_DAYS" as const,
       labelKey: "Properties.Reservation.plan.weekdays",
       subtitleKey: "Properties.Reservation.plan.weekdaysSub",
       price: property.weekdaysPrice ?? 0,
     },
     {
-      key: "weekends",
+      key: "WEEK_END" as const,
       labelKey: "Properties.Reservation.plan.weekend",
       subtitleKey: "Properties.Reservation.plan.weekendSub",
       price: property.weekendPrice ?? 0,
     },
     {
-      key: "wholeWeek",
+      key: "WHOLE_WEEK" as const,
       labelKey: "Properties.Reservation.plan.wholeWeek",
       subtitleKey: "Properties.Reservation.plan.wholeWeekSub",
       price: property.wholeWeekPrice ?? 0,
     },
     {
-      key: "dailyStay",
+      key: "DAILY" as const,
       labelKey: "Properties.Reservation.plan.dailyStay",
       subtitleKey: "Properties.Reservation.plan.dailyStaySub",
       price: property.dailyPrice ?? 0,
     },
     {
-      key: "dayUse",
+      key: "DAY_USE" as const,
       labelKey: "Properties.Reservation.plan.dayUse",
       subtitleKey: "Properties.Reservation.plan.dayUseSub",
       price: property.dayUsePrice ?? 0,
     },
   ].filter((p) => p.price > 0);
+
+  const onPay = () => {
+    setPaymentModalOpen(true);
+  };
+
+  const submitReservation = async (
+    paymentMethodId: "1" | "2"
+  ) => {
+    if (!booking.startDate || !booking.planKey) {
+      return;
+    }
+
+    const payload: CreateReservationPayload = {
+      startDate:
+        booking.startDate.toLocaleDateString(),
+
+      reservationType: booking.planKey,
+
+      paymentMethod: paymentMethodId,
+
+      deposit:
+        booking.paymentOption === "50",
+
+      services: booking.services.map(
+        (service) => service._id
+      ),
+
+      property: id,
+    };
+
+    try {
+      const html =
+        await createReservation.mutateAsync(
+          payload
+        );
+
+      const paymentWindow = window.open(
+        "",
+        "_blank",
+        "width=900,height=900"
+      );
+
+      if (!paymentWindow) {
+        toast.error(
+          t("General.popupBlocked")
+        );
+
+        return;
+      }
+
+      const blob = new Blob([html], {
+        type: "text/html",
+      });
+
+      const blobUrl =
+        URL.createObjectURL(blob);
+
+      paymentWindow.location.href = blobUrl;
+
+      let cleanedUp = false;
+
+      const cleanup = () => {
+        if (cleanedUp) return;
+
+        cleanedUp = true;
+
+        clearInterval(popupWatcher);
+
+        URL.revokeObjectURL(blobUrl);
+      };
+
+      paymentWindow.addEventListener(
+        "load",
+        cleanup
+      );
+
+      const popupWatcher = setInterval(() => {
+        if (paymentWindow.closed) {
+          cleanup();
+
+          navigate(
+            "/account",
+            {state: {page: "booking"}}
+          );
+        }
+      }, 500);
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
   return (
     <>
@@ -163,20 +277,20 @@ export default function ReservationPage() {
               onTermsChange={(v) => setBooking((b) => ({ ...b, acceptedTerms: v }))}
               onNext={goNext}
               onBack={goBack}
-            // isRTL={isRTL}
+              propertyId={id}
             />
           )}
 
           {currentStep === "services" && (
             <ServicesStep
-              services={[]}
-              selectedServices={booking.selectedServices}
-              onToggleService={(sid) =>
+
+              selectedServices={booking.services}
+              onToggleService={(service) =>
                 setBooking((b) => ({
                   ...b,
-                  selectedServices: b.selectedServices.includes(sid)
-                    ? b.selectedServices.filter((x) => x !== sid)
-                    : [...b.selectedServices, sid],
+                  services: b.services.some(S => S._id === service._id)
+                    ? b.services.filter((x) => x._id !== service._id)
+                    : [...b.services, service],
                 }))
               }
               onNext={goNext}
@@ -190,14 +304,61 @@ export default function ReservationPage() {
               property={property}
               booking={booking}
               plans={plans}
-              services={[]}
+              services={booking.services}
               onBack={goBack}
-              onPay={() => console.log("Pay pressed", booking)}
+              onPay={onPay}
               isRTL={isRTL}
+              onPaymentOptionChange={(value) =>
+                setBooking((b) => ({
+                  ...b,
+                  paymentOption: value,
+                }))
+              }
             />
           )}
         </div>
       </div>
+
+      <Dialog open={paymentModalOpen} onOpenChange={setPaymentModalOpen}>
+        <DialogContent className="sm:max-w-md rounded-2xl">
+          <DialogHeader>
+            <DialogTitle>
+              {t("Properties.Reservation.confirmation.selectPaymentMethod")}
+            </DialogTitle>
+          </DialogHeader>
+
+          <div className="space-y-3 mt-4">
+            {isPaymentMethodsLoading ? (
+              <div className="flex items-center justify-center py-8">
+                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-navy" />
+              </div>
+            ) : (
+              paymentMethods?.map((method) => (
+                <button
+                  key={method.value}
+                  onClick={() => {
+                    setBooking((b) => ({
+                      ...b,
+                      paymentMethod: method.value,
+                    }));
+
+                    setPaymentModalOpen(false);
+
+                    submitReservation(method.value);
+                  }}
+                  className="w-full border border-gray-200 hover:border-navy hover:bg-gray-50 transition-all rounded-xl p-4 flex items-center justify-between"
+                >
+                  <div className={cn("text-left", isRTL && "text-right")}>
+                    <p className="font-semibold text-navy">
+                      {method.name}
+                    </p>
+                  </div>
+                </button>
+              ))
+            )}
+          </div>
+        </DialogContent>
+      </Dialog>
     </>
   );
 }

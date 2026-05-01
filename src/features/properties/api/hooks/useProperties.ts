@@ -23,14 +23,14 @@ interface UsePropertiesReturn {
 }
 
 const DEFAULT_FILTERS: PropertiesFilters = {
-    guests:     0,
-    bedrooms:   0,
-    bathrooms:  0,
-    lounges:    0,
+    guests: 0,
+    bedrooms: 0,
+    bathrooms: 0,
+    lounges: 0,
     facilities: [],
-    search:     '',
-    page:       1,
-    limit:      12,
+    search: '',
+    page: 1,
+    limit: 12,
 };
 
 export function useProperties(): UsePropertiesReturn {
@@ -39,17 +39,17 @@ export function useProperties(): UsePropertiesReturn {
     // Strip zero/empty values before sending to the API
     const cleanFilters: PropertiesFilters = {
         ...filters,
-        guests:     filters.guests     || undefined,
-        bedrooms:   filters.bedrooms   || undefined,
-        bathrooms:  filters.bathrooms  || undefined,
-        lounges:    filters.lounges    || undefined,
-        search:     filters.search     || undefined,
+        guests: filters.guests || undefined,
+        bedrooms: filters.bedrooms || undefined,
+        bathrooms: filters.bathrooms || undefined,
+        lounges: filters.lounges || undefined,
+        search: filters.search || undefined,
         facilities: filters.facilities?.length ? filters.facilities : undefined,
     };
 
     const { data, isFetching, isError, refetch: queryRefetch } = useQuery({
         queryKey: ['properties', cleanFilters],
-        queryFn:  () => propertiesApi.getProperties(cleanFilters),
+        queryFn: () => propertiesApi.getProperties(cleanFilters),
         placeholderData: (prev) => prev, // keeps previous data visible while fetching next page
     });
 
@@ -71,11 +71,11 @@ export function useProperties(): UsePropertiesReturn {
     }, []);
 
     return {
-        properties:  data?.data?.data        ?? [],
-        totalPages:  data?.pages  ?? 1,
-        currentPage: filters.page      ?? 1,
-        isLoading:   isFetching,
-        error:       isError ? 'Failed to load properties. Please try again.' : null,
+        properties: data?.data?.data ?? [],
+        totalPages: data?.pages ?? 1,
+        currentPage: filters.page ?? 1,
+        isLoading: isFetching,
+        error: isError ? 'Failed to load properties. Please try again.' : null,
         filters,
         setFilters,
         resetFilters,

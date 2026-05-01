@@ -21,7 +21,7 @@ export function PricingStep({
   const { t } = useTranslation();
 
   return (
-    <div className="w-full max-w-2xl mx-auto" dir={isRTL ? "rtl" : "ltr"}>
+    <div className="w-full max-w-2xl mx-auto">
       <h2 className="text-lg font-bold text-navy text-center mb-6">
         {t("Properties.Reservation.pricing.title")}
       </h2>
@@ -38,7 +38,7 @@ export function PricingStep({
                 : "border-gray-200 bg-white hover:border-gray-300 hover:bg-gray-50"
             )}
           >
-            <div>
+            <div className={cn("flex flex-col", isRTL && "items-start")}>
               <p className={cn("font-semibold text-navy", isRTL && "text-right")}>
                 {t(plan.labelKey)}
               </p>
@@ -48,9 +48,9 @@ export function PricingStep({
               </span>
             </div>
 
-            <div className="flex flex-col items-center gap-3 shrink-0">
+            <div className="flex flex-col items-end gap-3 shrink-0">
               <span className="text-navy font-bold text-base">{plan.price} KWD</span>
-              <Switch className="shrink-0" checked={selectedPlanKey === plan.key} onCheckedChange={() => onPlanSelect(plan.key, plan.price)} />
+              <Switch dir="ltr" className="shrink-0" checked={selectedPlanKey === plan.key} onCheckedChange={() => onPlanSelect(plan.key, plan.price)} />
             </div>
           </div>
         ))}

@@ -1,6 +1,7 @@
 {
   "General": {
-    "clear": "Clear"
+    "clear": "Clear",
+    "pleaseLogin": "Please login first"
   },
   "Footer": {
     "socialMediaLinks": "Social Media Links",
@@ -226,6 +227,8 @@
         "cancellationPolicy": "Cancellation Policy",
         "terms": "Terms & Conditions",
         "and": "and",
+        "reservedInWeekly": "Selected week has reserved days, change plan or choose another week",
+        "reservedDaysInRange": "Selected range has reserved days, change plan or choose another start date",
         "days": {
           "mo": "Mo",
           "tu": "Tu",
@@ -254,7 +257,10 @@
         "net": "Net Amount",
         "deposit": "50% (Deposit)",
         "totalPayment": "100% (Total)",
-        "pay": "Pay & Reservation"
+        "pay": "Pay & Reservation",
+        "success": "Reservation created successfully",
+        "failure": "Failed to create reservation: {{error}}",
+        "selectPaymentMethod": "Select your preferred payment method"
       },
       "plan": {
         "weekdays": "Weekdays",

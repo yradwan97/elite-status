@@ -1,9 +1,10 @@
 export interface PricingPlan {
-  key: string;
+  key: 'WEEK_DAYS' | 'DAILY' | 'DAY_USE' | 'WEEK_END' | 'WHOLE_WEEK';
   labelKey: string;
   subtitleKey: string;
   price: number;
 }
+
 
 export interface ExtraService {
   _id: string;
@@ -15,10 +16,12 @@ export interface ExtraService {
 export interface BookingState {
   planKey: string | null;
   planPrice: number;
-  startDate: Date | undefined;
-  endDate: Date | undefined;
+  startDate?: Date;
+  endDate?: Date;
   acceptedTerms: boolean;
-  selectedServices: string[];
+  services: ExtraService[];
+  paymentMethod: string;
+  paymentOption: "50" | "100";
 }
 
 export type Step = "pricing" | "calendar" | "services" | "confirmation";

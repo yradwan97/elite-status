@@ -7,15 +7,31 @@ import AccountPricePlan from './components/MyPricePlan';
 import AccountFavourites from './components/MyFavorites';
 import { useSelector } from 'react-redux';
 import { RootState } from '@/store';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { PageTitle } from '@/components/shared/PageTitle';
 
 export default function AccountPage() {
   const [activeTab, setActiveTab] = useState<'profile' | 'booking' | 'price-plan' | 'favourite'>('profile');
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
-  const user = useSelector((state: RootState) => state.auth.user);
+  const location = useLocation()
   const navigate = useNavigate();
+  const passedPage = location.state?.page as 'profile' | 'booking' | 'price-plan' | 'favourite' | undefined
+
+  useEffect(() => {
+    if (passedPage) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
+      setActiveTab(passedPage)
+    }
+  }, [setActiveTab, passedPage])
+
+    useEffect(() => {
+        if (location.state) {
+            navigate('.', { replace: true, state: null });
+        }
+    }, [navigate, location.state]);
+
+  const user = useSelector((state: RootState) => state.auth.user);
 
   const { currentLanguage } = useSelector((state: RootState) => state.language);
 

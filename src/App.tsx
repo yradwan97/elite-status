@@ -3,7 +3,7 @@ import { Header } from '@/components/layout/Header';
 import { Footer } from '@/components/layout/Footer';
 import "./i18n";
 import Dashboard from './features/dashboard/Dashboard';
-import { clearCredentials, selectAccessToken } from './store/slices/authSlice';
+import { clearCredentials, selectAccessToken, selectUser } from './store/slices/authSlice';
 import { isTokenValid } from './lib/tokenHelper';
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
@@ -12,17 +12,19 @@ import PropertyDetails from './features/properties/components/PropertyDetails';
 import ReservationPage from './features/properties/reservation/ReservationPage';
 import AccountPage from './features/profile/AccountPage';
 import OwnerServices from './features/dashboard/owner-services/OwnerServices';
+import { ProtectedRoute } from './components/auth/ProtectedRoute';
 
 function App() {
 
   const accessToken = useSelector(selectAccessToken);
+  const user = useSelector(selectUser)
   const dispatch = useDispatch();
 
   useEffect(() => {
-    if (!isTokenValid(accessToken)) {
+    if (!user || !accessToken || (accessToken && !isTokenValid(accessToken))) {
       dispatch(clearCredentials());
     }
-  }, [accessToken, dispatch]);
+  }, [accessToken, dispatch, user]);
 
   return (
     <div className="min-h-screen bg-background flex flex-col">
@@ -35,10 +37,23 @@ function App() {
           <Route path="/" element={<Dashboard />} />
           <Route path="/properties" element={<PropertiesSection />} />
           <Route path="/properties/:id" element={<PropertyDetails />} />
-          <Route path="/properties/:id/reservation" element={<ReservationPage />} />
-          <Route path="/account" element={<AccountPage />} />
+          <Route
+            path="/properties/:id/reservation"
+            element={
+              <ProtectedRoute>
+                <ReservationPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/account"
+            element={
+              <ProtectedRoute>
+                <AccountPage />
+              </ProtectedRoute>
+            }
+          />
           <Route path="/owner-services" element={<OwnerServices />} />
-          <Route path="/settings" element={<div>Settings Page</div>} />
           <Route path="*" element={<Navigate to="/" />} />
         </Routes>
       </main>

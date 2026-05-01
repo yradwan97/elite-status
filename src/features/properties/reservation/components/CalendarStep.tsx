@@ -2,11 +2,12 @@
 import { useState, useMemo } from "react";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
-import { Check, ArrowLeft } from "lucide-react";
+import { Check, ArrowLeft, AlertCircle } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useTranslation } from "react-i18next";
-import type { DateRange } from "react-day-picker";
 import { PricingPlan } from "../types/types";
+import { useReservedDates } from "../api/hooks/useReservedDates";
+import i18next from "i18next";
 
 interface CalendarStepProps {
   selectedPlan: PricingPlan | null;
@@ -17,7 +18,36 @@ interface CalendarStepProps {
   onTermsChange: (accepted: boolean) => void;
   onNext: () => void;
   onBack: () => void;
+  propertyId: string;
 }
+
+// ─── helpers ────────────────────────────────────────────────────────────────
+
+/** Normalise a date to midnight local time so comparisons are day-accurate. */
+function toMidnight(d: Date): Date {
+  const copy = new Date(d);
+  copy.setHours(0, 0, 0, 0);
+  return copy;
+}
+
+/** Add `days` calendar days to `date`. */
+function addDays(date: Date, days: number): Date {
+  const d = new Date(date);
+  d.setDate(d.getDate() + days);
+  return d;
+}
+
+/** True if any day in [from, to] is reserved. */
+function rangeHasReserved(from: Date, to: Date, reservedSet: Set<string>): boolean {
+  const cur = new Date(from);
+  while (cur <= to) {
+    if (reservedSet.has(cur.toDateString())) return true;
+    cur.setDate(cur.getDate() + 1);
+  }
+  return false;
+}
+
+// ─── component ───────────────────────────────────────────────────────────────
 
 export function CalendarStep({
   selectedPlan,
@@ -28,148 +58,200 @@ export function CalendarStep({
   onTermsChange,
   onNext,
   onBack,
+  propertyId,
 }: CalendarStepProps) {
   const { t } = useTranslation();
 
-  const isDayUse = selectedPlan?.key === "dayUse";
+  const { reservedDates } = useReservedDates(propertyId);
+  const isRTL = i18next.language === "ar"
 
-  // =========================
-  // BASE DATE
-  // =========================
-  const today = useMemo(() => {
-    const d = new Date();
-    d.setHours(0, 0, 0, 0);
-    return d;
-  }, []);
+  // Pre-compute a Set<string> of reserved date strings for O(1) lookup
+  const reservedSet = useMemo<Set<string>>(() => {
+    const s = new Set<string>();
+    type ReservationEntry = { startDate: string; endDate: string };
+    (reservedDates ?? []).forEach((reservation: ReservationEntry) => {
+      const start = toMidnight(new Date(reservation.startDate));
+      const end = toMidnight(new Date(reservation.endDate));
+      if (isNaN(start.getTime()) || isNaN(end.getTime())) return;
+      const cur = new Date(start);
+      while (cur <= end) {
+        s.add(cur.toDateString());
+        cur.setDate(cur.getDate() + 1);
+      }
+    });
+    return s;
+  }, [reservedDates]);
 
-  // =========================
-  // STATE
-  // =========================
+  const today = useMemo(() => toMidnight(new Date()), []);
+
+  const planKey = selectedPlan?.key ?? "";
+
+  // Derive mode from plan
+  const isSingleMode = planKey === "DAY_USE" || planKey === "DAILY";
+
+  // ─── local state ────────────────────────────────────────────────────────
+
   const [selectedDate, setSelectedDate] = useState<Date | undefined>(
-    isDayUse ? startDate : undefined
+    isSingleMode ? startDate : undefined
   );
 
-  const [range, setRange] = useState<DateRange | undefined>(
-    !isDayUse && startDate
-      ? { from: startDate, to: endDate }
-      : undefined
+  const [rangeStart, setRangeStart] = useState<Date | undefined>(
+    !isSingleMode ? startDate : undefined
+  );
+  const [rangeEnd, setRangeEnd] = useState<Date | undefined>(
+    !isSingleMode ? endDate : undefined
   );
 
-  // =========================
-  // CLEAR HANDLER
-  // =========================
+  const [reservedError, setReservedError] = useState<string | undefined>();
+
+  // ─── derived: which days are "reserved" (for red colouring) ─────────────
+
+  /**
+   * react-day-picker accepts `modifiers` prop: Record<string, Matcher>.
+   * We pass a custom "reserved" modifier so CalendarDayButton can colour them red.
+   */
+  const reservedMatcher = useMemo(() => {
+    return (date: Date) => reservedSet.has(toMidnight(date).toDateString());
+  }, [reservedSet]);
+
+  // ─── disabled logic ──────────────────────────────────────────────────────
+
+  /**
+   * For range plans we only allow clicking on "start" days:
+   *   WHOLE_WEEK / WEEK_DAYS  → Sundays  (dayOfWeek 0)
+   *   WEEK_END                → Thursdays (dayOfWeek 4)
+   *
+   * Past dates are always disabled.
+   * Reserved dates are disabled via the matcher below (but also coloured red).
+   */
+  const disabledMatcher = useMemo(() => {
+    // Past dates always off
+    const pastMatcher = { before: today };
+
+    if (isSingleMode) {
+      // All days selectable except past + reserved
+      return [
+        pastMatcher,
+        reservedMatcher,
+        (date:Date) => [4, 5, 6].includes(date.getDay()) //Thursday, Friday, Saturday disabled
+      ];
+    }
+
+    switch (planKey) {
+      case "WHOLE_WEEK":
+      case "WEEK_DAYS":
+        // Only Sundays are valid start days; disable all non-Sundays + past + reserved
+        return [
+          pastMatcher,
+          reservedMatcher,
+          (date: Date) => date.getDay() !== 0, // not Sunday
+        ];
+
+      case "WEEK_END":
+        // Only Thursdays are valid start days
+        return [
+          pastMatcher,
+          reservedMatcher,
+          (date: Date) => date.getDay() !== 4, // not Thursday
+        ];
+
+      default:
+        return [pastMatcher, reservedMatcher];
+    }
+  }, [planKey, isSingleMode, today, reservedMatcher]);
+
+  // ─── handlers ────────────────────────────────────────────────────────────
+
   const handleClearDates = () => {
     setSelectedDate(undefined);
-    setRange(undefined);
+    setRangeStart(undefined);
+    setRangeEnd(undefined);
+    setReservedError(undefined);
     onDateChange(undefined, undefined);
   };
 
-  const hasSelection = !!selectedDate || !!range?.from || !!range?.to;
+  const hasSelection = !!selectedDate || !!rangeStart;
 
-  // =========================
-  // DISABLED DAYS
-  // =========================
-  const disabled = useMemo(() => {
-    if (!selectedPlan) return { before: today };
-
-    const base = { before: today };
-
-    switch (selectedPlan.key) {
-      case "weekdays":
-        return [base, { dayOfWeek: [4, 5, 6] }];
-
-      case "weekends":
-        return [base, { dayOfWeek: [0, 1, 2, 3] }];
-
-      // IMPORTANT: no restriction for wholeWeek
-      case "wholeWeek":
-        return base;
-
+  /**
+   * Given a start date, compute the fixed end date based on the plan:
+   *   WHOLE_WEEK → +6 days  (Sun → Sat)
+   *   WEEK_DAYS  → +3 days  (Sun → Wed)
+   *   WEEK_END   → +2 days  (Thu → Sat)
+   */
+  const computeEndDate = (start: Date): Date => {
+    switch (planKey) {
+      case "WHOLE_WEEK":
+        return addDays(start, 6);
+      case "WEEK_DAYS":
+        return addDays(start, 3);
+      case "WEEK_END":
+        return addDays(start, 2);
       default:
-        return base;
+        return start;
     }
-  }, [selectedPlan, today]);
+  };
 
-  // =========================
-  // HANDLE SELECT
-  // =========================
-  const handleSelect = (value: Date | DateRange | undefined) => {
-    if (!selectedPlan) return;
+  const handleSelectSingle = (date: Date | undefined) => {
+    setReservedError(undefined);
+    setSelectedDate(date);
+    onDateChange(date, date);
+  };
 
-    // =====================
-    // SINGLE MODE
-    // =====================
-    if (isDayUse) {
-      const date = value as Date | undefined;
+  /**
+   * For range plans, the user clicks a single start day and we auto-complete
+   * the range to the fixed end date. We then validate against reservedDates.
+   */
+  const handleSelectRangeStart = (date: Date | undefined) => {
+    setReservedError(undefined);
 
-      setSelectedDate(date);
-      onDateChange(date, date);
+    if (!date) {
+      setRangeStart(undefined);
+      setRangeEnd(undefined);
+      onDateChange(undefined, undefined);
       return;
     }
 
-    // =====================
-    // RANGE MODE
-    // =====================
-    const newRange = value as DateRange | undefined;
+    const end = computeEndDate(date);
 
-    const finalFrom = newRange?.from;
-    let finalTo = newRange?.to;
+    // Check for reserved days in [date, end]
+    if (rangeHasReserved(date, end, reservedSet)) {
+      setRangeStart(undefined);
+      setRangeEnd(undefined);
+      onDateChange(undefined, undefined);
 
-    // =====================
-    // WHOLE WEEK LOGIC
-    // =====================
-    if (selectedPlan.key === "wholeWeek") {
-
-      if (finalFrom && finalTo) {
-        const diffDays =
-          Math.floor(
-            (finalTo.getTime() - finalFrom.getTime()) /
-            (1000 * 60 * 60 * 24)
-          ) + 1;
-
-        if (diffDays < 7 || diffDays % 7 !== 0) {
-          finalTo = undefined;
-        }
+      switch (planKey) {
+        case "WHOLE_WEEK":
+          setReservedError(
+            t("Properties.Reservation.calendar.reservedInWeekly")
+          );
+          break;
+        default:
+          setReservedError(
+            t("Properties.Reservation.calendar.reservedDaysInRange")
+          );
       }
+      return;
     }
 
-    setRange({
-      from: finalFrom,
-      to: finalTo,
-    });
-
-    onDateChange(finalFrom, finalTo);
+    setRangeStart(date);
+    setRangeEnd(end);
+    onDateChange(date, end);
   };
 
-  // =========================
-  // VALIDATION
-  // =========================
+  // ─── validation ──────────────────────────────────────────────────────────
+
   const isValidSelection = useMemo(() => {
     if (!selectedPlan) return false;
+    if (isSingleMode) return !!selectedDate;
+    return !!rangeStart && !!rangeEnd;
+  }, [selectedPlan, isSingleMode, selectedDate, rangeStart, rangeEnd]);
 
-    if (isDayUse) return !!selectedDate;
 
-    if (!range?.from || !range?.to) return false;
 
-    if (selectedPlan.key === "wholeWeek") {
-      const diffDays =
-        Math.floor(
-          (range.to.getTime() - range.from.getTime()) /
-          (1000 * 60 * 60 * 24)
-        ) + 1;
+  // ─── UI ──────────────────────────────────────────────────────────────────
 
-      return diffDays >= 7 && diffDays % 7 === 0;
-    }
-
-    return true;
-  }, [selectedPlan, selectedDate, range, isDayUse]);
-
-  // =========================
-  // UI
-  // =========================
   return (
     <div className="w-full max-w-2xl mx-auto">
-
       {/* HEADER */}
       <div className="flex items-center justify-between rounded-2xl border border-gray-200 bg-gray-50 px-5 py-4 mb-6">
         <div>
@@ -189,7 +271,6 @@ export function CalendarStep({
             {selectedPlan?.price} KWD
           </span>
 
-          {/* CLEAR BUTTON */}
           <button
             type="button"
             onClick={handleClearDates}
@@ -201,25 +282,50 @@ export function CalendarStep({
         </div>
       </div>
 
+      {/* RESERVED ERROR */}
+      {reservedError && (
+        <div className="flex items-start gap-2 rounded-xl border border-red-200 bg-red-50 px-4 py-3 mb-4 text-sm text-red-600">
+          <AlertCircle className="w-4 h-4 mt-0.5 shrink-0" />
+          <span>{reservedError}</span>
+        </div>
+      )}
+
       {/* CALENDAR */}
       <div className="rounded-2xl flex justify-center border border-gray-200 bg-white p-8">
-        {isDayUse ? (
+        {isSingleMode ? (
           <Calendar
             mode="single"
             selected={selectedDate}
-            onSelect={handleSelect}
+            onSelect={handleSelectSingle}
             weekStartsOn={0}
-            disabled={disabled}
+            disabled={disabledMatcher}
+            modifiers={{ reserved: reservedMatcher }}
             className="w-3/4 max-w-md rounded-lg"
           />
         ) : (
+          /**
+           * We use mode="single" even for range plans so that onSelect always
+           * receives exactly the clicked Date — no ambiguity from react-day-picker's
+           * internal range state machine. The visual highlight is applied manually
+           * via modifiers (range_start / range_middle / range_end).
+           */
           <Calendar
-            mode="range"
-            selected={range}
-            onSelect={handleSelect}
+            mode="single"
+            selected={rangeStart}
+            onSelect={(date) => handleSelectRangeStart(date)}
             weekStartsOn={0}
-            disabled={disabled}
-            excludeDisabled
+            disabled={disabledMatcher}
+            modifiers={{
+              reserved: reservedMatcher,
+              range_start: rangeStart ?? false,
+              range_end: rangeEnd ?? false,
+              range_middle: rangeStart && rangeEnd
+                ? (date: Date) => {
+                    const d = toMidnight(date);
+                    return d > toMidnight(rangeStart) && d < toMidnight(rangeEnd);
+                  }
+                : false,
+            }}
             className="w-3/4 max-w-md rounded-lg"
           />
         )}
@@ -260,7 +366,7 @@ export function CalendarStep({
           className="flex-1 h-12 rounded-xl"
           onClick={onBack}
         >
-          <ArrowLeft className="w-4 h-4 mr-2" />
+          <ArrowLeft className={`w-4 h-4 mr-2 ${isRTL ? "rotate-180" : ""}`} />
           {t("Properties.Reservation.back")}
         </Button>
 

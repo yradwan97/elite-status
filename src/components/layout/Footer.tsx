@@ -8,7 +8,6 @@ import { useInfo } from "@/common/api/hooks/useInfo";
 export function Footer() {
   const { t } = useTranslation();
   const { info } = useInfo();
-  console.log(info)
 
   return (
     <footer className="bg-[#0A1229] text-white rounded-3xl mx-6 my-10 overflow-hidden border border-white/5">
