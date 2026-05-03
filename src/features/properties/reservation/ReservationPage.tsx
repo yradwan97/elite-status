@@ -208,7 +208,7 @@ export default function ReservationPage() {
 
           navigate(
             "/account",
-            {state: {page: "booking"}}
+            { state: { page: "booking" } }
           );
         }
       }, 500);

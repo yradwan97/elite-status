@@ -16,14 +16,14 @@ export interface Property {
     lat: string;
     long: string;
     images: string[];
-    propertyType: {key: string, title: string} | string;
+    propertyType: { key: string, title: string } | string;
     guests: number;
     bedrooms: number;
     bathrooms: number;
     lounges: number;
     descriptionAr: string;
     descriptionEn: string;
-    documents: {key: string, path: string}[];
+    documents: { key: string, path: string }[];
     weekdaysPrice: number;
     weekendPrice: number;
     wholeWeekPrice: number;
@@ -35,6 +35,7 @@ export interface Property {
     rate?: number;
     isFavourite?: boolean;
     insurance: number
+    tags: { titleAr: string, titleEn: string, _id: string }[]
 }
 
 export interface PropertiesFilters {
@@ -58,18 +59,18 @@ export interface PropertiesResponse {
 }
 
 export interface FavouritesResponse {
-  data: Favourite[]
-  itemsCount: number
-  pages: number
+    data: Favourite[]
+    itemsCount: number
+    pages: number
 }
 
 export interface Favourite {
-  _id: string
-  item: Property
-  user: string
-  createdAt: string
-  updatedAt: string
-  __v: number
+    _id: string
+    item: Property
+    user: string
+    createdAt: string
+    updatedAt: string
+    __v: number
 }
 
 
@@ -98,13 +99,13 @@ export const propertiesApi = {
     getProperties: async (filters: PropertiesFilters): Promise<PropertiesResponse> => {
         const params = new URLSearchParams();
 
-        if (filters.guests)      params.append('guests',    String(filters.guests));
-        if (filters.bedrooms)    params.append('bedrooms',  String(filters.bedrooms));
-        if (filters.bathrooms)   params.append('bathrooms', String(filters.bathrooms));
-        if (filters.lounges)     params.append('lounges',   String(filters.lounges));
-        if (filters.search)      params.append('search',    filters.search);
-        if (filters.page)        params.append('page',      String(filters.page));
-        if (filters.limit)       params.append('limit',     String(filters.limit));
+        if (filters.guests) params.append('guests', String(filters.guests));
+        if (filters.bedrooms) params.append('bedrooms', String(filters.bedrooms));
+        if (filters.bathrooms) params.append('bathrooms', String(filters.bathrooms));
+        if (filters.lounges) params.append('lounges', String(filters.lounges));
+        if (filters.search) params.append('search', filters.search);
+        if (filters.page) params.append('page', String(filters.page));
+        if (filters.limit) params.append('limit', String(filters.limit));
 
         // facilities is multi-value: &facilities=id1&facilities=id2
         if (filters.facilities?.length) {

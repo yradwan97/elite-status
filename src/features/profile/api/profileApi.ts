@@ -95,4 +95,9 @@ export const profileApi = {
  
         return response.data;
     },
+
+    deleteUserAccount: async () => {
+        const response = await api.delete('/users')
+        return response.data;
+    }
 };

@@ -69,6 +69,7 @@
   },
   "Auth": {
     "loginTitle": "Sign Into Your Account",
+    "Reset": "Reset your password",
     "email": "Type your email ...",
     "password": "Type Your Password ...",
     "forgetPassword": "Forget Password?",
@@ -76,6 +77,7 @@
     "or": "OR",
     "createAccount": "Create a New Account!",
     "signupTitle": "Create an Account!",
+    "changePasswordTitle": "Forgot your password? Enter your email to recover it!",
     "firstName": "First name",
     "lastName": "Last name",
     "mobileNumber": "Mobile Number",
@@ -94,6 +96,11 @@
     "registerSuccess": "Registration successful!",
     "loginSuccess": "Login successful!",
     "loginError": "Login failed. Please check your credentials and try again.",
+    "submit": "Submit",
+    "changePassword": {
+      "success": "Please check your email for a link",
+      "fail": "There was a problem with your request, please try again later"
+    },
     "validation": {
       "required": "This field is required",
       "emailInvalid": "Invalid email address",
@@ -103,6 +110,16 @@
       "acceptTerms": "You must accept terms",
       "fileTooLarge": "File must be under 10MB",
       "fileInvalidType": "Only JPG, PNG, WebP, or PDF allowed"
+    },
+    "resetPassword": {
+      "title": "Reset Password",
+      "newPasswordPlaceholder": "New password",
+      "confirmPasswordPlaceholder": "Confirm new password",
+      "submit": "Reset Password",
+      "submitting": "Resetting...",
+      "invalidLink": "Invalid or expired reset link.",
+      "success": "Password changed successfully, redirecting you to login!",
+      "error": "Failed to change password: {{error}}"
     }
   },
   "Properties": {
@@ -316,6 +333,16 @@
       "Edit": "Edit",
       "UpdateSuccess": "Profile updated successfully!",
       "ChangePasswordSuccess": "Password changed successfully!",
+      "ChangePasswordFail": "Failed to change password: {{error}}",
+      "DeleteAccount": {
+        "title": "Delete Account",
+        "warning": "This action cannot be undone. Are you sure you want to permanently delete your account?",
+        "dismiss": "Cancel",
+        "confirm": "Yes, Delete",
+        "deleting": "Deleting...",
+        "success": "Account deleted successfully, sorry to see you go",
+        "fail": "There was a problem deleting your account {{error}}"
+      },
       "Gender": {
         "male": "Male",
         "female": "Female",
@@ -340,6 +367,70 @@
       "Title": "My Favorites",
       "ViewDetails": "View Details",
       "NoFavourites": "No favorites added"
+    },
+    "Bookings": {
+      "title": "My Booking",
+      "tabs": {
+        "active": "Active",
+        "completed": "Completed",
+        "canceled": "Canceled"
+      },
+      "statusLabel": {
+        "ACTIVE": "Active",
+        "COMPLETED": "Completed",
+        "CANCELED": "Ended"
+      },
+      "currency": "KWD",
+      "retry": "Retry",
+      "empty": {
+        "title": "No reservations found",
+        "subtitle": "Your {{status}} reservations will appear here."
+      },
+      "status": {
+        "active": "active",
+        "completed": "completed",
+        "canceled": "canceled"
+      },
+      "rentType": {
+        "wholeWeek": "Whole Week",
+        "weekdays": "Weekdays",
+        "weekends": "Weekends",
+        "daily": "Daily"
+      },
+      "modal": {
+        "info": "Info",
+        "payment": "Payment",
+        "menu": "More options",
+        "cancelReservation": "Reservation Cancel",
+        "requestService": "Request Service",
+        "ownerInfo": "Owner Info",
+        "rentPeriod": "Rent Period",
+        "startDate": "Start Date",
+        "endDate": "End Date",
+        "checkin": "Checkin time",
+        "checkout": "Checkout time",
+        "servicesSelected": "Services Selected",
+        "rentInfo": "Rent Info",
+        "rentType": "Rent Type",
+        "amount": "Amount",
+        "insurance": "Insurance",
+        "downloadInvoice": "Download Invoice"
+      },
+      "cancel": {
+        "title": "Enter Cancellation Reason",
+        "placeholder": "Please describe your reason for cancellation...",
+        "submit": "Submit",
+        "dismiss": "Dismiss",
+        "success": "Cancelation requested successfully, pending admin confirmation",
+        "failure": "Failed to create cancelation: {{error}}",
+        "reasonNotEmpty": "Reason is required",
+        "next": "Next",
+        "confirmTitle": "Confirm Cancellation",
+        "confirmWarning": "This action cannot be undone. Your reservation will be permanently cancelled.",
+        "reasonLabel": "Your reason",
+        "back": "Back",
+        "confirm": "Yes, Cancel"
+      }
     }
   }
 }

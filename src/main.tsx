@@ -15,7 +15,6 @@ import { store } from "@/store";
 import { initAuth } from "@/lib/initAuth.ts";
 import { initLanguage } from "@/lib/initLanguage.ts";
 import { clearCredentials } from "./store/slices/authSlice.ts";
-import { DirectionProvider } from "./components/ui/direction.tsx";
 
 window.addEventListener('auth:logout', () => {
   store.dispatch(clearCredentials())
@@ -30,9 +29,7 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
       <Provider store={store}>
         <QueryClientProvider client={queryClient}>
           <BrowserRouter>
-            <DirectionProvider dir="rtl">
-              <App />
-            </DirectionProvider>
+            <App />
             <Toaster position="top-center" richColors />
           </BrowserRouter>
           <ReactQueryDevtools initialIsOpen={false} />

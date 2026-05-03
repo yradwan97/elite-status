@@ -12,7 +12,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { setLanguage } from '@/store/slices/language-slice';
 import { clearCredentials, selectUser } from '@/store/slices/authSlice';
 import AuthModal from '@/features/auth/AuthModal';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { OptimizedImage } from '../shared/OptimizedImage';
 import { useInfo } from '@/common/api/hooks/useInfo';
 
@@ -25,6 +25,7 @@ export function Header() {
   const [isOpen, setIsOpen] = useState(false);
   const [authOpen, setAuthOpen] = useState(false);
   const [popoverOpen, setPopoverOpen] = useState(false);
+  const location = useLocation()
 
   const {info} = useInfo();
 
@@ -33,6 +34,17 @@ export function Header() {
       i18n.changeLanguage(currentLanguage);
     }
   }, [currentLanguage, i18n]);
+
+  useEffect(() => {
+    if (location.state?.openLoginModal) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
+      setAuthOpen(true)
+      navigate("/", {
+        replace: true,
+        state: {}
+      })
+    }
+  }, [location, navigate])
 
   const changeLanguage = (lang: 'en' | 'ar') => {
     dispatch(setLanguage(lang));

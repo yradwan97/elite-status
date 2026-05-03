@@ -69,6 +69,7 @@
   },
   "Auth": {
     "loginTitle": "تسجيل الدخول إلى حسابك",
+    "Reset": "اعد تعيين كلمة السر",
     "email": "أدخل بريدك الإلكتروني...",
     "password": "أدخل كلمة المرور...",
     "forgetPassword": "هل نسيت كلمة المرور؟",
@@ -76,6 +77,7 @@
     "or": "أو",
     "createAccount": "! إنشاء حساب جديد",
     "signupTitle": "إنشاء حساب!",
+    "changeOPasswordTitle": "هل نسيت كلمة مرورك؟ أدخل بريدك الإلكتروني لاستعادتها!",
     "firstName": "الاسم الأول",
     "lastName": "اسم العائلة",
     "mobileNumber": "رقم الهاتف",
@@ -94,6 +96,11 @@
     "registerSuccess": "تم التسجيل بنجاح!",
     "loginSuccess": "تم تسجيل الدخول بنجاح!",
     "loginError": "فشل تسجيل الدخول. يرجى التحقق من بيانات الاعتماد الخاصة بك والمحاولة مرة أخرى.",
+    "submit": "إرسال",
+    "changePassword": {
+      "success": "يرجى مراجعة بريدك الإلكتروني للاطلاع على الرابط",
+      "fail": "حدثت مشكلة في طلبك، يرجى المحاولة مرة أخرى لاحقًا"
+    },
     "validation": {
       "required": "هذا الحقل مطلوب",
       "emailInvalid": "بريد إلكتروني غير صالح",
@@ -103,6 +110,16 @@
       "acceptTerms": "يجب الموافقة على الشروط",
       "fileTooLarge": "الملف يجب أن يكون أقل من 10MB",
       "fileInvalidType": "يُسمح فقط بملفات JPG, PNG, WebP, أو PDF"
+    },
+    "resetPassword": {
+      "title": "إعادة تعيين كلمة المرور",
+      "newPasswordPlaceholder": "كلمة المرور الجديدة",
+      "confirmPasswordPlaceholder": "تأكيد كلمة المرور الجديدة",
+      "submit": "إعادة التعيين",
+      "submitting": "جارٍ الإعادة...",
+      "invalidLink": "رابط إعادة التعيين غير صالح أو منتهي الصلاحية.",
+      "success": "تم تغيير كلمة المرور بنجاح، جارٍ إعادة توجيهك إلى صفحة تسجيل الدخول!",
+      "error": "فشل تغيير كلمة المرور: {{error}}"
     }
   },
   "Properties": {
@@ -312,6 +329,16 @@
       "Saving": "جارٍ الحفظ…",
       "UpdateSuccess": "تم تحديث الملف الشخصي بنجاح!",
       "ChangePasswordSuccess": "تم تغيير كلمة المرور بنجاح!",
+      "ChangePasswordFail": "فشل تغيير كلمة المرور: {{error}}",
+      "DeleteAccount": {
+        "title": "حذف الحساب",
+        "warning": "لا يمكن التراجع عن هذا الإجراء. هل أنت متأكد أنك تريد حذف حسابك نهائياً؟",
+        "dismiss": "إلغاء",
+        "confirm": "نعم، احذف",
+        "deleting": "جارٍ الحذف...",
+        "success": "تم حذف الحساب بنجاح، نأسف لمغادرتك",
+        "fail": "حدثت مشكلة أثناء حذف حسابك {{error}}"
+      },
       "Gender": {
         "male": "ذكر",
         "female": "أنثى",
@@ -339,6 +366,66 @@
       "Title": "الوحدات المفضلة",
       "ViewDetails": "عرض التفاصيل",
       "NoFavourites": "لا توجد مفضلات مضافة"
+    },
+    "Bookings": {
+      "title": "حجوزاتي",
+      "tabs": { "active": "نشطة", "completed": "مكتملة", "canceled": "ملغاة" },
+      "statusLabel": {
+        "ACTIVE": "نشط",
+        "COMPLETED": "مكتملة",
+        "CANCELED": "منتهية"
+      },
+      "currency": "د.ك",
+      "retry": "إعادة المحاولة",
+      "empty": {
+        "title": "لا توجد حجوزات",
+        "subtitle": "ستظهر هنا حجوزاتك {{status}}."
+      },
+      "status": {
+        "active": "النشطة",
+        "completed": "المكتملة",
+        "canceled": "الملغاة"
+      },
+      "rentType": {
+        "wholeWeek": "أسبوع كامل",
+        "weekdays": "أيام الأسبوع",
+        "weekends": "عطلة نهاية الأسبوع",
+        "daily": "يومي"
+      },
+      "modal": {
+        "info": "المعلومات",
+        "payment": "الدفع",
+        "menu": "المزيد",
+        "cancelReservation": "إلغاء الحجز",
+        "requestService": "طلب خدمة",
+        "ownerInfo": "معلومات المالك",
+        "rentPeriod": "فترة الإيجار",
+        "startDate": "تاريخ البدء",
+        "endDate": "تاريخ الانتهاء",
+        "checkin": "وقت تسجيل الدخول",
+        "checkout": "وقت تسجيل الخروج",
+        "servicesSelected": "الخدمات المختارة",
+        "rentInfo": "معلومات الإيجار",
+        "rentType": "نوع الإيجار",
+        "amount": "المبلغ",
+        "insurance": "التأمين",
+        "downloadInvoice": "تحميل الفاتورة"
+      },
+      "cancel": {
+        "title": "أدخل سبب الإلغاء",
+        "placeholder": "يرجى وصف سبب الإلغاء...",
+        "submit": "إرسال",
+        "dismiss": "إغلاق",
+        "success": "تم طلب الغاء الحجز بنجاح",
+        "failure": "فشل طلب الغاء الحجز: {{error}}",
+        "reasonNotEmpty": "يجب اضافة سبب للالغاء",
+        "next": "التالي",
+        "confirmTitle": "تأكيد الإلغاء",
+        "confirmWarning": "لا يمكن التراجع عن هذا الإجراء. سيتم إلغاء حجزك بشكل نهائي.",
+        "reasonLabel": "سببك",
+        "back": "رجوع",
+        "confirm": "نعم، إلغاء"
+      }
     }
   }
 }

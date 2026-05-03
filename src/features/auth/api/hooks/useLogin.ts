@@ -1,5 +1,5 @@
 import { useMutation } from "@tanstack/react-query";
-import { loginApi } from "../authApi";
+import { authApi } from "../authApi";
 import { useDispatch } from "react-redux";
 import { setCredentials } from "@/store/slices/authSlice";
 
@@ -13,7 +13,7 @@ export function useLogin({ onSuccess, onError }: UseLoginOptions = {}) {
 
   return useMutation({
     mutationFn: (payload: { email: string; password: string }) =>
-      loginApi(payload.email, payload.password),
+      authApi.login(payload.email, payload.password),
     onSuccess: (data) => {
       dispatch(setCredentials({
         user: data.user,

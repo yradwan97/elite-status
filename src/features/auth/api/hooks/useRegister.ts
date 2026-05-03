@@ -1,5 +1,5 @@
 import { useMutation } from "@tanstack/react-query";
-import { registerApi } from "../authApi";
+import { authApi } from "../authApi";
 import { uploadApi } from "../uploadApi";
 import { toast } from "sonner";
 import { useTranslation } from "react-i18next";
@@ -36,7 +36,7 @@ export function useRegister({ onSuccess, onError }: UseRegisterOptions = {}) {
         throw new Error("upload_failed");
       }
 
-      return registerApi({
+      return authApi.register({
         firstName: payload.firstName,
         lastName: payload.lastName,
         email: payload.email,

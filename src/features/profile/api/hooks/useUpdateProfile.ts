@@ -4,6 +4,7 @@ import { toast } from 'sonner';
 import { setCredentials } from '@/store/slices/authSlice';
 import { useDispatch } from 'react-redux';
 import { useTranslation } from 'react-i18next';
+import { ApiError } from '@/common/api/commonApi';
 
 export const useUpdateProfile = () => {
     const dispatch = useDispatch();
@@ -21,7 +22,7 @@ export const useUpdateProfile = () => {
 
         onError: (error: unknown) => {
             const errorMessage =
-                (error as any)?.response?.data?.message ||
+                (error as ApiError)?.response?.data?.message ||
                 (error as Error)?.message ||
                 'Failed to update profile';
 

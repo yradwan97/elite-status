@@ -2,6 +2,7 @@ import { useMutation } from '@tanstack/react-query';
 import { profileApi } from '../profileApi'; // adjust path as needed
 import { toast } from 'sonner';
 import { useTranslation } from 'react-i18next';
+import { ApiError } from '@/common/api/commonApi';
 
 export type ChangePasswordData = {
     currentPassword: string;
@@ -19,11 +20,11 @@ export const useChangePassword = () => {
 
         onError: (error: unknown) => {
             const errorMessage =
-                (error as any)?.response?.data?.message ||
+                (error as ApiError)?.response?.data?.message ||
                 (error as Error)?.message ||
                 'Failed to change password';
 
-            toast.error(errorMessage);
+            toast.error(t("Account.Profile.ChangePasswordFail", {error: errorMessage}));
         },
     });
 };

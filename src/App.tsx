@@ -13,6 +13,7 @@ import ReservationPage from './features/properties/reservation/ReservationPage';
 import AccountPage from './features/profile/AccountPage';
 import OwnerServices from './features/dashboard/owner-services/OwnerServices';
 import { ProtectedRoute } from './components/auth/ProtectedRoute';
+import ResetPassword from './features/auth/ResetPassword';
 
 function App() {
 
@@ -54,6 +55,7 @@ function App() {
             }
           />
           <Route path="/owner-services" element={<OwnerServices />} />
+          <Route path="/reset-password" element={<ResetPassword />} />
           <Route path="*" element={<Navigate to="/" />} />
         </Routes>
       </main>

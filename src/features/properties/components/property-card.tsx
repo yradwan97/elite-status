@@ -22,11 +22,11 @@ interface PropertyCardProps {
 export function PropertyCard({ property, isFromFavourites = false }: PropertyCardProps) {
     const { t, i18n } = useTranslation();
     const isArabic = i18n.language === 'ar';
-    const user = useSelector((state: RootState) => state.auth.user);    
+    const user = useSelector((state: RootState) => state.auth.user);
 
     const navigate = useNavigate()
 
-    const [isFavourite, setIsFavourite] = useState(isFromFavourites ? true :property?.isFavourite || false);
+    const [isFavourite, setIsFavourite] = useState(isFromFavourites ? true : property?.isFavourite || false);
     const toggleFavourite = useToggleFavourite(property?._id || "");
 
 
@@ -70,25 +70,36 @@ export function PropertyCard({ property, isFromFavourites = false }: PropertyCar
     return (
         <div onClick={handleGoToDetails} className="group bg-white cursor-pointer rounded-3xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 border border-gray-100">
             {/* Image */}
-            <div className="relative h-56 overflow-hidden">
+            <div className="relative h-56 overflow-hidden flex">
                 <OptimizedImage
                     src={image}
                     alt={title}
                     className="w-full h-full object-cover p-2 group-hover:scale-105 transition-transform duration-500"
                 />
 
-                {/* Rating badge */}
-                <div className="absolute top-4 left-4 flex gap-2">
-                    {(property.rate && property.rate > 0) ? <div className="flex items-center gap-1 bg-black/70 text-white text-xs font-medium px-3 py-1 rounded-md">
-                        <StarIcon size={16} color="#FACC15" />
-                        {(property.rate && property.rate > 0) && property.rate.toFixed(1)}
-                    </div> : null}
+                <div className={`absolute top-4 ${isArabic ? "right-4" : "left-4"} flex gap-2`}>
+                    {/* Rating badge */}
+                    <div className="flex gap-2">
+                        {(property.rate && property.rate > 0) ? <div className="flex items-center gap-1 bg-black/70 text-white text-xs font-medium px-3 py-1 rounded-md">
+                            <StarIcon size={16} color="#FACC15" />
+                            {(property.rate && property.rate > 0) && property.rate.toFixed(1)}
+                        </div> : null}
+                    </div>
+                    <div className="flex gap-2">
+                        {(property.tags && property.tags.length > 0) ? (
+                            property.tags.map((t) => (
+                                <div key={t._id} className="flex items-center gap-1 bg-navy text-white text-sm font-medium px-3 py-1 rounded-md">
+                                    {isArabic ? t.titleAr : t.titleEn}
+                                </div>
+                            ))
+                        ) : null}
+                    </div>
                 </div>
 
                 {/* Favorite */}
                 {user && (
-                    <button 
-                        className="absolute top-4 right-4 cursor-pointer rounded-full flex items-center justify-center transition-all hover:scale-110 shadow-sm"
+                    <button
+                        className={`absolute top-4 ${isArabic ? "left-4" : "right-4"} cursor-pointer rounded-full bg-white p-1 flex items-center justify-center transition-all hover:scale-110 shadow-sm`}
                         onClick={handleFavouriteToggle}
                     >
                         <Heart className={`w-5 h-5 transition-colors ${isFavourite ? 'fill-red-500 text-red-500' : 'text-gray-600'}`} />

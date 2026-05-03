@@ -6,6 +6,14 @@ export interface ApiResponse<T> {
     data: T
 }
 
+export interface ApiError {
+    response: {
+        data: {
+            message?: string
+        }
+    }
+}
+
 export interface InfoData {
     socialMedia: SocialMedia
     _id: string

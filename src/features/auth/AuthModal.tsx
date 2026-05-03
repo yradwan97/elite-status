@@ -7,8 +7,9 @@ import authBg from "@/assets/auth-bg.png";
 import { useTranslation } from "react-i18next";
 import i18next from "@/i18n";
 import { OptimizedImage } from "@/components/shared/OptimizedImage";
+import { ForgetPasswordModal } from "./ForgetPasswordModal";
 
-type AuthMode = "login" | "signup";
+export type AuthMode = "login" | "signup" | "forget";
 
 interface Props {
   open: boolean;
@@ -40,9 +41,11 @@ export default function AuthModal({ open, onOpenChange }: Props) {
           {/* RIGHT FORM */}
           <div className="p-8">
             {mode === "login" ? (
-              <LoginForm onSwitch={() => setMode("signup")} onClose={() => onOpenChange(false)} />
-            ) : (
+              <LoginForm setMode={setMode} onClose={() => onOpenChange(false)} />
+            ) : mode === 'signup' ? (
               <SignupForm onSwitch={() => setMode("login")} />
+            ) : (
+              <ForgetPasswordModal onSwitch={() => setMode("login")} onClose={() => onOpenChange(false)} />
             )}
           </div>
         </div>
