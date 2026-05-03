@@ -13,6 +13,12 @@ import useToggleFavourite from '../api/hooks/useToggleFavourite';
 import { useLayoutEffect, useState } from 'react';
 import { RootState } from '@/store';
 import { useSelector } from 'react-redux';
+import { useIsMobile } from '@/hooks/use-mobile';
+import {
+    Popover,
+    PopoverContent,
+    PopoverTrigger,
+} from '@/components/ui/popover';
 
 interface PropertyCardProps {
     property: Property;
@@ -28,6 +34,48 @@ export function PropertyCard({ property, isFromFavourites = false }: PropertyCar
 
     const [isFavourite, setIsFavourite] = useState(isFromFavourites ? true : property?.isFavourite || false);
     const toggleFavourite = useToggleFavourite(property?._id || "");
+    const temptags = [
+        {
+            "_id": "69f5ead88e7033b6e4b3169c",
+            "titleAr": "افضل العروض",
+            "titleEn": "Best Seller",
+            "__v": 0
+        },
+        {
+            "_id": "69f78ec12e8f1838e2f15910",
+            "titleAr": "ساحة انتظار",
+            "titleEn": "Parking",
+            "__v": 0
+        },
+        {
+            "_id": "69f78ec12e8f1838e2f15911",
+            "titleAr": "مسبح",
+            "titleEn": "Swimming Pool",
+            "__v": 0
+        },
+        {
+            "_id": "69f78ec12e8f1838e2f15912",
+            "titleAr": "إطلالة بحرية",
+            "titleEn": "Sea View",
+            "__v": 0
+        },
+        {
+            "_id": "69f78ec12e8f1838e2f15913",
+            "titleAr": "تشطيب فاخر",
+            "titleEn": "Luxury Finish",
+            "__v": 0
+        },
+        {
+            "_id": "69f78ec12e8f1838e2f15914",
+            "titleAr": "حديقة خاصة",
+            "titleEn": "Private Garden",
+            "__v": 0
+        }
+    ]
+    const visibleTags = temptags?.slice(0, 2) ?? [];
+    const extraTags = temptags?.slice(2) ?? [];
+
+    const isMobile = useIsMobile();
 
 
     useLayoutEffect(() => {
@@ -86,13 +134,61 @@ export function PropertyCard({ property, isFromFavourites = false }: PropertyCar
                         </div> : null}
                     </div>
                     <div className="flex gap-2">
-                        {(property.tags && property.tags.length > 0) ? (
-                            property.tags.map((t) => (
-                                <div key={t._id} className="flex items-center gap-1 bg-navy text-white text-sm font-medium px-3 py-1 rounded-md">
-                                    {isArabic ? t.titleAr : t.titleEn}
-                                </div>
-                            ))
-                        ) : null}
+                        {visibleTags.map((t) => (
+                            <div
+                                key={t._id}
+                                className="flex items-center gap-1 bg-navy text-white text-sm font-medium px-3 py-1 rounded-md"
+                            >
+                                {isArabic ? t.titleAr : t.titleEn}
+                            </div>
+                        ))}
+
+                        {extraTags.length > 0 && (
+                            isMobile ? (
+                                <Popover>
+                                    <PopoverTrigger asChild>
+                                        <div
+                                            className="flex items-center gap-1 bg-navy/60 text-white text-sm font-medium px-3 py-1 rounded-full cursor-pointer select-none"
+                                            onClick={(e) => e.stopPropagation()}
+                                        >
+                                            +{extraTags.length}
+                                        </div>
+                                    </PopoverTrigger>
+                                    <PopoverContent className="w-auto p-2" onClick={(e) => e.stopPropagation()}>
+                                        <div className="flex flex-wrap flex-col gap-2">
+                                            {extraTags.map((t) => (
+                                                <div
+                                                    key={t._id}
+                                                    className="flex items-center gap-1 bg-navy text-white text-sm font-medium px-3 py-1 rounded-md"
+                                                >
+                                                    {isArabic ? t.titleAr : t.titleEn}
+                                                </div>
+                                            ))}
+                                        </div>
+                                    </PopoverContent>
+                                </Popover>
+                            ) : (
+                                <HoverCard>
+                                    <HoverCardTrigger asChild>
+                                        <div className="flex items-center gap-1 bg-navy/60 text-white text-sm font-medium px-3 py-1 rounded-full cursor-pointer select-none">
+                                            +{extraTags.length}
+                                        </div>
+                                    </HoverCardTrigger>
+                                    <HoverCardContent className="w-auto p-2">
+                                        <div className="flex flex-wrap gap-2">
+                                            {extraTags.map((t) => (
+                                                <div
+                                                    key={t._id}
+                                                    className="flex items-center gap-1 bg-navy text-white text-sm font-medium px-3 py-1 rounded-md"
+                                                >
+                                                    {isArabic ? t.titleAr : t.titleEn}
+                                                </div>
+                                            ))}
+                                        </div>
+                                    </HoverCardContent>
+                                </HoverCard>
+                            )
+                        )}
                     </div>
                 </div>
 

@@ -144,7 +144,7 @@ export default function Dashboard() {
   return (
     <>
       <PageTitle titleKey="Dashboard.pageTitle" fallback="Elite Status" />
-      <div className="min-h-screen bg-gray-50">
+      <div className="min-h-screen bg-gray-50 overflow-y-hidden">
 
         {/* Hero Section */}
         <div
@@ -179,7 +179,7 @@ export default function Dashboard() {
                 />
 
                 {/* Guests - using Counter */}
-                <div className={`flex-1 ${isArabic ? 'text-end border-s-2 ps-3' : 'border-e-2 pe-3'}`}>
+                <div className={`flex-1 ${isArabic ? 'text-end md:border-s-2 ps-3' : 'md:border-e-2 pe-3'}`}>
                   <Counter
                     label={t('Dashboard.addGuests') || t('Properties.filter.guests')}
                     value={Number(noOfGuests) || 0}
@@ -207,7 +207,7 @@ export default function Dashboard() {
               <h2 className={`text-4xl font-bold text-navy ${isArabic ? 'text-right' : 'text-left'}`}>
                 {t('Dashboard.bestDealsForRent')}
               </h2>
-              <OptimizedImage src={pattern} alt="Best Deals Icon" className="h-12 w-auto" />
+              <OptimizedImage src={pattern} alt="Best Deals Icon" className="hidden md:flex h-12 w-auto" />
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-8" dir={isArabic ? 'rtl' : 'ltr'}>
               {isLoading ? (
@@ -239,7 +239,7 @@ export default function Dashboard() {
             </div>
 
             {/* Three Images */}
-            <div className={`relative flex items-center justify-center gap-10 px-6 mt-4 ${isArabic ? 'flex-row-reverse' : ''}`}>
+            <div className={`relative flex flex-col md:flex-row items-center justify-center gap-10 px-6 mt-4 ${isArabic ? 'sm:flex-row-reverse' : ''}`}>
 
               {/* Left */}
               <div className="w-72 h-80 rounded-2xl overflow-hidden shrink-0 shadow-sm">
@@ -296,10 +296,10 @@ export default function Dashboard() {
         {/* Plans Section */}
         <div className="max-w-7xl mx-auto px-6 py-16">
           <div className={`flex items-center justify-between mb-10 ${isArabic ? 'flex-row-reverse' : ''}`}>
-            <h2 className={`text-4xl font-bold w-1/2 text-navy ${isArabic ? 'text-right' : 'text-left'}`}>
+            <h2 className={`text-4xl font-bold md:w-1/2 text-navy ${isArabic ? 'text-right' : 'text-left'}`}>
               {t('Dashboard.Pricing.title')}
             </h2>
-            <OptimizedImage src={pattern} alt="pattern" className="h-12 w-auto" />
+            <OptimizedImage src={pattern} alt="pattern" className="hidden md:block h-12 w-auto" />
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 items-stretch">
             {mockPlans.map((plan) => (
@@ -314,7 +314,7 @@ export default function Dashboard() {
           style={{ backgroundImage: `url(${newsletterVector})`, backgroundSize: 'cover', backgroundPosition: 'center top' }}
         >
           <div className="max-w-7xl mx-auto px-10 pt-14 pb-48">
-            <div className={`flex flex-col md:flex-row items-center justify-between gap-10 ${isArabic ? 'flex-row-reverse' : 'flex-row'}`}>
+            <div className={`flex flex-col md:flex-row items-center justify-between gap-10 ${isArabic ? 'md:flex-row-reverse' : 'md:flex-row'}`}>
 
               {/* Text — always on the "start" side */}
               <div className={`flex flex-col gap-3 ${isArabic ? 'items-end text-right order-2' : 'items-start text-left order-1'}`}>
@@ -335,7 +335,7 @@ export default function Dashboard() {
                   type="email"
                   placeholder={t('Dashboard.Newsletter.emailPlaceholder')}
                   dir={isArabic ? 'rtl' : 'ltr'}
-                  className={`bg-white rounded-xl px-5 py-3.5 text-gray-700 placeholder-gray-400 text-sm focus:outline-none w-72 ${isArabic ? 'text-right' : 'text-left'}`}
+                  className={`bg-white rounded-xl px-5 py-3.5 text-gray-700 placeholder-gray-400 text-sm focus:outline-none w-42 md:w-72 ${isArabic ? 'text-right' : 'text-left'}`}
                 />
                 <button className="bg-navy text-white px-6 py-3.5 rounded-xl text-sm font-medium whitespace-nowrap hover:opacity-90 transition-opacity shrink-0">
                   {t('Dashboard.Newsletter.subscribe')}

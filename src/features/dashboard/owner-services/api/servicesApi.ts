@@ -19,7 +19,7 @@ export interface OwnerServicesResponse {
 
 
 export const servicesApi = {
-    getOwnerServices: async (page: number, searchTerm: string | undefined): Promise<ApiResponse<OwnerServicesResponse>> => {
+    getOwnerServices: async (page: number, searchTerm: string | undefined = ""): Promise<ApiResponse<OwnerServicesResponse>> => {
         try {
             const response = await axios.get(`/services?page=${page}&search=${searchTerm}`);
             return response.data;

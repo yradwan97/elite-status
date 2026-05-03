@@ -4,6 +4,7 @@ import { OptimizedImage } from "@/components/shared/OptimizedImage";
 import { OwnerService } from "../owner-services/api/servicesApi";
 import i18next from "i18next";
 import { useInfo } from "@/common/api/hooks/useInfo";
+import DOMPurify from "dompurify"
 
 
 interface ServiceCardProps {
@@ -15,6 +16,13 @@ export default function ServiceCard({ service, className }: ServiceCardProps) {
   const { t } = useTranslation()
   const isArabic = i18next.language === 'ar';
   const {info} = useInfo();
+
+  const description = isArabic ? service.descriptionAr : service.descriptionEn
+
+  const sanitizedDescription = DOMPurify.sanitize(description ?? "", {
+        ALLOWED_TAGS: ["p", "br", "strong", "em", "u", "span", "ul", "ol", "li", "h1", "h2", "h3"],
+        ALLOWED_ATTR: ["style", "class"],
+    });
 
   const handleBookService = () => {
       if (!info || !info.ownerServices) return;
@@ -38,7 +46,7 @@ export default function ServiceCard({ service, className }: ServiceCardProps) {
       {/* Text */}
       <div className="flex flex-col gap-1.5 flex-1">
         <h3 className="text-base font-semibold text-navy">{isArabic ? service.titleAr : service.titleEn}</h3>
-        <p className="text-sm text-gray-500 leading-relaxed">{isArabic ? service.descriptionAr : service.descriptionEn}</p>
+        <p className="text-sm text-gray-500 leading-relaxed" dangerouslySetInnerHTML={{__html: sanitizedDescription}} />
       </div>
 
       {/* CTA */}

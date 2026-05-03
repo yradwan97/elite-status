@@ -1,10 +1,10 @@
 import { useEffect, useState } from 'react';
-import { Menu, Phone, User, LogOut, UserCircle } from 'lucide-react';
+import { Menu, Phone, User, LogOut, UserCircle, Globe } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 
-import logo from '@/assets/elite-status-white-logo.png';
+import logo from '@/assets/elite-status-white-logo.svg';
 import { SocialIcon } from 'react-social-icons';
 import { useTranslation } from "react-i18next";
 import { RootState } from '@/store';
@@ -15,6 +15,7 @@ import AuthModal from '@/features/auth/AuthModal';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { OptimizedImage } from '../shared/OptimizedImage';
 import { useInfo } from '@/common/api/hooks/useInfo';
+import { useIsMobile } from '@/hooks/use-mobile';
 
 export function Header() {
   const dispatch = useDispatch();
@@ -25,9 +26,11 @@ export function Header() {
   const [isOpen, setIsOpen] = useState(false);
   const [authOpen, setAuthOpen] = useState(false);
   const [popoverOpen, setPopoverOpen] = useState(false);
+  const [languagePopoverOpen, setLanguagePopoverOpen] = useState(false);
   const location = useLocation()
+  const isMobile = useIsMobile()
 
-  const {info} = useInfo();
+  const { info } = useInfo();
 
   useEffect(function adjustLanguage() {
     if (i18n.language !== currentLanguage) {
@@ -63,6 +66,9 @@ export function Header() {
   };
 
   const isArabic = i18n.language === 'ar';
+  const userName = user ? 
+    !isMobile ? `${user?.firstName} ${user?.lastName}` : `${user.firstName}`
+    : null
 
   const goToHome = () => {
     navigate('/');
@@ -86,7 +92,7 @@ export function Header() {
 
                 <SheetContent side={isArabic ? "right" : "left"} className="pt-8">
                   <div className="flex flex-col gap-8">
-                    <OptimizedImage src={logo} alt="Elite Status" className="h-26 object-contain mx-auto" />
+                    <OptimizedImage src={logo} alt="Elite Status" className="h-30 object-contain mx-auto" />
 
                     <nav className="flex flex-col gap-6 text-lg font-medium text-center">
                       <a href="/" className="text-navy font-semibold transition-colors">{t("Dashboard.home")}</a>
@@ -120,6 +126,32 @@ export function Header() {
                 </SheetContent>
               </Sheet>
 
+              
+
+              <div className='flex md:hidden px-auto'>
+                <Popover open={languagePopoverOpen} onOpenChange={setLanguagePopoverOpen}>
+                  <PopoverTrigger asChild>
+                    <button className="flex items-center gap-2 text-base font-medium hover:cursor-pointer transition-colors">
+                      <Globe className="h-5 w-5" />
+                    </button>
+                  </PopoverTrigger>
+                  <PopoverContent align="center" className="w-30 p-2 flex bg-white flex-col gap-1">
+                    <button
+                      onClick={() => changeLanguage('en')}
+                      className={`px-4 py-1.5 rounded-full transition-all ${currentLanguage === 'en' ? 'bg-gray-200 shadow-md text-navy font-semibold' : 'text-gray-600 hover:text-gray-900'}`}
+                    >
+                      English
+                    </button>
+                    <button
+                      onClick={() => changeLanguage('ar')}
+                      className={`px-4 py-1.5 rounded-full transition-all ${currentLanguage === 'ar' ? 'bg-gray-200 shadow-md text-navy font-semibold' : 'text-gray-600 hover:text-gray-900'}`}
+                    >
+                      العربية
+                    </button>
+                  </PopoverContent>
+                </Popover>
+              </div>
+
               {/* Phone (Desktop) */}
               <a href="tel:+96522234567" className="hidden md:flex items-center gap-2 text-base font-medium text-gray-700">
                 <Phone className="h-5 w-5" />
@@ -134,7 +166,7 @@ export function Header() {
 
             {/* Right Side */}
             <div className={`flex items-center gap-6 ${isArabic ? 'flex-row-reverse' : ''}`}>
-              <div className="flex items-center bg-gray-100 rounded-full p-1 text-sm font-medium">
+              <div className="hidden md:flex items-center bg-gray-100 rounded-full p-1 text-sm font-medium">
                 <button
                   onClick={() => changeLanguage('en')}
                   className={`px-4 py-1.5 rounded-full transition-all ${currentLanguage === 'en' ? 'bg-white shadow text-navy font-semibold' : 'text-gray-600 hover:text-gray-900'}`}
@@ -155,7 +187,7 @@ export function Header() {
                 <Popover open={popoverOpen} onOpenChange={setPopoverOpen}>
                   <PopoverTrigger asChild>
                     <button className="flex items-center gap-2 text-base font-medium hover:cursor-pointer transition-colors">
-                      {user.firstName} {user.lastName}
+                      {userName}
                       <User className="h-5 w-5" />
                     </button>
                   </PopoverTrigger>

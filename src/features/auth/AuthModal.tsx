@@ -27,7 +27,7 @@ export default function AuthModal({ open, onOpenChange }: Props) {
         <div className="grid grid-cols-2 ">
           
           {/* LEFT IMAGE */}
-          <div className={`hidden md:block relative ${isArabic ? "order-last" : ""}`}>
+          <div className={`hidden md:flex relative ${isArabic ? "order-last" : ""}`}>
             <OptimizedImage
               src={authBg}
               alt="Auth background image"
@@ -39,7 +39,7 @@ export default function AuthModal({ open, onOpenChange }: Props) {
           </div>
 
           {/* RIGHT FORM */}
-          <div className="p-8">
+          <div className="p-8 col-span-2 md:col-span-1 w-full max-h-[80dvh] overflow-auto">
             {mode === "login" ? (
               <LoginForm setMode={setMode} onClose={() => onOpenChange(false)} />
             ) : mode === 'signup' ? (

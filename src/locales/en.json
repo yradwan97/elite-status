@@ -224,7 +224,8 @@
       "Share": {
         "err": "Failed to copy link.",
         "copyLink": "Copy Link",
-        "copied": "Link Copied!"
+        "copied": "Link Copied!",
+        "text": "Check out this property from Elite Status: {{title}}"
       },
       "Favorite": {
         "success": "Added to favorites!",

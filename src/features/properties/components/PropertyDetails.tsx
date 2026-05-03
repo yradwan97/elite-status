@@ -54,7 +54,7 @@ export default function PropertyDetails() {
     const user = useSelector((state: RootState) => state.auth.user);
 
     const { property, isLoading, refetch } = useProperty(id);
-    const {info} = useInfo();
+    const { info } = useInfo();
 
 
     // Gallery state
@@ -82,7 +82,6 @@ export default function PropertyDetails() {
 
     useLayoutEffect(() => {
         if (property) {
-            // eslint-disable-next-line react-hooks/set-state-in-effect
             setIsFavourite(!!property.isFavourite);
         }
     }, [property]);
@@ -145,26 +144,76 @@ export default function PropertyDetails() {
     };
 
     const handleShare = async () => {
-        if (navigator.share && property) {
+        if (!property) return;
+
+        const url = window.location.href;
+        const title = isRTL ? property.titleAr : property.titleEn
+        const shareData = {
+            title,
+            text: `${t("Properties.Details.Share.text", { title })}`,
+            url,
+        };
+
+        const isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent);
+        const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
+
+        // 1. Native iOS share sheet — skip canShare() check on iOS/Safari
+        //    since canShare() is unreliable there but share() works fine
+        if (navigator.share && (isIOS || isSafari || navigator.canShare?.(shareData))) {
             try {
-                await navigator.share({
-                    title: isRTL ? property.titleAr : property.titleEn,
-                    text: isRTL ? property.descriptionAr : property.descriptionEn,
-                    url: window.location.href,
-                });
+                await navigator.share(shareData);
+                return;
             } catch (error) {
-                console.error("Error sharing:", error);
-            }
-        } else {
-            try {
-                await navigator.clipboard.writeText(window.location.href);
-                toast.success(t("Share.copied"));
-            } catch (error) {
-                console.error("Failed to copy URL:", error);
-                toast.error(t("Share.error"));
+                if (error instanceof DOMException && error.name === "AbortError") return;
+                console.error("Native share failed:", error);
             }
         }
-    }
+
+        // 2. Safari-safe clipboard
+        if (navigator.clipboard?.write) {
+            try {
+                const clipboardItem = new ClipboardItem({
+                    "text/plain": new Blob([url], { type: "text/plain" }),
+                });
+                await navigator.clipboard.write([clipboardItem]);
+                toast.success(t("Properties.Details.Share.copied"));
+                return;
+            } catch (error) {
+                console.error("ClipboardItem write failed:", error);
+            }
+        }
+
+        // 3. Async writeText (non-Safari modern browsers)
+        if (navigator.clipboard?.writeText) {
+            try {
+                await navigator.clipboard.writeText(url);
+                toast.success(t("Properties.Details.Share.copied"));
+                return;
+            } catch (error) {
+                console.error("Clipboard writeText failed:", error);
+            }
+        }
+
+        // 4. Legacy execCommand fallback
+        try {
+            const textArea = document.createElement("textarea");
+            textArea.value = url;
+            textArea.style.cssText = "position:fixed;top:-9999px;left:-9999px;opacity:0;";
+            document.body.appendChild(textArea);
+            textArea.focus();
+            textArea.select();
+            const success = document.execCommand("copy");
+            document.body.removeChild(textArea);
+            if (success) {
+                toast.success(t("Properties.Details.Share.copied"));
+            } else {
+                throw new Error("execCommand returned false");
+            }
+        } catch (error) {
+            console.error("All copy methods failed:", error);
+            toast.error(t("Properties.Details.Share.err"));
+        }
+    };
 
     const handleSubmitTour = () => {
         if (!property?._id) return;
@@ -178,6 +227,8 @@ export default function PropertyDetails() {
             }
         });
     };
+
+
 
     return (
         <>
