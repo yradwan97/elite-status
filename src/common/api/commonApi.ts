@@ -21,6 +21,7 @@ export interface InfoData {
     whatsappTours: string
     ownerServices: string
     email: string
+    contact: string
     createdAt: string
     updatedAt: string
     __v: number

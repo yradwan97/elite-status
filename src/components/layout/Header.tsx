@@ -16,6 +16,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { OptimizedImage } from '../shared/OptimizedImage';
 import { useInfo } from '@/common/api/hooks/useInfo';
 import { useIsMobile } from '@/hooks/use-mobile';
+import { isValidImageUrl } from '@/lib/utils';
 
 export function Header() {
   const dispatch = useDispatch();
@@ -56,7 +57,10 @@ export function Header() {
   };
 
   const handleLogout = () => {
-    dispatch(clearCredentials());
+    navigate("/", {state: {isLoginError: false}, replace: true})
+    setTimeout(() => {
+      dispatch(clearCredentials())
+    }, 100)
     setPopoverOpen(false);
   };
 
@@ -99,7 +103,7 @@ export function Header() {
                       <a href="/properties" className="text-navy font-semibold transition-colors">{t("Dashboard.chalets")}</a>
                       <a href="/pricing" className="text-navy font-semibold transition-colors">{t("Dashboard.pricingPlan")}</a>
                       <a href="/owner-services" className="text-navy font-semibold transition-colors">{t("Dashboard.ownerServices")}</a>
-                      <a href="/contact" className="text-navy font-semibold transition-colors">{t("Dashboard.contactUs")}</a>
+                      {/* <a href="/contact" className="text-navy font-semibold transition-colors">{t("Dashboard.contactUs")}</a> */}
                     </nav>
 
                     <div className="pt-8 border-t">
@@ -153,10 +157,10 @@ export function Header() {
               </div>
 
               {/* Phone (Desktop) */}
-              <a href="tel:+96522234567" className="hidden md:flex items-center gap-2 text-base font-medium text-gray-700">
+              {info?.contact && <a href={`tel:${info.contact}`} className="hidden md:flex items-center gap-2 text-base font-medium text-gray-700">
                 <Phone className="h-5 w-5" />
-                +965-22234567
-              </a>
+                {info.contact}
+              </a>}
             </div>
 
             {/* Center Logo */}
@@ -188,7 +192,7 @@ export function Header() {
                   <PopoverTrigger asChild>
                     <button className="flex items-center gap-2 text-base font-medium hover:cursor-pointer transition-colors">
                       {userName}
-                      <User className="h-5 w-5" />
+                      {(user?.image && typeof user.image === "string" && isValidImageUrl(user.image)) ? <OptimizedImage className='size-8' src={user.image} alt='user-image' /> : <UserCircle className="h-4 w-4" />}
                     </button>
                   </PopoverTrigger>
                   <PopoverContent align="end" className="w-48 p-2 flex flex-col gap-1">
@@ -196,7 +200,7 @@ export function Header() {
                       onClick={handleProfile}
                       className="flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-100 transition-colors w-full text-left"
                     >
-                      <UserCircle className="h-4 w-4" />
+                      {(user?.image && typeof user.image === "string" && isValidImageUrl(user.image)) ? <OptimizedImage className='size-8' src={user.image} alt='user-image' /> : <UserCircle className="h-4 w-4" />}
                       {t("Header.profile") ?? "Profile"}
                     </button>
                     <button

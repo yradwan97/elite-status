@@ -2,6 +2,7 @@ import { useMutation } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { useTranslation } from "react-i18next";
 import { CancelReservationPayload, reservationApi } from "../reservationApi";
+import { ApiError } from "@/common/api/commonApi";
 
 export default function useCancelReservationMutation() {
     const { t } = useTranslation();
@@ -15,7 +16,7 @@ export default function useCancelReservationMutation() {
         },
 
         onError: (e: unknown) => {
-            const error = (e as any)?.response?.data?.message ||
+            const error = (e as ApiError)?.response?.data?.message ||
                 (e as Error)?.message;
             toast.error(t("Account.Bookings.cancel.failure", { error }));
         },

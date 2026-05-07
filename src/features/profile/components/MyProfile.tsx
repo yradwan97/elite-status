@@ -8,8 +8,8 @@ import { z as zod } from 'zod';
 import { useSelector } from 'react-redux';
 import { RootState } from '@/store';
 import { Camera, Lock } from 'lucide-react';
-import PhoneField from '@/features/auth/components/PhoneField';
-import InputField from '@/features/auth/components/InputField';
+import PhoneField from '@/components/shared/PhoneField';
+import InputField from '@/components/shared/InputField';
 import { IDUploadField } from '@/features/auth/components/IdUploadField';
 import i18next from 'i18next';
 import countryList from 'react-select-country-list';
@@ -115,7 +115,7 @@ export default function AccountProfile() {
             {avatarPreview ? (
               <img src={avatarPreview} alt="avatar" className="w-full h-full object-cover" />
             ) : user && user.image && typeof user.image === 'string' ? (
-              <OptimizedImage alt="avatar" src={user.image} />
+              <OptimizedImage alt="avatar" src={user.image} className='size-26 object-cover' />
             ) : (
               (user?.firstName?.[0] ?? 'A').toUpperCase()
             )}

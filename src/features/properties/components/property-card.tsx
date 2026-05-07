@@ -19,6 +19,7 @@ import {
     PopoverContent,
     PopoverTrigger,
 } from '@/components/ui/popover';
+import { adjustPriceForOffer, getFirstPriceAndPeriodKey, getRemainingPricesAndPeriodKeys, hasOffer } from '@/lib/utils';
 
 interface PropertyCardProps {
     property: Property;
@@ -29,6 +30,14 @@ export function PropertyCard({ property, isFromFavourites = false }: PropertyCar
     const { t, i18n } = useTranslation();
     const isArabic = i18n.language === 'ar';
     const user = useSelector((state: RootState) => state.auth.user);
+
+    const tempProperty: Property = {
+        ...property,
+        offer: 25,
+        offerEndDate: "2026-05-08T22:49:32.843Z",
+        offerStartDate: "2026-05-06T22:49:32.843Z",
+        offerRate: "PERCENTAGE"
+    }
 
     const navigate = useNavigate()
 
@@ -72,10 +81,12 @@ export function PropertyCard({ property, isFromFavourites = false }: PropertyCar
             "__v": 0
         }
     ]
-    const visibleTags = temptags?.slice(0, 2) ?? [];
-    const extraTags = temptags?.slice(2) ?? [];
-
+    // TODO: Remove temp tags
     const isMobile = useIsMobile();
+    const tagsCutoff = isMobile ? 1 : 2
+    const visibleTags = temptags?.slice(0, tagsCutoff) ?? [];
+    const extraTags = temptags?.slice(tagsCutoff) ?? [];
+
 
 
     useLayoutEffect(() => {
@@ -89,14 +100,21 @@ export function PropertyCard({ property, isFromFavourites = false }: PropertyCar
 
     const title = isArabic ? property.titleAr : property.titleEn;
     const image = property.images[0] ?? '';
-    const price = property.dailyPrice;
+    
+    const hasActiveOffer = hasOffer(property)
 
-    const priceRows = [
-        { label: t('Dashboard.weekdays', 'Weekdays'), value: property.weekdaysPrice },
-        { label: t('Dashboard.weekend', 'Weekend'), value: property.weekendPrice },
-        { label: t('Dashboard.wholeWeek', 'Whole Week'), value: property.wholeWeekPrice },
-        { label: t('Dashboard.dayUse', 'Day Use'), value: property.dayUsePrice },
-    ];
+    const originalPrice = getFirstPriceAndPeriodKey(property);
+    const discountedPrice = hasActiveOffer
+        ? adjustPriceForOffer(originalPrice.price, property)
+        : originalPrice.price;
+
+    const priceRows = getRemainingPricesAndPeriodKeys(property).map(item => ({
+        ...item,
+        originalPrice: item.price,
+        discountedPrice: hasActiveOffer
+            ? adjustPriceForOffer(item.price, property)
+            : item.price
+    }));
 
     const handleGoToDetails = () => {
         const id = property._id
@@ -116,13 +134,13 @@ export function PropertyCard({ property, isFromFavourites = false }: PropertyCar
     };
 
     return (
-        <div onClick={handleGoToDetails} className="group bg-white cursor-pointer rounded-3xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 border border-gray-100">
+        <div onClick={handleGoToDetails} className="group h-fit bg-white cursor-pointer rounded-3xl overflow-hidden shadow-sm hover:shadow-xl transition-all min-h-94.25 duration-300 border border-gray-100">
             {/* Image */}
-            <div className="relative h-56 overflow-hidden flex">
+            <div className="relative h-57.25 overflow-hidden flex">
                 <OptimizedImage
                     src={image}
                     alt={title}
-                    className="w-full h-full object-cover p-2 group-hover:scale-105 transition-transform duration-500"
+                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                 />
 
                 <div className={`absolute top-4 ${isArabic ? "right-4" : "left-4"} flex gap-2`}>
@@ -204,53 +222,69 @@ export function PropertyCard({ property, isFromFavourites = false }: PropertyCar
             </div>
 
             {/* Content */}
-            <div className={`p-5 ${isArabic ? 'text-right' : 'text-left'}`}>
-                <h3 className="font-semibold text-lg leading-tight text-navy mb-3 line-clamp-2">
+            <div className={`h-auto px-5 py-3 ${isArabic ? 'text-right' : 'text-left'}`}>
+                <h3 className="font-semibold text-lg leading-tight text-navy mb-2 line-clamp-2">
                     {title}
                 </h3>
 
                 {/* Location */}
-                <div className={`flex items-center gap-1.5 text-gray-600 text-sm mb-4 ${isArabic ? 'text-start' : 'text-end'}`}>
+                <div className={`flex items-center gap-1.5 text-gray-600 text-sm mb-1 ${isArabic ? 'text-start' : 'text-end'}`}>
                     <MapPin className="w-4 h-4 shrink-0" />
                     <span>{property.address}</span>
                 </div>
 
                 {/* Price — dailyPrice is the display price */}
-                <div className={`flex mb-4 ${isArabic ? 'text-start' : ''}`}>
-                    <div className={`flex items-center gap-1 mb-1 `}>
+                <div className={`flex mb-1 ${isArabic ? 'text-start' : ''}`}>
+                    <div className={`flex items-center gap-1 mb-1`}>
                         <CircleDollarSign className="w-4 h-4 text-gray-400 shrink-0" />
                         <span className="text-gray-600 text-sm">{t('Dashboard.startFrom')}</span>
+
                         <HoverCard openDelay={100} closeDelay={100}>
                             <HoverCardTrigger asChild>
                                 <button className="ms-1 text-gray-400 hover:text-navy transition-colors cursor-pointer">
                                     <Trans
-                                        i18nKey="Properties.dailyPrice"
-                                        values={{ price }}
-                                        components={{
-                                            value: <span className="text-2xl font-bold text-amber-500" />,
-                                            currency: <span className="text-lg text-gray-500" />,
-                                            divider: <span className="text-lg text-gray-400" />,
-                                            day: <span className="text-lg text-gray-400" />,
+                                        i18nKey="Properties.firstPrice"
+                                        values={{
+                                            price: hasActiveOffer ? discountedPrice : originalPrice.price,
+                                            period: t(originalPrice.periodKey),
+                                            original: originalPrice.price
                                         }}
-                                    >
-                                        <span className="text-3xl font-bold text-amber-500" />
-                                    </Trans>
+                                        components={{
+                                            value: (
+                                                <span className="text-xl font-bold text-amber-500" />
+                                            ),
+                                            currency: <span className="text-md text-gray-500" />,
+                                            divider: <span className="text-md text-gray-400" />,
+                                            period: <span className="text-md text-gray-400" />,
+                                            // New component for strikethrough original price
+                                            original: <span className={` ${hasActiveOffer ? "" : "hidden"} text-md text-gray-400 line-through ml-2`} />
+                                        }}
+                                    />
+
                                 </button>
                             </HoverCardTrigger>
-                            <HoverCardContent
-                                side="top"
-                                align={'end'}
-                                className="w-52 p-3"
-                            >
-                                <p className="text-xs text-center font-semibold text-navy mb-2">
+
+                            <HoverCardContent side="top" align="end" className="w-60 p-3">
+                                <p className="text-xs text-center font-semibold text-navy mb-3">
                                     {t('Properties.priceBreakdown', 'Price Breakdown')}
                                 </p>
-                                <div className="space-y-1.5">
-                                    {priceRows.map(({ label, value }) => (
-                                        <div key={label} className={`flex ${isArabic ? 'flex-row-reverse' : ''} items-center justify-between`}>
-                                            <span className="text-xs text-gray-500">{label}</span>
+                                <div className="space-y-2">
+                                    {/* Remaining Prices */}
+                                    {priceRows.map(({ price, discountedPrice, periodKey }, i) => (
+                                        <div key={i} className={`flex ${isArabic ? 'flex-row-reverse' : ''} items-center justify-between`}>
+                                            <div>
+                                                <span className="text-amber-500">
+                                                    {hasActiveOffer ? discountedPrice : price}
+                                                </span>
+                                                {hasActiveOffer && (
+                                                    <span className="text-xs text-gray-400 line-through ml-2">
+                                                        {price}
+                                                    </span>
+                                                )}
+                                                <span className="text-gray-500 text-xs ml-1">{t("General.kwd")}</span>
+                                            </div>
                                             <span className="text-xs font-semibold text-amber-500">
-                                                {value} KWD
+                                                {t(periodKey)}
                                             </span>
                                         </div>
                                     ))}

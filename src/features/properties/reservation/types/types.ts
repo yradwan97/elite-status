@@ -22,6 +22,7 @@ export interface BookingState {
   services: ExtraService[];
   paymentMethod: string;
   paymentOption: "50" | "100";
+  usePlan: boolean
 }
 
 export type Step = "pricing" | "calendar" | "services" | "confirmation";

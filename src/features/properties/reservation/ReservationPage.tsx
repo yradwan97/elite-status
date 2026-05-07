@@ -53,6 +53,7 @@ export default function ReservationPage() {
     services: [],
     paymentMethod: "1",
     paymentOption: "50",
+    usePlan: false
   });
 
   useEffect(() => {
@@ -139,21 +140,15 @@ export default function ReservationPage() {
     }
 
     const payload: CreateReservationPayload = {
-      startDate:
-        booking.startDate.toLocaleDateString(),
-
+      startDate: booking.startDate.toLocaleDateString(),
       reservationType: booking.planKey,
-
       paymentMethod: paymentMethodId,
-
-      deposit:
-        booking.paymentOption === "50",
-
+      deposit: booking.paymentOption === "50",
       services: booking.services.map(
         (service) => service._id
       ),
-
       property: id,
+      usePlan: booking.usePlan
     };
 
     try {
@@ -312,6 +307,12 @@ export default function ReservationPage() {
                 setBooking((b) => ({
                   ...b,
                   paymentOption: value,
+                }))
+              }
+              onPlanSelectionChange={(checked) =>
+                setBooking((b) => ({
+                  ...b,
+                  usePlan: checked
                 }))
               }
             />

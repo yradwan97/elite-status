@@ -3,11 +3,11 @@ import { servicesApi } from "../servicesApi";
 
 
 
-export function useOwnerServices(page: number, searchTerm: string | undefined) {
+export function useOwnerServices(page: number, searchTerm?: string, limit?: number) {
 
     const { data, isFetching, isError, refetch: queryRefetch } = useQuery({
         queryKey: ['owner-services', page, searchTerm],
-        queryFn:  () => servicesApi.getOwnerServices(page, searchTerm),
+        queryFn:  () => servicesApi.getOwnerServices(page, searchTerm, limit),
     });
 
     return {

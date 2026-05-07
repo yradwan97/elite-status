@@ -38,5 +38,10 @@ export const authApi = {
   resetPassword: async (password: string, token: string) => {
     const { data } = await axios.post(`/auth/reset_password?token=${token}`, { password });
     return data.data;
+  },
+
+  getUserProfile: async () => {
+    const response = await axios.get("/users")
+    return response.data.data;
   }
 }

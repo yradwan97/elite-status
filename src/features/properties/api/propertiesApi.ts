@@ -35,6 +35,10 @@ export interface Property {
     rate?: number;
     isFavourite?: boolean;
     insurance: number
+    offerRate: "VALUE" | "PERCENTAGE",
+    offer: number,
+    offerStartDate: string | null,
+    offerEndDate: string | null,
     tags: { titleAr: string, titleEn: string, _id: string }[]
 }
 

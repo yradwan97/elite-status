@@ -2,6 +2,7 @@ import { useMutation } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { useTranslation } from "react-i18next";
 import { CreateReservationPayload, reservationApi } from "../reservationApi";
+import { ApiError } from "@/common/api/commonApi";
 
 export default function useReservationMutation() {
     const { t } = useTranslation();
@@ -9,13 +10,8 @@ export default function useReservationMutation() {
         mutationFn: (payload: CreateReservationPayload) =>
             reservationApi.createReservation(payload),
 
-        onSuccess: (data) => {
-            console.log(data)
-            toast.success(t("Properties.Reservation.confirmation.success"));
-        },
-
         onError: (e: unknown) => {
-            const error = (e as any)?.response?.data?.message ||
+            const error = (e as ApiError)?.response?.data?.message ||
                 (e as Error)?.message;
             toast.error(t("Properties.Reservation.confirmation.failure", { error }));
         },

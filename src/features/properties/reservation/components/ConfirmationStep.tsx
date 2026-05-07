@@ -6,7 +6,17 @@ import { useTranslation } from "react-i18next";
 import { Property } from "../../api/propertiesApi";
 import i18next from "i18next";
 import { useReservationPolicies } from "../api/hooks/useReservationPolicies";
-import { useEffect } from "react";
+import { OptimizedImage } from "@/components/shared/OptimizedImage";
+import planIcon from "@/assets/plan-icon.png"
+import locationIcon from "@/assets/location-icon.png"
+import insuranceIcon from "@/assets/insurance-icon.png"
+import clockIcon from "@/assets/clock-icon.png"
+import calendarIcon from "@/assets/calendar-icon.png"
+import moneyIcon from "@/assets/money-icon.png"
+import rentTypeIcon from "@/assets/rent-type-icon.png"
+import { useSelector } from "react-redux";
+import { selectUser } from "@/store/slices/authSlice";
+import { Checkbox } from "@/components/ui/checkbox";
 
 interface ConfirmationStepProps {
   property: Property;
@@ -17,30 +27,33 @@ interface ConfirmationStepProps {
   onPay: () => void;
   isRTL: boolean;
   onPaymentOptionChange: (value: "50" | "100") => void;
+  onPlanSelectionChange: (checked: boolean) => void
 }
 
 function SummaryRow({ icon, label, value }: { icon: string; label: string; value: string }) {
   return (
-    <div className="flex gap-3">
-      <span className="text-base shrink-0 mt-0.5">{icon}</span>
-      <div className="">
+    <div className="flex flex-col p-4 rounded-lg bg-[#f9f9f9] gap-2">
+      <div className="flex items-center gap-2">
+        <OptimizedImage src={icon} className="size-5" alt={`${label}-icon`} />
         <p className="text-xs text-gray-400">{label}</p>
+      </div>
+      <div className="">
         <p className="text-sm font-semibold text-navy mt-0.5">{value}</p>
       </div>
     </div>
   );
 }
 
-function PriceLine({ label, value, bold = false }: { label: string; value: string; bold?: boolean }) {
+function PriceLine({ label, value, bold = true, strong = false }: { label: string; value: string; bold?: boolean, strong?: boolean }) {
   return (
     <div className="flex items-center justify-between">
-      <span className={cn("text-sm text-gray-600", bold && "font-semibold text-navy")}>
+      <span className={cn("text-lg text-navy", bold && "font-semibold text-navy")}>
         {label}
       </span>
       <span
         className={cn(
           "text-sm",
-          bold ? "font-bold text-navy px-3 py-0.5 bg-gray-100 rounded-lg" : "text-gray-700"
+          strong ? "font-bold text-navy px-3 py-0.5 bg-gray-100 rounded-lg" : "font-bold text-navy"
         )}
       >
         {value}
@@ -70,7 +83,8 @@ export function ConfirmationStep({
   onBack,
   onPay,
   isRTL,
-  onPaymentOptionChange
+  onPaymentOptionChange,
+  onPlanSelectionChange
 }: ConfirmationStepProps) {
   const { t } = useTranslation();
   const paymentOption = booking.paymentOption;
@@ -79,16 +93,13 @@ export function ConfirmationStep({
   const servicesTotal = selectedServicesList.reduce((sum, s) => sum + s.price, 0);
   const insurance = property.insurance ?? 0;
   const subtotal = booking.planPrice + servicesTotal;
-  //   const discount = property.packageDiscount ?? 0;
-  const netAmount = subtotal - 0;
-  const payNow = paymentOption === "50" ? (netAmount / 2).toFixed(2) : netAmount;
+  const discount = 0;
+  const netAmount = subtotal - discount;
   const language = i18next.language
 
-  const {checkInTime, checkOutTime} = useReservationPolicies(booking.planKey)
+  const user = useSelector(selectUser)
 
-  useEffect(() => {
-    console.log(services)
-  }, [services])
+  const { checkInTime, checkOutTime } = useReservationPolicies(booking.planKey)
 
   const formatBookingDates = (): string => {
     const locale = language === "ar" ? "ar-KW" : "en-US";
@@ -138,6 +149,13 @@ export function ConfirmationStep({
     return formatSingleDate(startDate);
   };
 
+  const isDepositPrice = (price: number): number => {
+    if (booking.paymentOption === "50") {
+      return price / 2
+    }
+    return price
+  }
+
   const selectedPlan = plans.find((p) => p.key === booking.planKey);
   const planLabel = selectedPlan ? t(selectedPlan.labelKey) : booking.planKey ?? "-";
 
@@ -146,49 +164,49 @@ export function ConfirmationStep({
   //   const navigationUrl = `https://www.google.com/maps/dir/?api=1&destination=${property.lat},${property.long}`;
 
   return (
-    <div className="w-full max-w-5xl mx-auto grid grid-cols-1 lg:grid-cols-[1fr_340px] gap-6">
+    <div className="w-full max-w-7xl flex justify-center gap-6">
       {/* LEFT — Booking Summary */}
-      <div className="border border-gray-200 rounded-2xl p-5 space-y-5 bg-white">
+      <div className="border border-gray-200 w-1/2 rounded-2xl shadow-xl p-5 space-y-5 bg-white">
         <SummaryRow
-          icon="📅"
+          icon={calendarIcon}
           label={t("Properties.Reservation.confirmation.dates")}
           value={formatBookingDates()}
         />
-        <div className="h-px bg-gray-100" />
 
         <SummaryRow
-          icon="🕙"
+          icon={clockIcon}
           label={t("Properties.Reservation.confirmation.time")}
           value={`${formatTimeTo12Hour(language, checkInTime)} - ${formatTimeTo12Hour(language, checkOutTime)}`}
         />
-        <div className="h-px bg-gray-100" />
 
         <SummaryRow
-          icon="🏷️"
+          icon={rentTypeIcon}
           label={t("Properties.Reservation.confirmation.rentType")}
           value={planLabel}
         />
-        <div className="h-px bg-gray-100" />
 
         <SummaryRow
-          icon="💰"
+          icon={moneyIcon}
           label={t("Properties.Reservation.confirmation.rentAmount")}
-          value={`${booking.planPrice} KWD`}
+          value={`${booking.planPrice} ${t("General.kwd")}`}
         />
-        <div className="h-px bg-gray-100" />
 
-        <SummaryRow
-          icon="🛡️"
-          label={t("Properties.Reservation.confirmation.insurance")}
-          value={`${insurance} KWD`}
-        />
-        <div className="h-px bg-gray-100" />
+        {insurance > 0 && (
+          <SummaryRow
+            icon={insuranceIcon}
+            label={t("Properties.Reservation.confirmation.insurance")}
+            value={`${insurance} ${t("General.kwd")}`}
+          />
+        )}
 
         {/* Location Map */}
-        <div>
-          <p className="text-xs text-gray-400 mb-2">
-            {t("Properties.Reservation.confirmation.location")}
-          </p>
+        <div className="rounded-lg shadow-lg bg-[#f9f9f9] p-4">
+          <div className="flex items-center gap-2 ">
+            <OptimizedImage src={locationIcon} className="size-5 mb-2" alt="location-icon" />
+            <p className="text-xs text-gray-400 mb-2">
+              {t("Properties.Reservation.confirmation.location")}
+            </p>
+          </div>
           <div className="rounded-xl overflow-hidden border border-gray-100">
             {GOOGLE_MAPS_API_KEY ? (
               <img src={mapEmbedUrl} alt="map" className="w-full h-40 object-cover" />
@@ -207,93 +225,111 @@ export function ConfirmationStep({
       </div>
 
       {/* RIGHT — Payment & Breakdown */}
-      <div className="space-y-4">
+      <div className="space-y-4 w-1/2">
         {/* Payment Option */}
-        <div className="border border-gray-200 rounded-2xl p-4 space-y-3 bg-white">
+        <div className="border border-gray-200 shadow-lg rounded-2xl p-3 h-37 space-y-2 bg-white">
           {(["50", "100"] as const).map((opt) => (
-            <button
-              key={opt}
-              onClick={() => onPaymentOptionChange(opt)}
-              className={cn(
-                "w-full flex items-center justify-between px-4 py-3 rounded-xl border transition-all",
-                paymentOption === opt ? "border-navy bg-navy/5" : "border-gray-200 hover:bg-gray-50"
-              )}
-            >
-              <div className={cn("text-left", isRTL && "text-right")}>
-                <p className="font-semibold text-navy text-sm">
-                  {opt === "50"
-                    ? t("Properties.Reservation.confirmation.deposit")
-                    : t("Properties.Reservation.confirmation.total")}
-                </p>
-                <span className="text-xs text-navy">
-                  {t("Properties.Reservation.info")}
-                </span>
-              </div>
-              <div
+            <>
+              <button
+                key={opt}
+                onClick={() => onPaymentOptionChange(opt)}
                 className={cn(
-                  "w-5 h-5 rounded-full border-2 flex items-center justify-center",
-                  paymentOption === opt ? "border-navy bg-navy" : "border-gray-300"
+                  "w-full flex items-center justify-between px-4 py-1 rounded-xl transition-all",
                 )}
               >
-                {paymentOption === opt && <div className="w-2 h-2 rounded-full bg-white" />}
-              </div>
-            </button>
+                <div className={cn("text-left", isRTL && "text-right")}>
+                  <p className="font-semibold text-navy text-sm">
+                    {opt === "50"
+                      ? t("Properties.Reservation.confirmation.deposit")
+                      : t("Properties.Reservation.confirmation.totalPayment")}
+                  </p>
+                  <span className="text-xs text-navy">
+                    {t("Properties.Reservation.info")}
+                  </span>
+                </div>
+                <div
+                  className={cn(
+                    "size-4 rounded-full border-2 flex items-center justify-center",
+                    paymentOption === opt ? "border-navy " : "border-gray-300"
+                  )}
+                >
+                  {paymentOption === opt && <div className="w-2 h-2 rounded-full bg-turquoise" />}
+                </div>
+              </button>
+              <div className="h-px w-4/5 self-center mx-auto bg-gray-100 last:hidden" />
+            </>
           ))}
         </div>
 
         {/* Price Breakdown */}
-        <div className="border border-gray-200 rounded-2xl p-4 bg-white space-y-3">
+        <div className="border border-gray-200 shadow-lg rounded-2xl p-4 bg-white space-y-3">
           <PriceLine
             label={t("Properties.Reservation.confirmation.chalet")}
-            value={`${booking.planPrice} KWD`}
+            value={`${isDepositPrice(booking.planPrice)} ${t("General.kwd")}`}
           />
+          <div className="h-px bg-gray-100" />
 
           {insurance > 0 && (
-            <PriceLine
-              label={t("Properties.Reservation.confirmation.insurance")}
-              value={`${insurance} KWD`}
-            />
+            <>
+              <PriceLine
+                label={t("Properties.Reservation.confirmation.insurance")}
+                value={`${insurance} ${t("General.kwd")}`}
+              />
+              <div className="h-px bg-gray-100" />
+            </>
           )}
-{/* TODO: fix onToggleService in reservationPage to sync selected services to main booking state and render here */}
+
           {selectedServicesList.map((s) => (
-            <PriceLine
-              key={s._id}
-              label={isRTL ? s.titleAr : s.titleEn}
-              value={`${s.price} KWD`}
-            />
+            <>
+              <PriceLine
+                key={s._id}
+                label={isRTL ? s.titleAr : s.titleEn}
+                value={`${isDepositPrice(s.price)} ${t("General.kwd")}`}
+              />
+              {selectedServicesList.length > 1 && <div className="h-px bg-gray-100 last:hidden" />}
+            </>
           ))}
 
-          <div className="h-px bg-gray-100" />
+          {selectedServicesList.length > 0 && <div className="h-px bg-gray-100" />}
 
           <PriceLine
             label={t("Properties.Reservation.confirmation.total")}
-            value={`${subtotal} KWD`}
-            bold
+            value={`${isDepositPrice(subtotal)} ${t("General.kwd")}`}
+            strong
           />
+        </div>
 
-          {/* {discount > 0 && (
-            <div className="flex items-center justify-between bg-gray-50 rounded-xl px-3 py-2">
-              <div>
-                <p className="text-xs text-gray-400">
+
+        {/* discount from package subscription */}
+        <div className="border border-gray-200 shadow-lg rounded-2xl p-4 bg-white space-y-3">
+          <div className="flex items-center justify-between rounded-xl px-3 py-2">
+            <div className="flex gap-2 items-center">
+              <OptimizedImage src={planIcon} className="size-6" alt="plan-icon" />
+              <div className="flex flex-col gap-1">
+                <p className="text-lg text-gray-400">
                   {t("Properties.Reservation.confirmation.packageDiscount")}
                 </p>
-                <p className="text-sm font-semibold text-navy">
-                  {t("Properties.Reservation.confirmation.goldPackage")}
-                </p>
-              </div>
-              <div className="w-5 h-5 rounded border-2 border-navy flex items-center justify-center">
-                <Check className="w-3 h-3 text-navy" />
+                {user?.plan && (
+                  <p className="text-sm font-semibold text-navy">
+                    {isRTL ? user.plan.titleAr : user.plan.titleEn}
+                  </p>
+                )}
               </div>
             </div>
-          )} */}
+            <Checkbox
+              checked={booking.usePlan}
+              onCheckedChange={(checked) => onPlanSelectionChange(checked === true)}
+              className="size-5 border-2 border-navy data-[state=checked]:bg-navy data-[state=checked]:border-navy"
+            />
+          </div>
+        </div>
 
-          <div className="h-px bg-gray-100" />
-
+        <div className="border border-gray-200 shadow-lg rounded-2xl p-4 bg-white space-y-3">
           <div className="flex items-center justify-between">
-            <span className="font-semibold text-gray-700">
+            <span className="font-semibold text-lg text-navy">
               {t("Properties.Reservation.confirmation.net")}
             </span>
-            <span className="font-bold text-xl text-navy">{netAmount} KWD</span>
+            <span className="font-bold text-xl text-turquoise">{isDepositPrice(netAmount)} {t("General.kwd")}</span>
           </div>
 
           <Button
@@ -301,7 +337,6 @@ export function ConfirmationStep({
             onClick={onPay}
           >
             {t("Properties.Reservation.confirmation.pay")}
-            {paymentOption === "50" && ` (${payNow} KWD)`}
           </Button>
         </div>
 

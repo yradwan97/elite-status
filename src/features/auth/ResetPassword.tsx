@@ -3,7 +3,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { useTranslation } from 'react-i18next';
 import { useNavigate, useSearchParams } from 'react-router-dom';
-import InputField from '@/features/auth/components/InputField';
+import InputField from '@/components/shared/InputField';
 import loginLogo from '@/assets/login-icon.png';
 import { OptimizedImage } from '@/components/shared/OptimizedImage';
 import { PageTitle } from '@/components/shared/PageTitle';

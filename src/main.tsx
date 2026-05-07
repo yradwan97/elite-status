@@ -32,7 +32,7 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
             <App />
             <Toaster position="top-center" richColors />
           </BrowserRouter>
-          <ReactQueryDevtools initialIsOpen={false} />
+          {/* <ReactQueryDevtools initialIsOpen={false} /> */}
         </QueryClientProvider>
       </Provider>
     </HelmetProvider>

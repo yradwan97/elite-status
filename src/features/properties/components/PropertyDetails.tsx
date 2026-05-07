@@ -7,26 +7,18 @@ import {
     Share2,
     ChevronRight,
     MapPin,
-    Users,
-    BedDouble,
-    Bath,
-    Sofa,
     FileText,
     ZoomIn,
     Navigation,
-    MessageCircle,
     ArrowRight,
     Home,
-    Info
+    Info,
+    ArrowLeft
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Separator } from "@/components/ui/separator";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-import { Label } from "@/components/ui/label";
 import { useProperty } from "../api/hooks/useProperty";
-import { cn } from "@/lib/utils";
+import { checkLoggedIn, cn } from "@/lib/utils";
 import { Facility } from "../api/propertiesApi";
 import i18next from "i18next";
 import DOMPurify from "dompurify";
@@ -40,6 +32,12 @@ import { toast } from "sonner";
 import useTourMutation from "../api/hooks/useTourMutation";
 import { useInfo } from "@/common/api/hooks/useInfo";
 import { Spinner } from "@/components/ui/spinner"
+import villaIcon from "@/assets/villa-icon.png"
+import bedIcon from "@/assets/bed-icon.png"
+import bathroomIcon from "@/assets/bathroom-icon.png"
+import userIcon from "@/assets/user-icon.png"
+import loungeIcon from "@/assets/lounge-icon.png";
+import { TourForm, TourFormValues } from "./TourForm";
 
 
 const Skeleton = ({ className }: { className?: string }) => (
@@ -86,9 +84,6 @@ export default function PropertyDetails() {
         }
     }, [property]);
 
-    // Tour form
-    const [tourForm, setTourForm] = useState({ name: "", email: "", phone: "", message: "" });
-
     if (!property) {
         if (isLoading) {
             return (
@@ -118,7 +113,7 @@ export default function PropertyDetails() {
         ALLOWED_TAGS: ["p", "br", "strong", "em", "u", "span", "ul", "ol", "li", "h1", "h2", "h3"],
         ALLOWED_ATTR: ["style", "class"],
     });
-    const images = property.images ?? [];
+    const images = [...property.images];
     const hasMorePhotos = images.length > 3;
 
     const descPreview = sanitizedDescription.slice(0, 380);
@@ -215,19 +210,13 @@ export default function PropertyDetails() {
         }
     };
 
-    const handleSubmitTour = () => {
+    const handleSubmitTour = (values: TourFormValues) => {
         if (!property?._id) return;
-
-        tourMutation.mutate({
-            ...tourForm,
-            property: property._id,
-        }, {
-            onSuccess: () => {
-                setTourForm({ name: "", email: "", phone: "", message: "" });
-            }
-        });
+        tourMutation.mutate(
+            { ...values, property: property._id },
+            { onSuccess: () => { } } // reset is handled inside TourForm
+        );
     };
-
 
 
     return (
@@ -297,13 +286,13 @@ export default function PropertyDetails() {
                             onClick={() => hasMorePhotos && setLightboxImage(images[0])}
                         >
                             {isLoading ? (
-                                <Skeleton className="w-full h-130 rounded-3xl" />
+                                <Skeleton className="w-full h-132 rounded-3xl" />
                             ) : images[0] ? (
                                 <OptimizedImage
                                     src={images[0]}
                                     alt={title}
                                     priority
-                                    className="w-full h-full object-contain group-hover:brightness-[0.92] transition-all duration-300 aspect-16/10 lg:aspect-auto lg:h-130"
+                                    className="w-full h-full object-cover group-hover:brightness-[0.92] transition-all duration-300 aspect-16/10  lg:h-130"
                                 />
                             ) : (
                                 <div className="w-full h-130 bg-gray-100 flex items-center justify-center">
@@ -326,7 +315,7 @@ export default function PropertyDetails() {
                                     <OptimizedImage
                                         src={images[1]}
                                         alt={`${title} - view 2`}
-                                        className="w-full h-full object-contain group-hover:brightness-[0.92] transition-all duration-300 aspect-16/10 lg:aspect-4/3"
+                                        className="w-full h-full object-cover group-hover:brightness-[0.92] transition-all duration-300 aspect-16/10 lg:h-65 lg:aspect-4/3"
                                     />
                                 ) : (
                                     <div className="w-full h-full bg-white" />
@@ -344,7 +333,7 @@ export default function PropertyDetails() {
                                     <OptimizedImage
                                         src={images[2]}
                                         alt={`${title} - view 3`}
-                                        className="w-full h-full object-contain group-hover:brightness-[0.92] transition-all duration-300 aspect-16/10 lg:aspect-4/3"
+                                        className="w-full h-full object-cover group-hover:brightness-[0.92] transition-all duration-300 aspect-16/10 lg:h-65 lg:aspect-4/3"
                                     />
                                 ) : (
                                     <div className="w-full h-full bg-white" />
@@ -376,7 +365,7 @@ export default function PropertyDetails() {
                     <div className="space-y-6">
 
                         {/* Property meta strip */}
-                        <div className="border border-gray-200 rounded-2xl p-4">
+                        <div className="border border-gray-200 rounded-2xl h-auto sm:h-23.5 p-2 flex items-center justify-start">
                             {isLoading ? (
                                 <div className="grid grid-cols-2 sm:grid-cols-5 gap-4">
                                     {Array.from({ length: 5 }).map((_, i) => (
@@ -384,29 +373,29 @@ export default function PropertyDetails() {
                                     ))}
                                 </div>
                             ) : (
-                                <div className="grid grid-cols-2 sm:grid-cols-5 gap-4">
+                                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-7">
                                     <MetaStat
-                                        icon={<Home className="w-4 h-4" />}
+                                        iconSrc={villaIcon}
                                         label={t("Properties.Details.meta.type")}
                                         value={typeof property.propertyType === 'string' ? property.propertyType : property.propertyType.title}
                                     />
                                     <MetaStat
-                                        icon={<Users className="w-4 h-4" />}
+                                        iconSrc={userIcon}
                                         label={t("Properties.Details.meta.guests")}
                                         value={`${property.guests} ${t("Properties.Details.meta.person")}`}
                                     />
                                     <MetaStat
-                                        icon={<BedDouble className="w-4 h-4" />}
+                                        iconSrc={bedIcon}
                                         label={t("Properties.Details.meta.bedrooms")}
                                         value={`${property.bedrooms} ${t("Properties.Details.meta.bedrooms")}`}
                                     />
                                     <MetaStat
-                                        icon={<Bath className="w-4 h-4" />}
+                                        iconSrc={bathroomIcon}
                                         label={t("Properties.Details.meta.bathrooms")}
                                         value={`${property.bathrooms} ${t("Properties.Details.meta.bathrooms")}`}
                                     />
                                     <MetaStat
-                                        icon={<Sofa className="w-4 h-4" />}
+                                        iconSrc={loungeIcon}
                                         label={t("Properties.Details.meta.lounges")}
                                         value={`${property.lounges} ${t("Properties.Details.meta.bigLounge")}`}
                                     />
@@ -415,34 +404,35 @@ export default function PropertyDetails() {
                         </div>
 
                         {/* Description */}
-                        {isLoading ? (
-                            <div className="space-y-2">
-                                <Skeleton className="h-3 w-full" />
-                                <Skeleton className="h-3 w-5/6" />
-                                <Skeleton className="h-3 w-4/6" />
-                            </div>
-                        ) :
-                            <div
-                                className="text-sm text-gray-500 leading-relaxed"
-                                style={!descExpanded ? { maxHeight: "8rem", overflow: "hidden", maskImage: "linear-gradient(to bottom, black 60%, transparent 100%)" } : undefined}
-                                dangerouslySetInnerHTML={{ __html: descExpanded ? sanitizedDescription : descPreview }}
-                            />}
-                        {descNeedsExpand && (
-                            <button
-                                className="text-navy capitalize font-semibold hover:underline text-sm mt-1"
-                                onClick={() => setDescExpanded(!descExpanded)}
-                            >
-                                {descExpanded
-                                    ? t("Properties.Details.description.seeLess")
-                                    : t("Properties.Details.description.seeMore")
-                                }
-                            </button>
-                        )}
+                        <div className="flex flex-col justify-start items-start gap-4 p-4 rounded-lg bg-[#f9f9f9]">
+                            {isLoading ? (
+                                <div className="space-y-2">
+                                    <Skeleton className="h-3 w-full" />
+                                    <Skeleton className="h-3 w-5/6" />
+                                    <Skeleton className="h-3 w-4/6" />
+                                </div>
+                            ) :
+                                <div
+                                    className="text-sm text-gray-500 leading-relaxed"
+                                    style={!descExpanded ? { maxHeight: "8rem", overflow: "hidden", maskImage: "linear-gradient(to bottom, black 60%, transparent 100%)" } : undefined}
+                                    dangerouslySetInnerHTML={{ __html: descExpanded ? sanitizedDescription : descPreview }}
+                                />}
+                            {descNeedsExpand && (
+                                <button
+                                    className="text-navy capitalize font-semibold hover:underline text-sm mt-1"
+                                    onClick={() => setDescExpanded(!descExpanded)}
+                                >
+                                    {descExpanded
+                                        ? t("Properties.Details.description.seeLess")
+                                        : t("Properties.Details.description.seeMore")
+                                    }
+                                </button>
+                            )}
 
-                        <Separator />
+                        </div>
 
                         {/* Facilities */}
-                        <div>
+                        <div className="rounded-lg bg-[#f9f9f9] p-4">
                             <h2 className="text-base font-bold text-navy mb-4">
                                 {t("Properties.Details.section.facilities")}
                             </h2>
@@ -457,11 +447,9 @@ export default function PropertyDetails() {
                                 {visibleFacilities.map((f: Facility) => (
                                     <div
                                         key={f._id}
-                                        className="flex flex-col items-center gap-1.5 border border-gray-200 rounded-xl px-5 py-3 min-w-20 text-center"
+                                        className="flex flex-col items-center gap-2.5 border bg-white shadow-md border-gray-200 rounded-[5px] px-5 py-2.5 min-w-20 w-30.5 h-21.75 text-center"
                                     >
-                                        <span className="text-xl">
-                                            <OptimizedImage src={f.icon!} alt={`${f.titleEn}-icon`} />
-                                        </span>
+                                        <OptimizedImage className="size-10 p-1" src={f.icon!} alt={`${f.titleEn}-icon`} />
                                         <span className="text-xs text-gray-600 font-medium">
                                             {i18next.language === "ar" ? f.titleAr : f.titleEn}
                                         </span>
@@ -478,10 +466,8 @@ export default function PropertyDetails() {
                             </div> : <p>{t("Properties.Details.facilities.none")}</p>}
                         </div>
 
-                        <Separator />
-
                         {/* Documents */}
-                        <div>
+                        <div className="rounded-lg shadow-lg bg-[#f9f9f9] p-4">
                             <h2 className="text-base font-bold text-navy mb-3">
                                 {t("Properties.Details.section.documents")}
                             </h2>
@@ -501,8 +487,8 @@ export default function PropertyDetails() {
                                         rel="noopener noreferrer"
                                         className="flex items-center gap-2 text-sm text-gray-600 hover:text-navy transition-colors group"
                                     >
-                                        <FileText className="w-4 h-4 text-gray-400 group-hover:text-navy transition-colors" />
-                                        <span className="underline-offset-2 hover:underline">
+                                        <FileText className="size-5 text-navy transition-colors" />
+                                        <span className="underline-offset-2 group-hover:underline">
                                             {key}
                                         </span>
                                     </a>
@@ -510,10 +496,8 @@ export default function PropertyDetails() {
                             </div>
                         </div>
 
-                        <Separator />
-
                         {/* Location / Map */}
-                        <div>
+                        <div className="rounded-lg shadow-lg bg-[#f9f9f9] p-4">
                             <h2 className="text-base font-bold text-navy mb-3">
                                 {t("Properties.Details.section.location")}
                             </h2>
@@ -570,7 +554,7 @@ export default function PropertyDetails() {
                         ) :
                             <>
                                 {/* Rent card */}
-                                <div className="border border-gray-200 rounded-2xl p-4 flex items-center justify-between">
+                                <div className="border border-gray-200 rounded-2xl p-4 h-23.5 mb-6 flex items-center justify-between">
                                     <div className="flex items-center gap-3">
                                         <div className="w-10 h-10 rounded-full bg-white flex items-center justify-center">
                                             <span className="text-lg"><OptimizedImage alt="money logo" src={moneyLogo} /></span>
@@ -579,7 +563,7 @@ export default function PropertyDetails() {
                                             <p className="text-xs text-gray-400">{t("Properties.Details.rent.startFrom")}</p>
                                             <div className="flex flex-row gap-2">
                                                 <p className="text-xl font-bold text-navy">
-                                                    {property.dailyPrice} <span className="text-sm font-medium">KWD</span>
+                                                    {property.dailyPrice} <span className="text-sm font-medium">{t("General.kwd")}</span>
                                                 </p>
                                                 <HoverCard openDelay={100} closeDelay={100}>
                                                     <HoverCardTrigger asChild>
@@ -600,7 +584,7 @@ export default function PropertyDetails() {
                                                                 <div key={label} className={`flex ${isRTL ? 'flex-row-reverse' : ''} items-center justify-between`}>
                                                                     <span className="text-xs text-gray-500">{label}</span>
                                                                     <span className="text-xs font-semibold text-amber-500">
-                                                                        {value} KWD
+                                                                        {value} {t("General.kwd")}
                                                                     </span>
                                                                 </div>
                                                             ))}
@@ -612,10 +596,10 @@ export default function PropertyDetails() {
                                     </div>
                                     <Button
                                         className="rounded-sm w-15 h-10 p-0 bg-navy cursor-pointer hover:bg-[#243760] text-white disabled:opacity-40 disabled:cursor-not-allowed"
-                                        disabled={!user}
                                         onClick={() => {
-                                            if (!user) return;
-                                            navigate(`/properties/${property._id}/reservation`)
+                                            if (checkLoggedIn(user)) {
+                                                navigate(`/properties/${property._id}/reservation`)
+                                            }
                                         }}
                                     >
                                         <ArrowRight className={cn("w-4 h-4", isRTL && "rotate-180")} />
@@ -623,7 +607,7 @@ export default function PropertyDetails() {
                                 </div>
 
                                 {/* Schedule a Tour */}
-                                <div className="border border-gray-200 rounded-2xl p-5">
+                                {/* <div className="border border-gray-200 rounded-2xl p-5">
                                     <h3 className="font-bold text-navy text-base mb-4">
                                         {t("Properties.Details.tour.title")}
                                     </h3>
@@ -631,6 +615,7 @@ export default function PropertyDetails() {
                                         <div>
                                             <Label className="text-lg text-gray-500 mb-1 block">{t("Properties.Details.tour.name")}</Label>
                                             <Input
+                                                required
                                                 placeholder={t("Properties.Details.tour.namePlaceholder")}
                                                 value={tourForm.name}
                                                 onChange={(e) => setTourForm({ ...tourForm, name: e.target.value })}
@@ -640,6 +625,7 @@ export default function PropertyDetails() {
                                         <div>
                                             <Label className="text-lg text-gray-500 mb-1 block">{t("Properties.Details.tour.email")}</Label>
                                             <Input
+                                                required
                                                 type="email"
                                                 placeholder={t("Properties.Details.tour.emailPlaceholder")}
                                                 value={tourForm.email}
@@ -650,6 +636,7 @@ export default function PropertyDetails() {
                                         <div>
                                             <Label className="text-lg text-gray-500 mb-1 block">{t("Properties.Details.tour.phone")}</Label>
                                             <Input
+                                                required
                                                 type="tel"
                                                 placeholder={t("Properties.Details.tour.phonePlaceholder")}
                                                 value={tourForm.phone}
@@ -668,8 +655,11 @@ export default function PropertyDetails() {
                                         </div>
                                         <Button
                                             className="w-full bg-navy hover:bg-[#243760] text-white rounded-xl h-11 font-semibold"
-                                            onClick={handleSubmitTour}
-                                            disabled={!user}
+                                            onClick={() => {
+                                                if (checkLoggedIn(user)) {
+                                                    handleSubmitTour()
+                                                }
+                                            }}
                                         >
                                             {t("Properties.Details.tour.submit")}
                                         </Button>
@@ -688,7 +678,14 @@ export default function PropertyDetails() {
                                             {t("Properties.Details.tour.whatsapp")}
                                         </Button>
                                     </div>
-                                </div>
+                                </div> */}
+                                <TourForm
+                                    onSubmit={(values) => {
+                                        if (checkLoggedIn(user)) handleSubmitTour(values);
+                                    }}
+                                    onWhatsapp={handleReserveOnWhatsapp}
+                                    isSubmitting={tourMutation.isPending}
+                                />
                             </>}
                     </div>
                 </div>
@@ -724,14 +721,47 @@ export default function PropertyDetails() {
 
                 {/* ── Lightbox Modal ── */}
                 <Dialog open={!!lightboxImage} onOpenChange={() => setLightboxImage(null)}>
-                    <DialogContent className="max-w-5xl w-full p-3 border-0 rounded-2xl overflow-hidden">
-                        {lightboxImage && (
-                            <OptimizedImage
-                                src={lightboxImage}
-                                alt="Full view"
-                                className="w-full max-h-[85vh] object-contain"
-                            />
-                        )}
+                    <DialogContent className="max-w-6xl w-full p-0 border-2 rounded-4xl overflow-hidden">
+                        {lightboxImage && (() => {
+                            const currentIndex = images.indexOf(lightboxImage);
+                            const hasPrev = currentIndex > 0;
+                            const hasNext = currentIndex < images.length - 1;
+
+                            return (
+                                <div className="relative">
+                                    <OptimizedImage
+                                        src={lightboxImage}
+                                        alt="Full view"
+                                        className="w-full max-h-[85vh] object-cover"
+                                    />
+
+                                    {hasPrev && (
+                                        <button
+                                            onClick={() => setLightboxImage(images[currentIndex - 1])}
+                                            className="absolute left-3 top-1/2 -translate-y-1/2 bg-black/40 hover:bg-black/60 text-white rounded-full p-2.5 transition-all backdrop-blur-sm"
+                                            aria-label="Previous image"
+                                        >
+                                            <ArrowLeft className="w-5 h-5" />
+                                        </button>
+                                    )}
+
+                                    {hasNext && (
+                                        <button
+                                            onClick={() => setLightboxImage(images[currentIndex + 1])}
+                                            className="absolute right-3 top-1/2 -translate-y-1/2 bg-black/40 hover:bg-black/60 text-white rounded-full p-2.5 transition-all backdrop-blur-sm"
+                                            aria-label="Next image"
+                                        >
+                                            <ArrowRight className="w-5 h-5" />
+                                        </button>
+                                    )}
+
+                                    {/* Image counter */}
+                                    <div className="absolute bottom-3 left-1/2 -translate-x-1/2 bg-black/40 backdrop-blur-sm text-white text-xs px-3 py-1 rounded-full">
+                                        {currentIndex + 1} / {images.length}
+                                    </div>
+                                </div>
+                            );
+                        })()}
                     </DialogContent>
                 </Dialog>
             </div>
@@ -742,19 +772,21 @@ export default function PropertyDetails() {
 // ── Helper component ──────────────────────────────────────────────────────
 
 function MetaStat({
-    icon,
+    iconSrc,
     label,
     value,
 }: {
-    icon: React.ReactNode;
+    iconSrc: string;
     label: string;
     value: string;
 }) {
     return (
-        <div className="flex flex-col items-center gap-1 text-center">
-            <div className="text-gray-400">{icon}</div>
+        <div className="flex flex-col items-start gap-1 text-center">
             <p className="text-[10px] uppercase tracking-wide text-gray-400">{label}</p>
-            <p className="text-sm font-semibold text-navy leading-tight">{value}</p>
+            <div className="flex gap-2">
+                <OptimizedImage src={iconSrc} className="size-5" alt={`${label}-icon`} />
+                <p className="text-sm font-semibold text-navy leading-tight">{value}</p>
+            </div>
         </div>
     );
 }

@@ -69,7 +69,7 @@ export default function InputField<T extends FieldValues>({
         )}
       </div>
 
-      {error && <p className="text-red-500 text-sm mt-1 text-right">{error}</p>}
+      {error && <p className={`text-red-500 text-sm mt-1 ${isRTL ? "text-right" : "text-left"}`}>{error}</p>}
     </div>
   );
 }

@@ -3,7 +3,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useTranslation } from "react-i18next";
 import z from "zod";
 import { Mail } from "lucide-react";
-import InputField from "./components/InputField";
+import InputField from "../../components/shared/InputField";
 import loginLogo from "@/assets/login-icon.png";
 import { OptimizedImage } from "@/components/shared/OptimizedImage";
 import { getForgetPasswordSchema } from "./schemas/forgetPasswordSchema";

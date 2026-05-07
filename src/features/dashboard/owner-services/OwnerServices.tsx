@@ -19,7 +19,7 @@ export default function OwnerServices() {
   const debouncedSearch = useDebounce(searchTerm, 500);
 
   // Fetch services using debounced value
-  const { services, isLoading, error, pages } = useOwnerServices(page, debouncedSearch);
+  const { services, isLoading, error, pages } = useOwnerServices(page, debouncedSearch, 12);
 
   // Reset to first page when debounced search changes
   useEffect(() => {

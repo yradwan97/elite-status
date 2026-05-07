@@ -99,5 +99,15 @@ export const profileApi = {
     deleteUserAccount: async () => {
         const response = await api.delete('/users')
         return response.data;
+    },
+    
+    getPlans: async () => {
+        const response = await api.get("/plans");
+        return response.data
+    },
+
+    subscribeToPlan: async (planId: string) => {
+        const response = await api.post("/plans/subscription", {plan: planId})
+        return response.data;
     }
 };

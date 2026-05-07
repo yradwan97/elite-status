@@ -8,11 +8,17 @@ export interface CreateReservationPayload {
     deposit: boolean
     paymentMethod: "1" | "2"
     services: string[]
+    usePlan: boolean
 }
 
 export interface CancelReservationPayload {
     reservation: string
     reason: string
+}
+
+export interface RequestExtraServicesPayload {
+    reservation: string
+    services: string[]
 }
 
 export type ReservationStatus = 'ACTIVE' | 'COMPLETED' | 'CANCELED';
@@ -47,6 +53,7 @@ export interface Reservation {
   transaction: string;
   user: ReservationUser;
   amount: number;
+  discount?: number
   services: ReservationService[];
   insurance: number;
   status: ReservationStatus;
@@ -56,7 +63,7 @@ export interface Reservation {
   reservationType: ReservationType;
   reservationPrice: number;
   deposit: boolean;
-  invoice: string;
+  invoice?: string;
   createdAt: string;
   updatedAt: string;
 }
@@ -95,9 +102,18 @@ export const reservationApi = {
         return response.data
     },
 
+    getDiscountedReservations: async (
+        page: number
+    ): Promise<ApiResponse<ReservationsResponse>> => {
+        const response = await api.get<ApiResponse<ReservationsResponse>>(
+            `/reservations?page=${page}&discounted=true&size=6`,
+        );
+        return response.data;
+    },
+
     getReservations: async (
         status: ReservationStatus,
-        page: number
+        page: number,
     ): Promise<ApiResponse<ReservationsResponse>> => {
         const response = await api.get<ApiResponse<ReservationsResponse>>(
             `/reservations?status=${status}&page=${page}`,
@@ -108,5 +124,10 @@ export const reservationApi = {
     requestReservationCancelation: async (cancelPayload: CancelReservationPayload) => {
         const response = await api.post("/requests/cancellations", {...cancelPayload})
         return response.data;
+    },
+
+    requestExtraServices: async (payload: RequestExtraServicesPayload) => {
+        const response = await api.post("/extra-services/requests", {...payload})
+        return response.data
     }
 }

@@ -31,7 +31,7 @@ const clearCredentialsAndRedirect = () => {
   localStorage.removeItem('refreshToken')
   localStorage.removeItem('user')
   window.dispatchEvent(new Event('auth:logout'))
-  window.location.href = '/login'
+  // window.location.href = '/login'
 }
 
 // Request interceptor - attach accessToken from localStorage

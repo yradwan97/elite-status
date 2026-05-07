@@ -32,10 +32,10 @@ export default function AccountFavourites() {
   const isArabic = i18next.language === 'ar';
 
   return (
-    <div className="max-w-5xl mx-auto p-6 lg:p-8">
+    <div className="max-w-7xl mx-auto p-6 lg:p-8">
       <h1 className={`text-2xl ${isArabic ? 'text-right' : 'text-left'} font-semibold mb-8`}>{t("Account.Favourites.Title")}</h1>
       <section className="flex-1 min-w-0" dir={isArabic ? 'rtl' : 'ltr'}>
-        <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
           {isLoading
             ? Array.from({ length: 9 }).map((_, i) => <SkeletonCard key={i} />)
             : properties?.length > 0

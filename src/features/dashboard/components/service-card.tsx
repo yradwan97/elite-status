@@ -26,8 +26,8 @@ export default function ServiceCard({ service, className }: ServiceCardProps) {
 
   const handleBookService = () => {
       if (!info || !info.ownerServices) return;
-      // const phoneNumber = info.ownerServices;
-      const phoneNumber = 201032315996;
+      const phoneNumber = info.ownerServices;
+      // const phoneNumber = 201032315996;
       const message = t("Dashboard.Services.whatsappMessage", { title: isArabic ? service?.titleAr : service?.titleEn });
       const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
       window.open(whatsappUrl, "_blank");
@@ -35,12 +35,12 @@ export default function ServiceCard({ service, className }: ServiceCardProps) {
 
   return (
     <div className={cn(
-      "group flex flex-col gap-4 bg-gray-100 border border-gray-300 rounded-2xl p-8 h-full hover:shadow-md hover:border-navy/20 transition-all duration-200",
+      "group flex flex-col gap-4 bg-gray-100 border border-gray-300 rounded-2xl p-8 h-64 w-79 hover:shadow-md hover:border-navy/20 transition-all duration-200",
       className
     )}>
       {/* Icon */}
-      <div className="w-16 h-16 rounded-2xl  flex items-center justify-center group-hover:bg-navy/10 transition-colors">
-        <OptimizedImage src={service.icon} alt={service.titleEn} className="w-8 h-8 object-contain" />
+      <div className="w-16 h-16 rounded-2xl  flex items-center justify-center transition-colors">
+        <OptimizedImage src={service.icon} alt={service.titleEn} className="size-16 rounded-2xl object-cover" />
       </div>
 
       {/* Text */}
@@ -52,7 +52,7 @@ export default function ServiceCard({ service, className }: ServiceCardProps) {
       {/* CTA */}
       <button
         onClick={handleBookService}
-        className="self-start bg-navy text-white text-sm font-medium px-6 py-3 rounded-full hover:opacity-90 transition-opacity"
+        className="self-start bg-navy w-23.25 h-9.25 cursor-pointer text-white text-sm font-medium p-2.5 rounded-full hover:opacity-90 transition-opacity"
       >
         {t("Dashboard.Services.bookNow") ?? "Book Now"}
       </button>

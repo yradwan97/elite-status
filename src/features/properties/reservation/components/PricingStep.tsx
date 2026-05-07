@@ -49,7 +49,7 @@ export function PricingStep({
             </div>
 
             <div className="flex flex-col items-end gap-3 shrink-0">
-              <span className="text-navy font-bold text-base">{plan.price} KWD</span>
+              <span className="text-navy font-bold text-base">{plan.price} {t("General.kwd")}</span>
               <Switch dir="ltr" className="shrink-0" checked={selectedPlanKey === plan.key} onCheckedChange={() => onPlanSelect(plan.key, plan.price)} />
             </div>
           </div>

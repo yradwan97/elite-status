@@ -1,5 +1,11 @@
+import { Plan } from "@/features/profile/api/hooks/usePlans";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
+
+export interface UserPlan extends Pick<Plan, 'titleAr'| 'titleEn' | 'extraServicesDiscount' | 'insuranceDiscount' | 'reservationDiscount'> {
+    expirationDate: string
+    subscriptionDate: string
+}
 export interface User {
     _id?: string;
     firstName: string;
@@ -11,6 +17,7 @@ export interface User {
     gender?: "male" | "female";
     nationality?: string;
     image?: File | string | null;
+    plan?: UserPlan
 }
 
 interface AuthState {
@@ -42,20 +49,24 @@ const authSlice = createSlice({
             state.user = action.payload.user;
             if (action.payload.accessToken)
                 state.accessToken = action.payload.accessToken;
-            
+
             state.refreshToken = action.payload.refreshToken ?? null;
         },
         clearCredentials: (state) => {
             ["user", "accessToken", "refreshToken"].forEach((key) => localStorage.removeItem(key));
-            
+
             state.user = null;
             state.accessToken = null;
             state.refreshToken = null;
         },
+        setUser: (state, action: PayloadAction<User>) => {
+            localStorage.setItem('user', JSON.stringify(action.payload));
+            state.user = action.payload
+        }
     },
 });
 
-export const { setCredentials, clearCredentials } = authSlice.actions;
+export const { setCredentials, clearCredentials, setUser } = authSlice.actions;
 export default authSlice.reducer;
 
 // Selectors

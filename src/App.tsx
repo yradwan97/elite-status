@@ -14,12 +14,16 @@ import AccountPage from './features/profile/AccountPage';
 import OwnerServices from './features/dashboard/owner-services/OwnerServices';
 import { ProtectedRoute } from './components/auth/ProtectedRoute';
 import ResetPassword from './features/auth/ResetPassword';
+import { WhatsAppFAB } from './components/layout/WhatsAppFAB';
+import { useOnlineStatus } from './hooks/use-is-online';
+import { OfflineBanner } from './components/layout/OfflineBanner';
 
 function App() {
 
   const accessToken = useSelector(selectAccessToken);
   const user = useSelector(selectUser)
   const dispatch = useDispatch();
+  const isOnline = useOnlineStatus()
 
   useEffect(() => {
     if (!user || !accessToken || (accessToken && !isTokenValid(accessToken))) {
@@ -30,6 +34,7 @@ function App() {
   return (
     <div className="min-h-screen bg-background flex flex-col">
       {/* Header */}
+      {!isOnline && <OfflineBanner />}
       <Header />
 
       {/* Main Content Area - This will grow naturally */}
@@ -62,6 +67,7 @@ function App() {
 
       {/* Footer - Now sits naturally at the bottom only when content is short */}
       <Footer />
+      <WhatsAppFAB />
     </div>
   );
 }

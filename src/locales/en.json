@@ -1,7 +1,17 @@
 {
   "General": {
     "clear": "Clear",
-    "pleaseLogin": "Please login first"
+    "pleaseLogin": "Please login first",
+    "chatWithUs": "💬 Chat with us on WhatsApp",
+    "kwd": "KWD",
+    "cancel": "Cancel",
+    "upgrade": "Upgrade",
+    "rent": "Rent"
+  },
+  "Offline": {
+    "title": "You're offline",
+    "description": "Check your internet connection and try again.",
+    "retry": "Retry"
   },
   "Footer": {
     "socialMediaLinks": "Social Media Links",
@@ -52,13 +62,22 @@
     "Pricing": {
       "title": "Best Subscribe Plan For You",
       "billedAnnually": "Billed annually.",
-      "getStarted": "Get Started"
+      "getStarted": "Get Started",
+      "goldBadge": "Best ROI",
+      "platinumBadge": "Most Popular",
+      "diamondBadge": "Enterprise",
+      "confirmTitle": "Confirm Subscription",
+      "confirmBody": "You are about to subscribe to the {{plan}}. Do you wish to proceed? You will be redirected to a payment gateway to complete your payment",
+      "confirm": "Confirm",
+      "subsciptionFailed": "Failed to subscribe to selected plan: {{error}}",
+      "subsciptionSuccess": "Subscription proccessed successfully"
     },
     "Newsletter": {
-      "title": "Join The Inner Circle",
-      "subtitle": "Unlock unforgettable escapes and elevate every stay with Elite Status.",
-      "emailPlaceholder": "enter your email ...",
-      "subscribe": "Subscribe Now"
+      "title": "Showcase Your Chalet to the World",
+      "subtitle": "Submit your phone number and let our team handle the rest. We'll help market our chalet to the right audience!",
+      "emailPlaceholder": "enter your number ...",
+      "subscribe": "Send Number",
+      "whatsappMessage": "Hi, I'm interested in receiving updates about Elite status. This is my preferred mode of communication. Thank you!"
     },
     "Services": {
       "growTitle": "Grow Your Rental Income",
@@ -131,7 +150,7 @@
     "priceBreakdown": "Price Breakdown",
     "wholeWeek": "Whole Week",
     "dayUse": "Day Use",
-    "dailyPrice": "<value>{{price}}</value> <currency>KWD</currency> <divider>/</divider> <day>day</day>",
+    "firstPrice": "<value>{{price}}</value> <original>{{original}}</original> <currency>KWD</currency> <divider>/</divider> <period>{{period}}</period>",
     "filter": {
       "title": "Filter by",
       "guests": "No Of Guest",
@@ -217,7 +236,15 @@
         "whatsapp": "Reserve on Whatsapp",
         "success": "Tour request sent successfully!",
         "error": "Failed to send tour request. Please try again.",
-        "whatsappMessage": "I would like to schedule a tour for your property, '{{title}}'. Please let me know the available dates and times. Thank you!"
+        "whatsappMessage": "I would like to schedule a tour for your property, '{{title}}'. Please let me know the available dates and times. Thank you!",
+        "validation": {
+          "name": "Name is required",
+          "email": "Email is required",
+          "validEmail": "Enter a valid email",
+          "phone": "Phone number is required",
+          "validPhone": "Enter a valid phone number",
+          "message": "Message must be at least 5 characters"
+        }
       },
       "error": "Failed to load property.",
       "retry": "Retry",
@@ -299,6 +326,13 @@
         "details": "Chalet Details",
         "reservation": "Reservation"
       }
+    },
+    "pricePeriods": {
+      "daily": "Day (with stay)",
+      "dayUse": "Day (day use)",
+      "weekly": "Week",
+      "weekdays": "Weekdays",
+      "weekends": "Weekends"
     }
   },
   "Account": {
@@ -416,6 +450,10 @@
         "amount": "Amount",
         "insurance": "Insurance",
         "downloadInvoice": "Download Invoice"
+      },
+      "services": {
+        "success": "Extra services requested successfully",
+        "fail": "There was a problem with your request, please try again later: {{error}}"
       },
       "cancel": {
         "title": "Enter Cancellation Reason",

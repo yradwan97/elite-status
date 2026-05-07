@@ -8,13 +8,16 @@ import {
   DialogTitle,
 } from '@/components/ui/dialog';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { CancelReservationPayload, Reservation } from '@/features/properties/reservation/api/reservationApi';
+import { CancelReservationPayload, RequestExtraServicesPayload, Reservation } from '@/features/properties/reservation/api/reservationApi';
 import { InfoTab, PaymentTab } from './Tabs';
 import reservationCancelIcon from "@/assets/reservation-cancel.png"
 import requestServiceIcon from "@/assets/request-service-reservation.png"
 import CancelReservationModal from './BookingCancelationModal';
 import useCancelReservationMutation from '@/features/properties/reservation/api/hooks/useCancelReservationMutation';
 import { toast } from 'sonner';
+import { ExtraService } from '@/features/properties/reservation/api/hooks/useExtraServices';
+import RequestServiceModal from './RequestServicesModal';
+import useRequestExtraServicesMutation from '@/features/properties/reservation/api/hooks/useRequestExtraServicesMutation';
 
 const NS = 'Account.Bookings';
 
@@ -46,8 +49,10 @@ export default function BookingModal({
   const [menuOpen, setMenuOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
   const [cancelModalOpen, setCancelModalOpen] = useState(false);
+  const [serviceModalOpen, setServiceModalOpen] = useState(false)
 
   const cancelReservationMutation = useCancelReservationMutation()
+  const requestServicesMutation = useRequestExtraServicesMutation()
 
   // close dropdown on outside click
   useEffect(() => {
@@ -82,14 +87,29 @@ export default function BookingModal({
 
     cancelReservationMutation.mutate(payload, {
       onSuccess: () => {
-       setCancelModalOpen(false) 
+        setCancelModalOpen(false)
       }
     })
 
   };
   const handleRequestService = () => {
     setMenuOpen(false);
-    // TODO: wire up request service action
+    setServiceModalOpen(true);
+  };
+
+  // 4. add handler
+  const handleServicesConfirmed = async (services: ExtraService[]) => {
+    console.log('Selected extra services:', services);
+    const payload: RequestExtraServicesPayload = {
+      reservation: booking._id,
+      services: services.map(s => s._id)
+    }
+
+    await requestServicesMutation.mutateAsync(payload, {
+      onSuccess: () => {
+        onClose()
+      }
+    })
   };
 
   const triggers = [
@@ -172,7 +192,7 @@ export default function BookingModal({
             onValueChange={(v) => setActiveTab(v as 'info' | 'payment')}
           >
             <TabsList className="w-full grid grid-cols-2 border bg-white rounded-lg mt-2 p-2 h-15!">
-              {!isRTL ? [...triggers].reverse() : triggers}
+              {isRTL ? triggers.reverse() : triggers}
             </TabsList>
 
             <TabsContent value="info" className="mt-6 pb-6 space-y-8">
@@ -190,6 +210,12 @@ export default function BookingModal({
         isOpen={cancelModalOpen}
         onClose={() => setCancelModalOpen(false)}
         onSubmit={handleCancelSubmit}
+        isRTL={isRTL}
+      />
+      <RequestServiceModal
+        isOpen={serviceModalOpen}
+        onClose={() => setServiceModalOpen(false)}
+        onConfirm={(selected) => handleServicesConfirmed(selected)}
         isRTL={isRTL}
       />
     </Dialog>

@@ -6,8 +6,8 @@ import { useExtraServices } from "../api/hooks/useExtraServices";
 import { useState } from "react";
 import Pagination from "@/components/shared/Pagination";
 import { ExtraService } from "../types/types";
-import { OptimizedImage } from "@/components/shared/OptimizedImage";
 import DOMPurify from "dompurify";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 
 interface ServicesStepProps {
   selectedServices: ExtraService[];
@@ -27,6 +27,7 @@ export function ServicesStep({
   const { t } = useTranslation();
   const [page, setPage] = useState(1)
   const { services, pages, isLoading } = useExtraServices(page)
+  const [descriptionModal, setDescriptionModal] = useState<{ title: string; html: string } | null>(null);
 
   return (
     <div className="w-full max-w-2xl mx-auto">
@@ -69,15 +70,23 @@ export function ServicesStep({
                   className="w-full rounded-2xl shadow-md text-start flex items-center bg-accent justify-between px-5 py-4 hover:bg-gray-100 transition-colors"
                 >
                   <div className="flex items-center gap-3">
-                    <OptimizedImage className="size-26" src={service.icon} alt="Service" />
+                    {/* <OptimizedImage className="size-26" src={service.icon} alt="Service" /> */}
                     <div>
                       <p className="font-semibold text-navy">{title}</p>
 
                       <p className="text-sm text-gray-400">
-                        {service.price} KWD
+                        {service.price} {t("General.kwd")}
                       </p>
 
-                      <p className="text-sm text-gray-400" dangerouslySetInnerHTML={{ __html: sanitizedDescription }}/>
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setDescriptionModal({ title, html: sanitizedDescription });
+                        }}
+                        className="text-sm text-turquoise cursor-pointer underline underline-offset-2 hover:opacity-70 transition-opacity"
+                      >
+                        {t("Properties.Reservation.info")}
+                      </button>
                     </div>
                   </div>
 
@@ -129,6 +138,17 @@ export function ServicesStep({
         </Button>
 
       </div>
+      <Dialog open={!!descriptionModal} onOpenChange={() => setDescriptionModal(null)}>
+        <DialogContent className="max-w-md rounded-2xl p-6">
+          <DialogHeader>
+            <DialogTitle className="text-navy">{descriptionModal?.title}</DialogTitle>
+          </DialogHeader>
+          <div
+            className="text-sm text-gray-500 leading-relaxed mt-2"
+            dangerouslySetInnerHTML={{ __html: descriptionModal?.html ?? "" }}
+          />
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

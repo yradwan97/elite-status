@@ -268,7 +268,7 @@ export function CalendarStep({
 
         <div className="flex items-center gap-3">
           <span className="font-bold text-navy text-base">
-            {selectedPlan?.price} KWD
+            {selectedPlan?.price} {t("General.kwd")}
           </span>
 
           <button

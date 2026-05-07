@@ -34,12 +34,12 @@ export function Footer() {
             <OptimizedImage
               src={logo}
               alt="Elite Status"
-              className="h-28 object-contain"
+              className="h-[246px] object-contain"
             />
 
-            <div className="w-64 h-px bg-white/20 my-2" />
+            <div className="w-[318px] h-px bg-white/20 my-2" />
 
-            <p className="text-sm tracking-widest text-white/70 uppercase">
+            <p className="text-sm tracking-widest text-white capitalize">
               {t("Footer.socialMediaLinks")}
             </p>
 
@@ -64,12 +64,16 @@ export function Footer() {
 
           {/* Right - Phone */}
           <div className="flex flex-col items-center gap-5">
-            <div className="border border-white/30 rounded-full p-5">
-              <Phone size={26} strokeWidth={1.8} />
-            </div>
-            <p className="text-lg tracking-wide text-white/90">
-              +965-22234567
-            </p>
+            {info?.contact && 
+              <>
+                <div className="border border-white/30 rounded-full p-5">
+                  <Phone size={26} strokeWidth={1.8} />
+                </div>
+                <p className="text-lg tracking-wide text-white/90">
+                  {info?.contact}
+                </p>
+              </>
+            }
           </div>
 
         </div>

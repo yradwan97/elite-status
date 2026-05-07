@@ -4,7 +4,7 @@ import { getLoginSchema } from "@/features/auth/schemas/loginSchema";
 import { useTranslation } from "react-i18next";
 import z from "zod";
 import { Mail, Lock } from "lucide-react";
-import InputField from "./components/InputField";
+import InputField from "../../components/shared/InputField";
 import loginLogo from "@/assets/login-icon.png";
 import { toast } from "sonner";
 import { useLogin } from "./api/hooks/useLogin";

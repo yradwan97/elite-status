@@ -25,11 +25,11 @@ export default function AccountPage() {
     }
   }, [setActiveTab, passedPage])
 
-    useEffect(() => {
-        if (location.state) {
-            navigate('.', { replace: true, state: null });
-        }
-    }, [navigate, location.state]);
+  useEffect(() => {
+    if (location.state) {
+      navigate('.', { replace: true, state: null });
+    }
+  }, [navigate, location.state]);
 
   const user = useSelector((state: RootState) => state.auth.user);
 
