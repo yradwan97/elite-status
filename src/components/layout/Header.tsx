@@ -16,7 +16,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { OptimizedImage } from '../shared/OptimizedImage';
 import { useInfo } from '@/common/api/hooks/useInfo';
 import { useIsMobile } from '@/hooks/use-mobile';
-import { isValidImageUrl } from '@/lib/utils';
+import { isValidUrl } from '@/lib/utils';
 
 export function Header() {
   const dispatch = useDispatch();
@@ -192,7 +192,7 @@ export function Header() {
                   <PopoverTrigger asChild>
                     <button className="flex items-center gap-2 text-base font-medium hover:cursor-pointer transition-colors">
                       {userName}
-                      {(user?.image && typeof user.image === "string" && isValidImageUrl(user.image)) ? <OptimizedImage className='size-8' src={user.image} alt='user-image' /> : <UserCircle className="h-4 w-4" />}
+                      {(user?.image && typeof user.image === "string" && isValidUrl(user.image)) ? <OptimizedImage className='size-8' src={user.image} alt='user-image' /> : <UserCircle className="h-4 w-4" />}
                     </button>
                   </PopoverTrigger>
                   <PopoverContent align="end" className="w-48 p-2 flex flex-col gap-1">
@@ -200,7 +200,7 @@ export function Header() {
                       onClick={handleProfile}
                       className="flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-100 transition-colors w-full text-left"
                     >
-                      {(user?.image && typeof user.image === "string" && isValidImageUrl(user.image)) ? <OptimizedImage className='size-8' src={user.image} alt='user-image' /> : <UserCircle className="h-4 w-4" />}
+                      {(user?.image && typeof user.image === "string" && isValidUrl(user.image)) ? <OptimizedImage className='size-8' src={user.image} alt='user-image' /> : <UserCircle className="h-4 w-4" />}
                       {t("Header.profile") ?? "Profile"}
                     </button>
                     <button

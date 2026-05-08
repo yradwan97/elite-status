@@ -30,15 +30,6 @@ export function PropertyCard({ property, isFromFavourites = false }: PropertyCar
     const { t, i18n } = useTranslation();
     const isArabic = i18n.language === 'ar';
     const user = useSelector((state: RootState) => state.auth.user);
-
-    const tempProperty: Property = {
-        ...property,
-        offer: 25,
-        offerEndDate: "2026-05-08T22:49:32.843Z",
-        offerStartDate: "2026-05-06T22:49:32.843Z",
-        offerRate: "PERCENTAGE"
-    }
-
     const navigate = useNavigate()
 
     const [isFavourite, setIsFavourite] = useState(isFromFavourites ? true : property?.isFavourite || false);

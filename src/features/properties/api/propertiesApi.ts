@@ -39,6 +39,7 @@ export interface Property {
     offer: number,
     offerStartDate: string | null,
     offerEndDate: string | null,
+    video: string | null
     tags: { titleAr: string, titleEn: string, _id: string }[]
 }
 

@@ -1,13 +1,15 @@
 'use client';
 import { PropertyCard } from '@/features/properties/components/property-card';
 import { useTranslation } from 'react-i18next';
-import eliteHomepageBg from '@/assets/elite-homepage-bg.png';
 import { ArrowLeftIcon, ArrowRightIcon, Search } from 'lucide-react';
 import i18next from 'i18next';
 import { PageTitle } from '@/components/shared/PageTitle';
 import ServiceCard, { ServiceCardSkeleton } from "./components/service-card";
 import PlanCard, { PlanCardSkeleton } from './components/plan-card';
 
+import eliteHomepageBg from '@/assets/elite-homepage-bg.png';
+import hero3 from '@/assets/hero-3.jpeg';
+import hero2 from '@/assets/hero-2.jpeg';
 import carouselLast from '@/assets/carousel-last.png';
 import carouselCenter from '@/assets/carousel-center.png';
 import carouselfirst from '@/assets/carousel-first.png';
@@ -27,73 +29,6 @@ import PhoneField from '@/components/shared/PhoneField';
 import { useInfo } from '@/common/api/hooks/useInfo';
 import { isValidPhoneNumber } from 'react-phone-number-input';
 import { usePlans } from '../profile/api/hooks/usePlans';
-
-// const mockPlans: Plan[] = [
-//   {
-//     key: "silver",
-//     name: "Silver Plan",
-//     price: 25,
-//     tagline: "Simple Stay, Smart Choice.",
-//     icon: silverPlanIcon,
-//     features: [
-//       { label: "5% discount on any booking for 6 months from the date of subscription", included: true },
-//       { label: "Pay 50% of the insurance value for any booking within a 6-month period", included: true },
-//       { label: "Enter a prize draw that takes place every 6 months", included: true },
-//       { label: "--", included: false },
-//       { label: "--", included: false },
-//       { label: "--", included: false },
-//     ],
-//   },
-//   {
-//     key: "gold",
-//     name: "Gold Plan",
-//     price: 50,
-//     tagline: "More comfort, more style.",
-//     badge: { label: "Best ROI", className: "bg-amber-600 text-amber-50" },
-//     icon: goldPlanIcon,
-//     features: [
-//       { label: "5% discount on any booking for 6 months from the date of subscription", included: true },
-//       { label: "Pay 50% of the insurance value for any booking within a 6-month period", included: true },
-//       { label: "Enter a prize draw that takes place every 6 months", included: true },
-//       { label: "Enter a prize draw that takes place every 6 months", included: true },
-//       { label: "--", included: false },
-//       { label: "--", included: false },
-//     ],
-//   },
-//   {
-//     key: "platinum",
-//     name: "Platinum Plan",
-//     price: 100,
-//     tagline: "Luxury without limits.",
-//     icon: platinumPlanIcon,
-//     badge: { label: "Most Popular", className: "bg-rose-600 text-rose-50" },
-//     featured: true,
-//     features: [
-//       { label: "5% discount on any booking for 6 months from the date of subscription", included: true },
-//       { label: "Pay 50% of the insurance value for any booking within a 6-month period", included: true },
-//       { label: "Enter a prize draw that takes place every 6 months", included: true },
-//       { label: "Enter a prize draw that takes place every 6 months", included: true },
-//       { label: "Enter a prize draw that takes place every 6 months", included: true },
-//       { label: "--", included: false },
-//     ],
-//   },
-//   {
-//     key: "diamond",
-//     name: "Diamond Plan",
-//     price: 200,
-//     tagline: "Stay productive, stay ahead.",
-//     icon: diamondPlanIcon,
-//     badge: { label: "Enterprise", className: "bg-teal-600 text-teal-50" },
-//     features: [
-//       { label: "5% discount on any booking for 6 months from the date of subscription", included: true },
-//       { label: "Pay 50% of the insurance value for any booking within a 6-month period", included: true },
-//       { label: "Enter a prize draw that takes place every 6 months", included: true },
-//       { label: "Enter a prize draw that takes place every 6 months", included: true },
-//       { label: "Enter a prize draw that takes place every 6 months", included: true },
-//       { label: "Enter a prize draw that takes place every 6 months", included: true },
-//     ],
-//   },
-// ];
 
 export default function Dashboard() {
   const { t } = useTranslation();
@@ -145,8 +80,7 @@ export default function Dashboard() {
     }
   }, [location, navigate, t]);
 
-  // TODO: get new images from youssef
-  const slides = [eliteHomepageBg, carouselfirst, carouselCenter];
+  const slides = [eliteHomepageBg, hero2, hero3];
   const [current, setCurrent] = useState(0);
 
   useEffect(() => {

@@ -13,12 +13,13 @@ import {
     ArrowRight,
     Home,
     Info,
-    ArrowLeft
+    ArrowLeft,
+    PlayCircle
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { useProperty } from "../api/hooks/useProperty";
-import { checkLoggedIn, cn } from "@/lib/utils";
+import { checkLoggedIn, cn, isValidUrl } from "@/lib/utils";
 import { Facility } from "../api/propertiesApi";
 import i18next from "i18next";
 import DOMPurify from "dompurify";
@@ -377,7 +378,7 @@ export default function PropertyDetails() {
                                     <MetaStat
                                         iconSrc={villaIcon}
                                         label={t("Properties.Details.meta.type")}
-                                        value={typeof property.propertyType === 'string' ? property.propertyType : property.propertyType.title}
+                                        value={typeof property.propertyType === 'string' ? property.propertyType : t(`Properties.Details.propertyType.${property.propertyType.key}`)}
                                     />
                                     <MetaStat
                                         iconSrc={userIcon}
@@ -430,6 +431,42 @@ export default function PropertyDetails() {
                             )}
 
                         </div>
+
+                        {/* Video Player */}
+                        {(!!property?.video && isValidUrl(property.video)) && (
+                            <div className="rounded-lg bg-[#f9f9f9] p-4">
+                                <h2 className="text-base font-bold text-navy mb-4">
+                                    {t("Properties.Details.section.video")}
+                                </h2>
+
+                                <Dialog>
+                                    <DialogTrigger asChild>
+                                        <Button variant="outline" className="flex items-center gap-2">
+                                            <PlayCircle className="w-4 h-4" />
+                                            {t("Properties.Details.section.watchVideo")}
+                                        </Button>
+                                    </DialogTrigger>
+
+                                    <DialogContent className="sm:min-w-xl md:min-w-2xl lg:min-w-5xl p-0 overflow-hidden">
+                                        <DialogHeader className="px-4 pt-4">
+                                            <DialogTitle>
+                                                {t("Properties.Details.section.video")}
+                                            </DialogTitle>
+                                        </DialogHeader>
+                                        <div className="aspect-video w-full">
+                                            <video
+                                                src={property.video}
+                                                controls
+                                                autoPlay
+                                                className="w-full h-full"
+                                            >
+                                                Your browser does not support the video tag.
+                                            </video>
+                                        </div>
+                                    </DialogContent>
+                                </Dialog>
+                            </div>
+                        )}
 
                         {/* Facilities */}
                         <div className="rounded-lg bg-[#f9f9f9] p-4">
@@ -605,80 +642,6 @@ export default function PropertyDetails() {
                                         <ArrowRight className={cn("w-4 h-4", isRTL && "rotate-180")} />
                                     </Button>
                                 </div>
-
-                                {/* Schedule a Tour */}
-                                {/* <div className="border border-gray-200 rounded-2xl p-5">
-                                    <h3 className="font-bold text-navy text-base mb-4">
-                                        {t("Properties.Details.tour.title")}
-                                    </h3>
-                                    <div className="space-y-3">
-                                        <div>
-                                            <Label className="text-lg text-gray-500 mb-1 block">{t("Properties.Details.tour.name")}</Label>
-                                            <Input
-                                                required
-                                                placeholder={t("Properties.Details.tour.namePlaceholder")}
-                                                value={tourForm.name}
-                                                onChange={(e) => setTourForm({ ...tourForm, name: e.target.value })}
-                                                className="rounded-xl border-gray-200 text-lg placeholder:text-gray-300"
-                                            />
-                                        </div>
-                                        <div>
-                                            <Label className="text-lg text-gray-500 mb-1 block">{t("Properties.Details.tour.email")}</Label>
-                                            <Input
-                                                required
-                                                type="email"
-                                                placeholder={t("Properties.Details.tour.emailPlaceholder")}
-                                                value={tourForm.email}
-                                                onChange={(e) => setTourForm({ ...tourForm, email: e.target.value })}
-                                                className="rounded-xl border-gray-200 text-lg placeholder:text-gray-300"
-                                            />
-                                        </div>
-                                        <div>
-                                            <Label className="text-lg text-gray-500 mb-1 block">{t("Properties.Details.tour.phone")}</Label>
-                                            <Input
-                                                required
-                                                type="tel"
-                                                placeholder={t("Properties.Details.tour.phonePlaceholder")}
-                                                value={tourForm.phone}
-                                                onChange={(e) => setTourForm({ ...tourForm, phone: e.target.value })}
-                                                className={`rounded-xl border-gray-200 text-lg placeholder:text-gray-300 ${isRTL ? 'placeholder:text-right' : ''}`}
-                                            />
-                                        </div>
-                                        <div>
-                                            <Label className="text-lg text-gray-500 mb-1 block">{t("Properties.Details.tour.message")}</Label>
-                                            <Textarea
-                                                placeholder={t("Properties.Details.tour.messagePlaceholder")}
-                                                value={tourForm.message}
-                                                onChange={(e) => setTourForm({ ...tourForm, message: e.target.value })}
-                                                className="rounded-xl border-gray-200 text-sm placeholder:text-gray-300 resize-none min-h-25"
-                                            />
-                                        </div>
-                                        <Button
-                                            className="w-full bg-navy hover:bg-[#243760] text-white rounded-xl h-11 font-semibold"
-                                            onClick={() => {
-                                                if (checkLoggedIn(user)) {
-                                                    handleSubmitTour()
-                                                }
-                                            }}
-                                        >
-                                            {t("Properties.Details.tour.submit")}
-                                        </Button>
-                                        <div className="flex items-center gap-2">
-                                            <Separator className="flex-1" />
-                                            <span className="text-xs text-gray-400 uppercase tracking-wide">
-                                                {t("Properties.Details.tour.or")}
-                                            </span>
-                                            <Separator className="flex-1" />
-                                        </div>
-                                        <Button
-                                            className="w-full bg-[#25D366] hover:bg-[#1db954] text-white rounded-xl h-11 font-semibold gap-2"
-                                            onClick={handleReserveOnWhatsapp}
-                                        >
-                                            <MessageCircle className="w-4 h-4" />
-                                            {t("Properties.Details.tour.whatsapp")}
-                                        </Button>
-                                    </div>
-                                </div> */}
                                 <TourForm
                                     onSubmit={(values) => {
                                         if (checkLoggedIn(user)) handleSubmitTour(values);

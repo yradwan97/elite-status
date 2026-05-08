@@ -56,6 +56,7 @@ export const hasOffer = (property: Property): boolean => {
   if (!start || !end) return false
   const now = new Date()
   return !!property.offer &&
+    property.offerRate === "PERCENTAGE" &&
     property.offer > 0 &&
     !!property.offerRate &&
     !!property.offerStartDate &&
@@ -121,9 +122,6 @@ export const adjustPriceForOffer = (price: number, property: Property) => {
     } else {
       return price * (1 - property.offer)
     }
-  } else {
-    // TODO: ask nasser & youssef about offer as VALUE when value is more than one of the prices (EG: --- dayUsePrice is 20 while offerValue is 30 as a VALUE not PERCENTAGE)
-    return price - property.offer
   }
 }
 
@@ -157,7 +155,7 @@ export const getRemainingPricesAndPeriodKeys = (property: Property) => {
     .map(({ key, period }) => ({ price: property[key] as number, periodKey: `${KEY_PREFIX}.${period}` }));
 };
 
-export const isValidImageUrl = (url: string | undefined | null): boolean => {
+export const isValidUrl = (url: string | undefined | null): boolean => {
   if (!url || typeof url !== "string" || url.trim() === "") return false;
   try {
     new URL(url);

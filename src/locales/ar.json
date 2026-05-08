@@ -15,7 +15,7 @@
   },
   "Footer": {
     "socialMediaLinks": "روابط وسائل التواصل الاجتماعي",
-    "copyright": "حقوق النشر © {{year}} بواسطة Echo Soft"
+    "copyright": "حقوق النشر محفوظة - {{year}} - شركة ايكوسوفت ©"
   },
   "Header": {
     "menu": "القائمة",
@@ -185,15 +185,19 @@
         "bigLounge": "صالة كبيرة"
       },
       "propertyType": {
-        "APARTMENT": "شاليه",
+        "APARTMENT": "شقة",
         "VILLA": "فيلا",
-        "STUDIO": "استوديو"
+        "STUDIO": "استوديو",
+        "CHALET": "شاليه",
+        "TOWNHOUSE": "تاون هاوس"
       },
       "section": {
         "description": "الوصف",
         "facilities": "المرافق",
         "documents": "المستندات",
-        "location": "الموقع"
+        "location": "الموقع",
+        "video": "فيديو الوحدة",
+        "watchVideo": "شاهد الفيديو"
       },
       "description": {
         "seeMore": "...المزيد",
