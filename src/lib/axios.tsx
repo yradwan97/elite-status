@@ -1,7 +1,7 @@
 import axios from 'axios'
 import i18next from 'i18next'
 
-const BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000/api' 
+const BASE_URL = import.meta.env.VITE_API_URL || 'https://api.elitestatuskw.com' 
 
 const api = axios.create({
   baseURL: BASE_URL,
