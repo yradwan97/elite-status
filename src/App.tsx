@@ -1,4 +1,4 @@
-import { Routes, Route, Navigate } from 'react-router-dom';
+import { Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import { Header } from '@/components/layout/Header';
 import { Footer } from '@/components/layout/Footer';
 import "./i18n";
@@ -17,6 +17,7 @@ import ResetPassword from './features/auth/ResetPassword';
 import { WhatsAppFAB } from './components/layout/WhatsAppFAB';
 import { useOnlineStatus } from './hooks/use-is-online';
 import { OfflineBanner } from './components/layout/OfflineBanner';
+import { scrollToTop } from './lib/utils';
 
 function App() {
 
@@ -24,12 +25,17 @@ function App() {
   const user = useSelector(selectUser)
   const dispatch = useDispatch();
   const isOnline = useOnlineStatus()
+  const location = useLocation()
 
   useEffect(() => {
     if (!user || !accessToken || (accessToken && !isTokenValid(accessToken))) {
       dispatch(clearCredentials());
     }
   }, [accessToken, dispatch, user]);
+
+  useEffect(() => {
+    scrollToTop()
+  }, [location.pathname])
 
   return (
     <div className="min-h-screen bg-background flex flex-col">

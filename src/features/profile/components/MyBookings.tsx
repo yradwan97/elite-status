@@ -100,7 +100,7 @@ export default function AccountBooking() {
       {/* ── Empty state ──────────────────────────────────────────── */}
       {!isLoading && !error && reservations.length === 0 && (
         <div className="flex flex-col items-center gap-2 py-16 text-center text-gray-400">
-          <OptimizedImage className='w-1/2' src={noReservations} alt="No Reservations" />
+          <OptimizedImage className='mx-auto my-6 w-44 h-44 opacity-70 object-contain' src={noReservations} alt="No Reservations" />
           <p className="text-lg font-medium">
             {t(`Account.Bookings.empty.title`)}
           </p>

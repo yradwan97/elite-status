@@ -7,8 +7,10 @@ import AccountPricePlan from './components/MyPricePlan';
 import AccountFavourites from './components/MyFavorites';
 import { useSelector } from 'react-redux';
 import { RootState } from '@/store';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate, useSearchParams } from 'react-router-dom';
 import { PageTitle } from '@/components/shared/PageTitle';
+import { PlanSubscriptionSuccessModal } from './components/plans/PlanSubscriptionSuccessModal';
+import { scrollToTop } from '@/lib/utils';
 
 export default function AccountPage() {
   const [activeTab, setActiveTab] = useState<'profile' | 'booking' | 'price-plan' | 'favourite'>('profile');
@@ -18,12 +20,23 @@ export default function AccountPage() {
   const navigate = useNavigate();
   const passedPage = location.state?.page as 'profile' | 'booking' | 'price-plan' | 'favourite' | undefined
 
+  const [searchParams, setSearchParams] = useSearchParams();
+  const page = searchParams.get('page') as 'profile' | 'booking' | 'price-plan' | 'favourite' | undefined;
+  const [openSuccessModal, setOpenSuccessModal] = useState(false)
+
   useEffect(() => {
-    if (passedPage) {
-      // eslint-disable-next-line react-hooks/set-state-in-effect
-      setActiveTab(passedPage)
+    if (passedPage || page) {
+      const active = passedPage || page || ""
+      if (active) {
+        // eslint-disable-next-line react-hooks/set-state-in-effect
+        setActiveTab(active)
+      }
     }
-  }, [setActiveTab, passedPage])
+    if (page && page === "price-plan") {
+      setOpenSuccessModal(true)
+    }
+  }, [setActiveTab, passedPage, page])
+
 
   useEffect(() => {
     if (location.state) {
@@ -52,11 +65,15 @@ export default function AccountPage() {
     }
   };
 
+  useEffect(() => {
+    scrollToTop()
+  }, [activeTab])
+
   return (
     <>
       <PageTitle titleKey='Account.Header.pageTitle' />
 
-      <div className={`min-h-screen bg-gray-50 p-6 flex flex-col gap-4`}>
+      <div className={`min-h-screen min-w-md bg-gray-50 p-6 flex flex-col gap-4`}>
 
         {/* Profile Header */}
         <div className="bg-white rounded-2xl shadow-sm border border-gray-100" dir={isRTL ? "rtl" : "ltr"}>
@@ -108,6 +125,15 @@ export default function AccountPage() {
               </div>
             </div>
           )}
+
+          <PlanSubscriptionSuccessModal
+            open={openSuccessModal}
+            onClose={() => {
+              setSearchParams({}, { replace: true });
+              setOpenSuccessModal(false)
+            }}
+            planName={""}
+          />
 
         </div>
       </div>

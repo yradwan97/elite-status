@@ -4,7 +4,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import i18next from "i18next";
 import { ChevronRight } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { cn, formatDate, scrollToTop } from "@/lib/utils";
 import { useProperty } from "../api/hooks/useProperty";
 import { PageTitle } from "@/components/shared/PageTitle";
 
@@ -27,6 +27,8 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { toast } from "sonner";
+import { queryClient } from "@/lib/query-client";
+import { useReservationTypesInfo } from "./api/hooks/useReservationTypesInfo";
 
 const STEPS: Step[] = ["pricing", "calendar", "services", "confirmation"];
 
@@ -35,6 +37,7 @@ export default function ReservationPage() {
   const navigate = useNavigate();
   const { t } = useTranslation();
   const isRTL = i18next.language === "ar";
+  
 
   const { property, isLoading, error } = useProperty(id);
 
@@ -42,6 +45,10 @@ export default function ReservationPage() {
 
   const { paymentMethods, isLoading: isPaymentMethodsLoading } =
     usePaymentMethods();
+
+  const {typesInfo} = useReservationTypesInfo()
+
+  console.log(typesInfo)
 
   const [currentStep, setCurrentStep] = useState<Step>("pricing");
   const [booking, setBooking] = useState<BookingState>({
@@ -57,8 +64,8 @@ export default function ReservationPage() {
   });
 
   useEffect(() => {
-    console.log(booking)
-  }, [booking])
+    scrollToTop()
+  }, [currentStep])
 
   const createReservation = useReservationMutation()
 
@@ -126,7 +133,15 @@ export default function ReservationPage() {
       subtitleKey: "Properties.Reservation.plan.dayUseSub",
       price: property.dayUsePrice ?? 0,
     },
-  ].filter((p) => p.price > 0);
+  ]
+  .map((plan) => {
+    const typeInfo = typesInfo.find(t => t.type === plan.key)
+    return {
+      ...plan,
+      info: (isRTL ? typeInfo?.infoAr : typeInfo?.infoEn) ?? t("Properties.Reservation.info.info")
+    }
+  })
+  .filter((p) => p.price > 0);
 
   const onPay = () => {
     setPaymentModalOpen(true);
@@ -140,7 +155,7 @@ export default function ReservationPage() {
     }
 
     const payload: CreateReservationPayload = {
-      startDate: booking.startDate.toLocaleDateString(),
+      startDate: formatDate({date: booking.startDate, format: 'short'}),
       reservationType: booking.planKey,
       paymentMethod: paymentMethodId,
       deposit: booking.paymentOption === "50",
@@ -157,10 +172,10 @@ export default function ReservationPage() {
           payload
         );
 
+        queryClient.invalidateQueries({queryKey: ['discounted-reservations', 'reservations']})
+
       const paymentWindow = window.open(
-        "",
-        "_blank",
-        "width=900,height=900"
+        ""
       );
 
       if (!paymentWindow) {
@@ -248,6 +263,7 @@ export default function ReservationPage() {
         <div className="max-w-6xl mx-auto px-4 pb-16">
           {currentStep === "pricing" && (
             <PricingStep
+              property={property}
               plans={plans}
               selectedPlanKey={booking.planKey}
               onPlanSelect={(key, price) => {
@@ -264,7 +280,7 @@ export default function ReservationPage() {
 
           {currentStep === "calendar" && (
             <CalendarStep
-              selectedPlan={plans.find((p) => p.key === booking.planKey) ?? null}
+              selectedPlan={plans.find((p) => p.key === booking.planKey) as PricingPlan}
               startDate={booking.startDate}
               endDate={booking.endDate}
               acceptedTerms={booking.acceptedTerms}

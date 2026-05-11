@@ -2,7 +2,7 @@ import { Plan } from "@/features/profile/api/hooks/usePlans";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 
-export interface UserPlan extends Pick<Plan, 'titleAr'| 'titleEn' | 'extraServicesDiscount' | 'insuranceDiscount' | 'reservationDiscount'> {
+export interface UserPlan extends Pick<Plan, 'titleAr' | 'titleEn' | 'extraServicesDiscount' | 'insuranceDiscount' | 'reservationDiscount'> {
     expirationDate: string
     subscriptionDate: string
 }
@@ -62,7 +62,7 @@ const authSlice = createSlice({
         setUser: (state, action: PayloadAction<User>) => {
             localStorage.setItem('user', JSON.stringify(action.payload));
             state.user = action.payload
-        }
+        },
     },
 });
 

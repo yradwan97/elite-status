@@ -85,7 +85,7 @@ export function ServicesStep({
                         }}
                         className="text-sm text-turquoise cursor-pointer underline underline-offset-2 hover:opacity-70 transition-opacity"
                       >
-                        {t("Properties.Reservation.info")}
+                        {t("Properties.Reservation.info.info")}
                       </button>
                     </div>
                   </div>

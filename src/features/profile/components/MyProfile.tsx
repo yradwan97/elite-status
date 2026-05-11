@@ -1,5 +1,5 @@
 // src/features/account/pages/AccountProfile.tsx
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Controller, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -49,7 +49,10 @@ export default function AccountProfile() {
     formState: { errors },
   } = useForm<FormValues>({
     resolver: zodResolver(schema),
-    defaultValues: {
+  });
+
+  useEffect(() => {
+    reset({
       firstName: user?.firstName ?? '',
       lastName: user?.lastName ?? '',
       email: user?.email ?? '',
@@ -60,8 +63,8 @@ export default function AccountProfile() {
       gender: user?.gender ?? null,
       nationality: user?.nationality ?? null,
       image: user?.image ?? null,
-    },
-  });
+    });
+  }, [user, reset])
 
   const handleAvatarChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];

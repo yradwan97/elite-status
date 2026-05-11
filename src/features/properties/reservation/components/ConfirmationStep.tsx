@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { ArrowLeft } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { adjustPriceForOffer, cn, hasOffer } from "@/lib/utils";
 import { BookingState, PricingPlan, ExtraService } from "../types/types";
 import { useTranslation } from "react-i18next";
 import { Property } from "../../api/propertiesApi";
@@ -17,6 +17,8 @@ import rentTypeIcon from "@/assets/rent-type-icon.png"
 import { useSelector } from "react-redux";
 import { selectUser } from "@/store/slices/authSlice";
 import { Checkbox } from "@/components/ui/checkbox";
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import { Info } from 'lucide-react';
 
 interface ConfirmationStepProps {
   property: Property;
@@ -30,15 +32,17 @@ interface ConfirmationStepProps {
   onPlanSelectionChange: (checked: boolean) => void
 }
 
-function SummaryRow({ icon, label, value }: { icon: string; label: string; value: string }) {
+import { ReactNode } from 'react';
+
+function SummaryRow({ icon, label, value }: { icon: string; label: string; value: ReactNode }) {
   return (
     <div className="flex flex-col p-4 rounded-lg bg-[#f9f9f9] gap-2">
       <div className="flex items-center gap-2">
         <OptimizedImage src={icon} className="size-5" alt={`${label}-icon`} />
         <p className="text-xs text-gray-400">{label}</p>
       </div>
-      <div className="">
-        <p className="text-sm font-semibold text-navy mt-0.5">{value}</p>
+      <div className="text-sm font-semibold text-navy mt-0.5">
+        {value}
       </div>
     </div>
   );
@@ -75,6 +79,10 @@ const formatTimeTo12Hour = (language: string, time?: string): string => {
     .padStart(2, "0")} ${period}`;
 };
 
+const getDiscountedPrice = (price: number, discountPercentage: number): number => {
+  return price * (discountPercentage / 100)
+}
+
 export function ConfirmationStep({
   property,
   booking,
@@ -89,15 +97,31 @@ export function ConfirmationStep({
   const { t } = useTranslation();
   const paymentOption = booking.paymentOption;
 
+  const isDepositPrice = (price: number): number => {
+    if (booking.paymentOption === "50") {
+      return price / 2
+    }
+    return price
+  }
+
+  const user = useSelector(selectUser)
+  const userPlan = user?.plan
+  
+  const rentAmount = isDepositPrice(adjustPriceForOffer(booking.planPrice, property))
   const selectedServicesList = services.filter((s) => booking.services.map(s => s._id).includes(s._id));
-  const servicesTotal = selectedServicesList.reduce((sum, s) => sum + s.price, 0);
-  const insurance = property.insurance ?? 0;
-  const subtotal = booking.planPrice + servicesTotal;
-  const discount = 0;
+  const servicesTotal = isDepositPrice(selectedServicesList.reduce((sum, s) => sum + s.price, 0))
+  const insuranceAmount = isDepositPrice(property.insurance);
+
+  const subtotal = rentAmount + servicesTotal + insuranceAmount;
+
+  const discount = (booking.usePlan && userPlan) ? (
+    getDiscountedPrice(rentAmount, userPlan.reservationDiscount) + 
+    getDiscountedPrice(servicesTotal, userPlan.extraServicesDiscount) + 
+    getDiscountedPrice(insuranceAmount, userPlan.insuranceDiscount)
+  ) : 0;
   const netAmount = subtotal - discount;
   const language = i18next.language
 
-  const user = useSelector(selectUser)
 
   const { checkInTime, checkOutTime } = useReservationPolicies(booking.planKey)
 
@@ -149,12 +173,15 @@ export function ConfirmationStep({
     return formatSingleDate(startDate);
   };
 
-  const isDepositPrice = (price: number): number => {
-    if (booking.paymentOption === "50") {
-      return price / 2
-    }
-    return price
-  }
+  // const hasActiveOffer = true
+  const hasActiveOffer = hasOffer(property)
+
+  const rentAmountValue = hasActiveOffer ? <span className="flex items-center gap-2">
+    <span className="text-gray-400 line-through text-sm">{booking.planPrice} {t("General.kwd")}</span>
+    <span className="text-navy font-bold text-base">{rentAmount} {t("General.kwd")}</span>
+  </span> : <span className="text-navy font-bold text-base">{rentAmount} {t("General.kwd")}</span>
+
+  
 
   const selectedPlan = plans.find((p) => p.key === booking.planKey);
   const planLabel = selectedPlan ? t(selectedPlan.labelKey) : booking.planKey ?? "-";
@@ -164,9 +191,9 @@ export function ConfirmationStep({
   //   const navigationUrl = `https://www.google.com/maps/dir/?api=1&destination=${property.lat},${property.long}`;
 
   return (
-    <div className="w-full max-w-7xl flex justify-center gap-6">
+    <div className="w-full max-w-7xl flex flex-col sm:flex-row justify-center gap-6">
       {/* LEFT — Booking Summary */}
-      <div className="border border-gray-200 w-1/2 rounded-2xl shadow-xl p-5 space-y-5 bg-white">
+      <div className="border border-gray-200 w-full sm:w-1/2 rounded-2xl shadow-xl p-5 space-y-5 bg-white">
         <SummaryRow
           icon={calendarIcon}
           label={t("Properties.Reservation.confirmation.dates")}
@@ -188,14 +215,14 @@ export function ConfirmationStep({
         <SummaryRow
           icon={moneyIcon}
           label={t("Properties.Reservation.confirmation.rentAmount")}
-          value={`${booking.planPrice} ${t("General.kwd")}`}
+          value={rentAmountValue}
         />
 
-        {insurance > 0 && (
+        {insuranceAmount > 0 && (
           <SummaryRow
             icon={insuranceIcon}
             label={t("Properties.Reservation.confirmation.insurance")}
-            value={`${insurance} ${t("General.kwd")}`}
+            value={`${insuranceAmount} ${t("General.kwd")}`}
           />
         )}
 
@@ -225,7 +252,7 @@ export function ConfirmationStep({
       </div>
 
       {/* RIGHT — Payment & Breakdown */}
-      <div className="space-y-4 w-1/2">
+      <div className="space-y-4 w-full sm:w-1/2">
         {/* Payment Option */}
         <div className="border border-gray-200 shadow-lg rounded-2xl p-3 h-37 space-y-2 bg-white">
           {(["50", "100"] as const).map((opt) => (
@@ -243,9 +270,17 @@ export function ConfirmationStep({
                       ? t("Properties.Reservation.confirmation.deposit")
                       : t("Properties.Reservation.confirmation.totalPayment")}
                   </p>
-                  <span className="text-xs text-navy">
-                    {t("Properties.Reservation.info")}
-                  </span>
+                  <Popover>
+                    <PopoverTrigger asChild>
+                      <button className="flex items-center gap-1 text-md text-turquoise hover:opacity-70 transition-opacity">
+                        <Info className="w-3.5 h-3.5" />
+                        {t("Properties.Reservation.info.info")}
+                      </button>
+                    </PopoverTrigger>
+                    <PopoverContent className="w-64 text-md text-gray-600 flex flex-col gap-1.5">
+                      <p className="text-md" key={opt}>{t(`Properties.Reservation.info.${opt}`)}</p>
+                    </PopoverContent>
+                  </Popover>
                 </div>
                 <div
                   className={cn(
@@ -265,28 +300,28 @@ export function ConfirmationStep({
         <div className="border border-gray-200 shadow-lg rounded-2xl p-4 bg-white space-y-3">
           <PriceLine
             label={t("Properties.Reservation.confirmation.chalet")}
-            value={`${isDepositPrice(booking.planPrice)} ${t("General.kwd")}`}
+            value={`${rentAmount} ${t("General.kwd")}`}
           />
           <div className="h-px bg-gray-100" />
 
-          {insurance > 0 && (
+          {insuranceAmount > 0 && (
             <>
               <PriceLine
                 label={t("Properties.Reservation.confirmation.insurance")}
-                value={`${insurance} ${t("General.kwd")}`}
+                value={`${isDepositPrice(insuranceAmount)} ${t("General.kwd")}`}
               />
               <div className="h-px bg-gray-100" />
             </>
           )}
 
-          {selectedServicesList.map((s) => (
+          {selectedServicesList.map((s, i) => (
             <>
               <PriceLine
                 key={s._id}
                 label={isRTL ? s.titleAr : s.titleEn}
                 value={`${isDepositPrice(s.price)} ${t("General.kwd")}`}
               />
-              {selectedServicesList.length > 1 && <div className="h-px bg-gray-100 last:hidden" />}
+              {i < selectedServicesList.length - 1 && <div className="h-px bg-gray-100 last:hidden" />}
             </>
           ))}
 
@@ -294,7 +329,7 @@ export function ConfirmationStep({
 
           <PriceLine
             label={t("Properties.Reservation.confirmation.total")}
-            value={`${isDepositPrice(subtotal)} ${t("General.kwd")}`}
+            value={`${subtotal} ${t("General.kwd")}`}
             strong
           />
         </div>
@@ -329,7 +364,7 @@ export function ConfirmationStep({
             <span className="font-semibold text-lg text-navy">
               {t("Properties.Reservation.confirmation.net")}
             </span>
-            <span className="font-bold text-xl text-turquoise">{isDepositPrice(netAmount)} {t("General.kwd")}</span>
+            <span className="font-bold text-xl text-turquoise">{netAmount} {t("General.kwd")}</span>
           </div>
 
           <Button

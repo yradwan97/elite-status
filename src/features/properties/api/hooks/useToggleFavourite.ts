@@ -2,6 +2,7 @@ import { useMutation } from "@tanstack/react-query";
 import { propertiesApi } from "../propertiesApi";
 import { toast } from "sonner";
 import { useTranslation } from "react-i18next";
+import { queryClient } from "@/lib/query-client";
 
 const useToggleFavourite = (propertyId: string) => {
   const { t } = useTranslation();
@@ -11,7 +12,7 @@ const useToggleFavourite = (propertyId: string) => {
     },
 
     onSuccess: (_data, isFavourite) => {
-
+      queryClient.invalidateQueries({queryKey: ['favourites']})
       toast.success(
         isFavourite
           ? t("Properties.Details.Favorite.removeSuccess")

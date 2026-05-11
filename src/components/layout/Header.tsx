@@ -57,10 +57,10 @@ export function Header() {
   };
 
   const handleLogout = () => {
-    navigate("/", {state: {isLoginError: false}, replace: true})
+    navigate("/", { state: { isLogout: true } });
     setTimeout(() => {
-      dispatch(clearCredentials())
-    }, 100)
+      dispatch(clearCredentials());
+    }, 300)
     setPopoverOpen(false);
   };
 
@@ -70,7 +70,7 @@ export function Header() {
   };
 
   const isArabic = i18n.language === 'ar';
-  const userName = user ? 
+  const userName = user ?
     !isMobile ? `${user?.firstName} ${user?.lastName}` : `${user.firstName}`
     : null
 
@@ -130,7 +130,7 @@ export function Header() {
                 </SheetContent>
               </Sheet>
 
-              
+
 
               <div className='flex md:hidden px-auto'>
                 <Popover open={languagePopoverOpen} onOpenChange={setLanguagePopoverOpen}>

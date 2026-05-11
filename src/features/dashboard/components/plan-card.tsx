@@ -110,8 +110,6 @@ export default function PlanCard({ plan, isUpgrade = false }: { plan: Plan, isUp
 
       const paymentWindow = window.open(
         "",
-        "_blank",
-        "width=900,height=900"
       );
 
       if (!paymentWindow) {
@@ -164,7 +162,7 @@ export default function PlanCard({ plan, isUpgrade = false }: { plan: Plan, isUp
   };
 
   return (
-    <div className="relative flex flex-col h-full pt-6">
+    <div className="relative flex flex-col shadow-xl rounded-full h-full pt-6">
 
       <SubscribeConfirmDialog
         open={dialogOpen}
@@ -176,7 +174,7 @@ export default function PlanCard({ plan, isUpgrade = false }: { plan: Plan, isUp
       {/* Badge */}
       {badge && (
         <div className="absolute top-3 left-1/2 -translate-x-1/2 z-10">
-          <span className={cn("text-xs font-medium px-4 py-1.5 rounded-full whitespace-nowrap", badge.className)}>
+          <span style={{fontSize: "20px"}} className={cn("font-alex font-medium px-4 py-1.5 rounded-full whitespace-nowrap", badge.className)}>
             {t(badge.label)}
           </span>
         </div>
@@ -196,12 +194,12 @@ export default function PlanCard({ plan, isUpgrade = false }: { plan: Plan, isUp
         </div>
 
         {/* Name */}
-        <p className={cn("text-center font-medium text-base", isFeatured ? "text-white" : "text-gray-900")}>
+        <p style={{fontSize: "20px"}} className={cn("text-center font-alex font-medium text-base", isFeatured ? "text-white" : "text-navy")}>
           {planName}
         </p>
 
         {/* Billing */}
-        <p className={cn("text-center text-xs mt-1", isFeatured ? "text-white/50" : "text-gray-400")}>
+        <p className={cn("text-center text-xs mt-1", isFeatured ? "text-[#FEFEFE]" : "text-[#4A606B]")}>
           {t("Dashboard.Pricing.billedAnnually") ?? "Billed annually."}
         </p>
 
@@ -210,7 +208,7 @@ export default function PlanCard({ plan, isUpgrade = false }: { plan: Plan, isUp
           {plan.price} <span className="text-xl">{t("General.kwd")} / YR</span>
         </p>
 
-        <hr className={cn("mb-5", isFeatured ? "border-white/10" : "border-gray-100")} />
+        <hr className={cn("my-8", isFeatured ? "border-white/10" : "border-gray-100")} />
 
         {/* Features */}
         <ul className="flex flex-col gap-3 flex-1">
@@ -234,7 +232,7 @@ export default function PlanCard({ plan, isUpgrade = false }: { plan: Plan, isUp
           }}
           className={cn(
             "mt-6 w-full py-3 rounded-xl text-sm font-medium transition-opacity hover:opacity-90",
-            isFeatured ? "bg-amber-500 text-white" : "bg-navy text-white"
+            isFeatured ? "bg-[#CEA926] text-white" : "bg-navy text-white"
           )}
         >
           {isUpgrade ? t("General.upgrade") : t("Dashboard.Pricing.getStarted")}

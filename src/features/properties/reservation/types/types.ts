@@ -3,6 +3,7 @@ export interface PricingPlan {
   labelKey: string;
   subtitleKey: string;
   price: number;
+  info?: string;
 }
 
 

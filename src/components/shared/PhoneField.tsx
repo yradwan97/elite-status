@@ -1,3 +1,4 @@
+import { cn } from "@/lib/utils";
 import PhoneInput from "react-phone-number-input";
 import "react-phone-number-input/style.css";
 
@@ -5,9 +6,10 @@ interface PhoneFieldProps {
   value?: string;
   onChange: (value: string) => void;
   disabled?: boolean;
+  className?: string
 }
 
-export default function PhoneField({ value, onChange, disabled = false }: PhoneFieldProps) {
+export default function PhoneField({ value, onChange, disabled = false, className }: PhoneFieldProps) {
   return (
     <div className={`border rounded-lg px-3 py-2 transition-colors ${
       disabled ? "bg-gray-100 border-gray-200 cursor-default" : "bg-white"
@@ -18,7 +20,7 @@ export default function PhoneField({ value, onChange, disabled = false }: PhoneF
         value={value}
         onChange={(val) => onChange(val || "")}
         disabled={disabled}
-        className="w-full outline-none"
+        className={cn("w-full outline-none", className)}
       />
     </div>
   );

@@ -1,4 +1,4 @@
-import { ApiResponse } from '@/common/api/commonApi';
+import { ApiPaginationResponse, ApiResponse } from '@/common/api/commonApi';
 import axios from '@/lib/axios';
 
 export interface Facility {
@@ -77,9 +77,6 @@ export interface Favourite {
     updatedAt: string
     __v: number
 }
-
-
-
 export interface PropertyResponse {
     data: Property
 }
@@ -94,6 +91,19 @@ export interface CreateTourPayload {
     phone: string;
     message: string;
     property: string;
+}
+
+export type Ad = {
+    _id: string
+    image: string
+    link: string
+    __v: number
+    createdAt: string
+    updatedAt: string
+}
+
+export interface AdsResponse {
+    data: Ad[]
 }
 
 export const propertiesApi = {
@@ -153,8 +163,13 @@ export const propertiesApi = {
         await axios.post(`/tours`, payload);
     },
 
-    getFavouriteProperties: async (page: number): Promise<ApiResponse<FavouritesResponse>> => {
-        const response = await axios.get<ApiResponse<FavouritesResponse>>(`/favourites?page=${page}&limit=9`);
+    getFavouriteProperties: async (page: number): Promise<ApiPaginationResponse<FavouritesResponse>> => {
+        const response = await axios.get<ApiPaginationResponse<FavouritesResponse>>(`/favourites?page=${page}&limit=9`);
+        return response.data;
+    },
+
+    getAds: async (): Promise<ApiResponse<Ad>> => {
+        const response = await axios.get<ApiResponse<Ad>>("/ads")
         return response.data;
     }
 };

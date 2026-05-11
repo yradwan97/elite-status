@@ -1,10 +1,14 @@
 import { Button } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
+import { adjustPriceForOffer, cn, hasOffer } from "@/lib/utils";
 import { PricingPlan } from "../types/types";
 import { useTranslation } from "react-i18next";
 import { Switch } from "@/components/ui/switch";
+import { Property } from "../../api/propertiesApi";
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import { Info } from 'lucide-react';
 interface PricingStepProps {
   plans: PricingPlan[];
+  property: Property
   selectedPlanKey: string | null;
   onPlanSelect: (key: string, price: number) => void;
   onNext: () => void;
@@ -17,8 +21,12 @@ export function PricingStep({
   onPlanSelect,
   onNext,
   isRTL,
+  property
 }: PricingStepProps) {
   const { t } = useTranslation();
+
+  const hasActiveOffer = hasOffer(property)
+
 
   return (
     <div className="w-full max-w-2xl mx-auto">
@@ -43,13 +51,28 @@ export function PricingStep({
                 {t(plan.labelKey)}
               </p>
               <p className="text-sm text-gray-400 mt-0.5">{t(plan.subtitleKey)}</p>
-              <span className="text-xs text-navy hover:underline cursor-pointer mt-1 block">
-                {t("Properties.Reservation.info")}
-              </span>
+              <Popover>
+                <PopoverTrigger asChild>
+                  <button className="flex items-center gap-1 text-md text-turquoise hover:opacity-70 transition-opacity">
+                    <Info className="w-3.5 h-3.5" />
+                    {t("Properties.Reservation.info.info")}
+                  </button>
+                </PopoverTrigger>
+                <PopoverContent className="w-64 text-md text-gray-600 flex flex-col gap-1.5">
+                  <p className="text-md" key={plan.key}>{plan.info}</p>
+                </PopoverContent>
+              </Popover>
             </div>
 
             <div className="flex flex-col items-end gap-3 shrink-0">
-              <span className="text-navy font-bold text-base">{plan.price} {t("General.kwd")}</span>
+              {hasActiveOffer ? (
+                <span className="flex items-center gap-2">
+                  <span className="text-gray-400 line-through text-sm">{plan.price} {t("General.kwd")}</span>
+                  <span className="text-navy font-bold text-base">{adjustPriceForOffer(plan.price, property)} {t("General.kwd")}</span>
+                </span>
+              ) : (
+                <span className="text-navy font-bold text-base">{plan.price} {t("General.kwd")}</span>
+              )}
               <Switch dir="ltr" className="shrink-0" checked={selectedPlanKey === plan.key} onCheckedChange={() => onPlanSelect(plan.key, plan.price)} />
             </div>
           </div>

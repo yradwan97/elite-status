@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Search, SlidersHorizontal, ChevronDown, ChevronRight } from 'lucide-react';
+import { Search, SlidersHorizontal, ChevronDown, ChevronRight, CircleX } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { PropertyCard } from '@/features/properties/components/property-card';
 import { useProperties } from '@/features/properties/api/hooks/useProperties';
@@ -11,6 +11,7 @@ import { OptimizedImage } from '@/components/shared/OptimizedImage';
 import Counter from '@/components/shared/Counter';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { cn } from '@/lib/utils';
+import { useAds } from '../api/hooks/useAds';
 
 // ── Skeleton card ─────────────────────────────────────────────────────────────
 function SkeletonCard() {
@@ -45,6 +46,9 @@ export default function PropertiesSection() {
     } = useProperties();
 
     const { facilities, isLoading: isFacilitiesLoading } = useFacilities();
+    const { ads } = useAds()
+
+    console.log(ads)
 
     const location = useLocation()
     const navigate = useNavigate()
@@ -174,8 +178,8 @@ export default function PropertiesSection() {
                 <div className={`max-w-7xl mx-auto px-6 py-8 flex gap-8 items-start ${isArabic ? 'flex-row-reverse' : ''}`}>
 
                     {/* ── Filter Sidebar ── */}
-                    <aside className="w-56 shrink-0 sticky top-6">
-                        <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-5">
+                    <aside className="w-56 shrink-0 sticky top-6 flex flex-col gap-6">
+                        <div className="bg-white max-h-147.75 rounded-2xl shadow-sm border border-gray-100 p-5">
                             <div className={`flex items-center gap-2 mb-4 ${isArabic ? 'flex-row-reverse' : ''}`}>
                                 <SlidersHorizontal className="w-4 h-4 text-navy" />
                                 <h2 className="font-semibold text-navy text-sm">
@@ -260,6 +264,21 @@ export default function PropertiesSection() {
                                 </button>
                             </div>
                         </div>
+                        {(ads && ads.length > 0) &&
+                            <>
+                                {ads.map((ad, index) => (
+                                    <div className='relative border-gray-500 border'>
+                                        <div className='absolute top-4 flex text-white gap-1 right-4 bg-gray-500 rounded-md p-1'>
+                                            <span className='text-sm'>{t("General.closeAd")}</span>
+                                            <CircleX className='size-5' />
+                                        </div>
+                                        <a href={ad.link} target='_blank'>
+                                            <OptimizedImage src={ad.image} alt={`Ad image - ${index}`} className='h-116.25 w-73.75 object-contain' />
+                                        </a>
+                                    </div>
+                                ))}
+                            </>
+                        }
                     </aside>
 
                     {/* ── Property Grid ── */}

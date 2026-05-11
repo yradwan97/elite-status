@@ -165,7 +165,8 @@ export default function BookingModal({
                 >
                   <button
                     onClick={handleCancel}
-                    className="flex items-center gap-3 w-full px-4 py-3 text-sm text-gray-700 hover:bg-gray-50 transition-colors"
+                    disabled={booking.status !== "ACTIVE"}
+                    className="flex disabled:cursor-not-allowed disabled:opacity-65 items-center gap-3 w-full px-4 py-3 rounded-2xl text-sm text-gray-700 hover:bg-gray-50 transition-colors"
                   >
                     {/* cancel icon */}
                     <img src={reservationCancelIcon} />
@@ -173,7 +174,8 @@ export default function BookingModal({
                   </button>
                   <button
                     onClick={handleRequestService}
-                    className="flex items-center gap-3 w-full px-4 py-3 text-sm text-gray-700 hover:bg-gray-50 transition-colors"
+                    disabled={booking.status !== "ACTIVE"}
+                    className="flex disabled:cursor-not-allowed disabled:opacity-65 items-center gap-3 w-full px-4 py-3 rounded-2xl text-sm text-gray-700 hover:bg-gray-50 transition-colors"
                   >
                     {/* service icon */}
                     <img src={requestServiceIcon} />

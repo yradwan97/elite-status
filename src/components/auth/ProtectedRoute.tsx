@@ -32,7 +32,7 @@ export function ProtectedRoute({
       <Navigate
         to="/"
         replace
-        state={{ from: location.pathname, isLoginError: true }}
+        state={{ ...location.state, from: location.pathname, isLoginError: true }}
       />
     );
   }

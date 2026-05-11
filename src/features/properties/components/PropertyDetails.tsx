@@ -17,7 +17,7 @@ import {
     PlayCircle
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { useProperty } from "../api/hooks/useProperty";
 import { checkLoggedIn, cn, isValidUrl } from "@/lib/utils";
 import { Facility } from "../api/propertiesApi";
@@ -293,7 +293,7 @@ export default function PropertyDetails() {
                                     src={images[0]}
                                     alt={title}
                                     priority
-                                    className="w-full h-full object-cover group-hover:brightness-[0.92] transition-all duration-300 aspect-16/10  lg:h-130"
+                                    className="w-full h-full object-cover transition-all duration-300 aspect-16/10"
                                 />
                             ) : (
                                 <div className="w-full h-130 bg-gray-100 flex items-center justify-center">
@@ -363,7 +363,7 @@ export default function PropertyDetails() {
                 {/* ── Main content ── */}
                 <div className="max-w-6xl mx-auto px-4 mt-6 grid grid-cols-1 lg:grid-cols-[1fr_340px] gap-6 pb-16">
                     {/* LEFT COLUMN */}
-                    <div className="space-y-6">
+                    <div className="space-y-6 order-2 sm:order-first">
 
                         {/* Property meta strip */}
                         <div className="border border-gray-200 rounded-2xl h-auto sm:h-23.5 p-2 flex items-center justify-start">
@@ -432,39 +432,22 @@ export default function PropertyDetails() {
 
                         </div>
 
-                        {/* Video Player */}
                         {(!!property?.video && isValidUrl(property.video)) && (
                             <div className="rounded-lg bg-[#f9f9f9] p-4">
                                 <h2 className="text-base font-bold text-navy mb-4">
                                     {t("Properties.Details.section.video")}
                                 </h2>
 
-                                <Dialog>
-                                    <DialogTrigger asChild>
-                                        <Button variant="outline" className="flex items-center gap-2">
-                                            <PlayCircle className="w-4 h-4" />
-                                            {t("Properties.Details.section.watchVideo")}
-                                        </Button>
-                                    </DialogTrigger>
-
-                                    <DialogContent className="sm:min-w-xl md:min-w-2xl lg:min-w-5xl p-0 overflow-hidden">
-                                        <DialogHeader className="px-4 pt-4">
-                                            <DialogTitle>
-                                                {t("Properties.Details.section.video")}
-                                            </DialogTitle>
-                                        </DialogHeader>
-                                        <div className="aspect-video w-full">
-                                            <video
-                                                src={property.video}
-                                                controls
-                                                autoPlay
-                                                className="w-full h-full"
-                                            >
-                                                Your browser does not support the video tag.
-                                            </video>
-                                        </div>
-                                    </DialogContent>
-                                </Dialog>
+                                <a
+                                    href={property.video}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                >
+                                    <Button variant="outline" className="flex items-center gap-2">
+                                        <PlayCircle className="w-4 h-4" />
+                                        {t("Properties.Details.section.watchVideo")}
+                                    </Button>
+                                </a>
                             </div>
                         )}
 

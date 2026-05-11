@@ -1,4 +1,4 @@
-import { ApiResponse } from '@/common/api/commonApi';
+import { ApiPaginationResponse } from '@/common/api/commonApi';
 import axios from '@/lib/axios';
 
 export interface OwnerService {
@@ -19,7 +19,7 @@ export interface OwnerServicesResponse {
 
 
 export const servicesApi = {
-    getOwnerServices: async (page: number, searchTerm: string = "", limit: number = 4): Promise<ApiResponse<OwnerServicesResponse>> => {
+    getOwnerServices: async (page: number, searchTerm: string = "", limit: number = 4): Promise<ApiPaginationResponse<OwnerServicesResponse>> => {
         try {
             const response = await axios.get(`/services?page=${page}&search=${searchTerm}&limit=${limit}`);
             return response.data;

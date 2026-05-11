@@ -3,7 +3,7 @@ import { propertiesApi } from "../propertiesApi";
 
 export const useFavouriteProperties = (page: number) => {
     const { data, isFetching, isError, refetch: queryRefetch } = useQuery({
-        queryKey: ['properties', 'favourites', page],
+        queryKey: ['favourites', page],
         queryFn:  () => propertiesApi.getFavouriteProperties(page),
         placeholderData: (prev) => prev, // keeps previous data visible while fetching next page
     });

@@ -48,7 +48,7 @@ export default function AccountFavourites() {
               ))
               : (
                 <div className="col-span-3 text-center py-20 text-gray-400">
-                  <OptimizedImage src={noFavourites} alt="No favourites" className="mx-auto my-6 w-64 h-64 opacity-70 object-contain" />
+                  <OptimizedImage src={noFavourites} alt="No favourites" className="mx-auto my-6 w-44 h-44 opacity-70 object-contain" />
                   <p className="text-lg font-medium">{t('Account.Favourites.NoFavourites')}</p>
                 </div>
               )

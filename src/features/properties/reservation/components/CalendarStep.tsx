@@ -8,9 +8,11 @@ import { useTranslation } from "react-i18next";
 import { PricingPlan } from "../types/types";
 import { useReservedDates } from "../api/hooks/useReservedDates";
 import i18next from "i18next";
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import { Info } from 'lucide-react';
 
 interface CalendarStepProps {
-  selectedPlan: PricingPlan | null;
+  selectedPlan: PricingPlan;
   startDate: Date | undefined;
   endDate: Date | undefined;
   acceptedTerms: boolean;
@@ -133,7 +135,7 @@ export function CalendarStep({
       return [
         pastMatcher,
         reservedMatcher,
-        (date:Date) => [4, 5, 6].includes(date.getDay()) //Thursday, Friday, Saturday disabled
+        (date: Date) => [4, 5, 6].includes(date.getDay()) //Thursday, Friday, Saturday disabled
       ];
     }
 
@@ -261,9 +263,17 @@ export function CalendarStep({
           <p className="text-sm text-gray-400">
             {t("Properties.Reservation.calendar.selectDates")}
           </p>
-          <span className="text-xs text-navy hover:underline cursor-pointer">
-            {t("Properties.Reservation.info")}
-          </span>
+          <Popover>
+            <PopoverTrigger asChild>
+              <button className="flex items-center gap-1 text-md text-turquoise hover:opacity-70 transition-opacity">
+                <Info className="w-3.5 h-3.5" />
+                {t("Properties.Reservation.info.info")}
+              </button>
+            </PopoverTrigger>
+            <PopoverContent className="w-64 text-md text-gray-600 flex flex-col gap-1.5">
+              <p className="text-md" key={selectedPlan.key}>{selectedPlan.info}</p>
+            </PopoverContent>
+          </Popover>
         </div>
 
         <div className="flex items-center gap-3">
@@ -321,9 +331,9 @@ export function CalendarStep({
               range_end: rangeEnd ?? false,
               range_middle: rangeStart && rangeEnd
                 ? (date: Date) => {
-                    const d = toMidnight(date);
-                    return d > toMidnight(rangeStart) && d < toMidnight(rangeEnd);
-                  }
+                  const d = toMidnight(date);
+                  return d > toMidnight(rangeStart) && d < toMidnight(rangeEnd);
+                }
                 : false,
             }}
             className="w-3/4 max-w-md rounded-lg"

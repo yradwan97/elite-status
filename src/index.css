@@ -6,13 +6,14 @@
 @custom-variant dark (&:is(.dark *));
 
 /* Optional: You can add custom @theme extensions here later */
-@theme {
-  /* Example: extend colors, fonts, etc. */
-}
+@theme {}
 
 @theme inline {
   --font-heading: var(--font-sans);
   --font-sans: 'Geist Variable', sans-serif;
+  --font-alex: 'Alexandria', sans-serif;
+  --font-merienda: 'Merienda', sans-serif;
+  --font-maitree: 'Maitree', sans-serif;
   --color-sidebar-ring: var(--sidebar-ring);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
@@ -57,8 +58,6 @@
   --tracking-widest-3: 0.3em;
   --tracking-widest-4: 0.4em;
   --tracking-widest-6: 0.6em;
-  --font-maitree: var(--font-maitree);
-  --font-merienda: var(--font-merienda)
 }
 
 :root {

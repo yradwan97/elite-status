@@ -35,11 +35,11 @@ export function DatePicker({
 
     return (
         <Popover>
-            <PopoverTrigger asChild>
+            <PopoverTrigger asChild className="w-full flex lg:w-auto">
                 <Button
                     variant="outline"
                     className={cn(
-                        "flex-1 px-6 py-4 rounded-2xl justify-start text-left font-normal h-auto border border-gray-200 text-black bg-white",
+                        "flex-1 px-6 py-4 rounded-2xl cursor-pointer justify-start text-left font-normal h-auto border border-gray-500 lg:border-gray-200 text-black bg-white",
                         isArabic && "text-end flex-row-reverse",
                         !date && "text-muted-foreground"
                     )}

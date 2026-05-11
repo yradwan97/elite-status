@@ -6,7 +6,10 @@
     "kwd": "KWD",
     "cancel": "Cancel",
     "upgrade": "Upgrade",
-    "rent": "Rent"
+    "rent": "Rent",
+    "close": "Close",
+    "closeAd": "Close AD",
+    "search": "Search"
   },
   "Offline": {
     "title": "You're offline",
@@ -83,6 +86,7 @@
       "growTitle": "Grow Your Rental Income",
       "growSubtitle": "Keep your chalet in perfect condition with our trusted repair and maintenance solutions",
       "bookNow": "Book Now",
+      "readMore": "Click to read more",
       "whatsappMessage": "Hi, I'm interested in booking the {{title}} service. Please provide me with more details and availability. Thank you!"
     }
   },
@@ -107,7 +111,8 @@
     "register": "Register",
     "registering": "Registering...",
     "alreadyHaveAccount": "Already have an account? Login",
-    "agreeTerms": "I agree Terms & Conditions",
+    "termsAndConditions": "Terms & Conditions",
+    "agreeTerms": { "prefix": "I agree to the", "link": "Terms & Conditions" },
     "welcome-1": "Welcome To",
     "welcome-2": "Elite Status Company",
     "uploadError": "Failed to upload ID images. Please try again.",
@@ -323,7 +328,11 @@
         "dayUse": "Daily (Day Use)",
         "dayUseSub": "Sunday - Wednesday"
       },
-      "info": "Info",
+      "info": {
+        "info":"Info",
+        "50": "Pay 50% of the booking amount now to confirm your reservation. The remaining balance must be paid before check-in (up to 48 hours prior to arrival), or upon arrival depending on the booking policy. Please note: the deposit payment is non-refundable in case of cancellation and is subject to the Refund Policy.",
+        "100": "Pay the full booking amount now to instantly secure your chalet reservation. In case of cancellation, any eligible refund amount will be processed according to the Refund Policy."
+      },
       "next": "Next",
       "back": "Back",
       "breadcrumb": {
@@ -332,8 +341,8 @@
       }
     },
     "pricePeriods": {
-      "daily": "Day (with stay)",
-      "dayUse": "Day (day use)",
+      "daily": "Day",
+      "dayUse": "Day use",
       "weekly": "Week",
       "weekdays": "Weekdays",
       "weekends": "Weekends"
@@ -392,6 +401,7 @@
       "Title": "My Price Plan",
       "GoldPlan": "Gold Plan",
       "Upgrade": "Upgrade",
+      "Subscribe": "Subscribe now",
       "YourPlanTracking": "Your Plan Tracking",
       "No": "No",
       "Date": "Date",
@@ -400,7 +410,13 @@
       "Discount": "Discount",
       "InvoiceLink": "Invoice Link",
       "SubscribedOn": "Subscribed on: {{date}}",
-      "ExpiresOn": "Expires on: {{date}}"
+      "ExpiresOn": "Expires on: {{date}}",
+      "Success": {
+        "title": "Subscription Confirmed!",
+        "subtitle": "You're all set. Your plan is now active and you can start enjoying all its benefits.",
+        "viewPlan": "View My Plan",
+        "goHome": "Back to Home"
+      }
     },
     "Favourites": {
       "Title": "My Favorites",
@@ -417,7 +433,7 @@
       "statusLabel": {
         "ACTIVE": "Active",
         "COMPLETED": "Completed",
-        "CANCELED": "Ended"
+        "CANCELED": "Canceled"
       },
       "currency": "KWD",
       "retry": "Retry",
@@ -469,7 +485,7 @@
         "reasonNotEmpty": "Reason is required",
         "next": "Next",
         "confirmTitle": "Confirm Cancellation",
-        "confirmWarning": "This action cannot be undone. Your reservation will be permanently cancelled.",
+        "confirmWarning": "This action cannot be undone. If your cancellation request is approved by the administrator, your rental for this unit will be permanently terminated. Any payments made will be handled according to our refund policy.",
         "reasonLabel": "Your reason",
         "back": "Back",
         "confirm": "Yes, Cancel"

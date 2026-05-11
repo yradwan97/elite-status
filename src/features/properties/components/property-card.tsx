@@ -34,49 +34,11 @@ export function PropertyCard({ property, isFromFavourites = false }: PropertyCar
 
     const [isFavourite, setIsFavourite] = useState(isFromFavourites ? true : property?.isFavourite || false);
     const toggleFavourite = useToggleFavourite(property?._id || "");
-    const temptags = [
-        {
-            "_id": "69f5ead88e7033b6e4b3169c",
-            "titleAr": "افضل العروض",
-            "titleEn": "Best Seller",
-            "__v": 0
-        },
-        {
-            "_id": "69f78ec12e8f1838e2f15910",
-            "titleAr": "ساحة انتظار",
-            "titleEn": "Parking",
-            "__v": 0
-        },
-        {
-            "_id": "69f78ec12e8f1838e2f15911",
-            "titleAr": "مسبح",
-            "titleEn": "Swimming Pool",
-            "__v": 0
-        },
-        {
-            "_id": "69f78ec12e8f1838e2f15912",
-            "titleAr": "إطلالة بحرية",
-            "titleEn": "Sea View",
-            "__v": 0
-        },
-        {
-            "_id": "69f78ec12e8f1838e2f15913",
-            "titleAr": "تشطيب فاخر",
-            "titleEn": "Luxury Finish",
-            "__v": 0
-        },
-        {
-            "_id": "69f78ec12e8f1838e2f15914",
-            "titleAr": "حديقة خاصة",
-            "titleEn": "Private Garden",
-            "__v": 0
-        }
-    ]
-    // TODO: Remove temp tags
+    
     const isMobile = useIsMobile();
-    const tagsCutoff = isMobile ? 1 : 2
-    const visibleTags = temptags?.slice(0, tagsCutoff) ?? [];
-    const extraTags = temptags?.slice(tagsCutoff) ?? [];
+    const tagsCutoff = 1
+    const visibleTags = property?.tags?.slice(0, tagsCutoff) ?? [];
+    const extraTags = property?.tags?.slice(tagsCutoff) ?? [];
 
 
 
@@ -125,7 +87,7 @@ export function PropertyCard({ property, isFromFavourites = false }: PropertyCar
     };
 
     return (
-        <div onClick={handleGoToDetails} className="group h-fit bg-white cursor-pointer rounded-3xl overflow-hidden shadow-sm hover:shadow-xl transition-all min-h-94.25 duration-300 border border-gray-100">
+        <div onClick={handleGoToDetails} className="group h-fit w-79.25 bg-white cursor-pointer rounded-3xl overflow-hidden shadow-sm hover:shadow-xl transition-all min-h-94.25 duration-300 border border-gray-100">
             {/* Image */}
             <div className="relative h-57.25 overflow-hidden flex">
                 <OptimizedImage
@@ -137,12 +99,12 @@ export function PropertyCard({ property, isFromFavourites = false }: PropertyCar
                 <div className={`absolute top-4 ${isArabic ? "right-4" : "left-4"} flex gap-2`}>
                     {/* Rating badge */}
                     <div className="flex gap-2">
-                        {(property.rate && property.rate > 0) ? <div className="flex items-center gap-1 bg-black/70 text-white text-xs font-medium px-3 py-1 rounded-md">
+                        {property?.rate && property.rate > 0 ? <div className="flex items-center gap-1 bg-black/70 text-white text-xs font-medium px-3 py-1 rounded-md">
                             <StarIcon size={16} color="#FACC15" />
                             {(property.rate && property.rate > 0) && property.rate.toFixed(1)}
                         </div> : null}
                     </div>
-                    <div className="flex gap-2">
+                    {visibleTags.length > 0 && <div className="flex gap-2">
                         {visibleTags.map((t) => (
                             <div
                                 key={t._id}
@@ -198,7 +160,7 @@ export function PropertyCard({ property, isFromFavourites = false }: PropertyCar
                                 </HoverCard>
                             )
                         )}
-                    </div>
+                    </div>}
                 </div>
 
                 {/* Favorite */}
@@ -213,20 +175,20 @@ export function PropertyCard({ property, isFromFavourites = false }: PropertyCar
             </div>
 
             {/* Content */}
-            <div className={`h-auto px-5 py-3 ${isArabic ? 'text-right' : 'text-left'}`}>
+            <div className={`h-auto px-2.5 py-5 ${isArabic ? 'text-right' : 'text-left'}`}>
                 <h3 className="font-semibold text-lg leading-tight text-navy mb-2 line-clamp-2">
                     {title}
                 </h3>
 
                 {/* Location */}
-                <div className={`flex items-center gap-1.5 text-gray-600 text-sm mb-1 ${isArabic ? 'text-start' : 'text-end'}`}>
+                <div className={`flex items-center gap-1.25 text-gray-600 text-sm ${isArabic ? 'text-start' : 'text-end'}`}>
                     <MapPin className="w-4 h-4 shrink-0" />
                     <span>{property.address}</span>
                 </div>
 
                 {/* Price — dailyPrice is the display price */}
                 <div className={`flex mb-1 ${isArabic ? 'text-start' : ''}`}>
-                    <div className={`flex items-center gap-1 mb-1`}>
+                    <div className={`flex items-center gap-1`}>
                         <CircleDollarSign className="w-4 h-4 text-gray-400 shrink-0" />
                         <span className="text-gray-600 text-sm">{t('Dashboard.startFrom')}</span>
 
@@ -242,7 +204,7 @@ export function PropertyCard({ property, isFromFavourites = false }: PropertyCar
                                         }}
                                         components={{
                                             value: (
-                                                <span className="text-xl font-bold text-amber-500" />
+                                                <span className="text-lg font-bold text-amber-500" />
                                             ),
                                             currency: <span className="text-md text-gray-500" />,
                                             divider: <span className="text-md text-gray-400" />,
@@ -286,7 +248,7 @@ export function PropertyCard({ property, isFromFavourites = false }: PropertyCar
                 </div>
 
                 {/* Capacity */}
-                <div className={`flex items-center gap-1.5 text-gray-600`}>
+                <div className={`flex items-center gap-1.25 text-sm text-gray-600`}>
                     <Users className="w-4 h-4 shrink-0" />
                     <span>{property.guests} {t('Dashboard.person')}</span>
                 </div>

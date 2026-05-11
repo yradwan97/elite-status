@@ -22,7 +22,7 @@ export function formatDate({
   format = 'medium',
   includeTime = false,
 }: FormatDateOptions): string {
-  const resolvedLocale = locale === 'ar' ? 'ar-KW' : 'en-GB';
+  const resolvedLocale = locale === 'ar' ? 'ar-KW' : 'en-US';
   const parsedDate = typeof date === 'string' ? new Date(date) : date;
 
   if (isNaN(parsedDate.getTime())) return '';
@@ -116,13 +116,15 @@ export const adjustPriceForOffer = (price: number, property: Property) => {
 
   if (now < normalizedStart || now > normalizedEnd) return price;
 
-  if (property.offerRate === "PERCENTAGE") {
+  if (property.offerRate ==="PERCENTAGE" ) {
     if (property.offer > 1) {
       return (price * (1 - (property.offer / 100)))
     } else {
       return price * (1 - property.offer)
     }
   }
+
+  return price
 }
 
 const PRICE_MAP: { key: keyof Property; period: string }[] = [
@@ -164,3 +166,5 @@ export const isValidUrl = (url: string | undefined | null): boolean => {
     return false;
   }
 };
+
+export const scrollToTop = () => window.scrollTo({ top: 0, behavior: 'smooth' });

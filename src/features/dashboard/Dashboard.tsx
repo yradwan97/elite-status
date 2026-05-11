@@ -34,9 +34,9 @@ export default function Dashboard() {
   const { t } = useTranslation();
   const isArabic = i18next.language === 'ar';
 
-  const { properties, isLoading } = useProperties()
+  const { properties, isLoading, refetch } = useProperties()
   const { services, isLoading: servicesLoading } = useOwnerServices(1)
-  const {plans, isLoading: isPlansLoading} = usePlans()
+  const { plans, isLoading: isPlansLoading } = usePlans()
   const navigate = useNavigate()
 
   const [destination, setDestination] = useState("")
@@ -44,8 +44,11 @@ export default function Dashboard() {
   const [date, setDate] = useState("")
   const [phone, setPhone] = useState<string | undefined>(undefined)
   const { info } = useInfo()
-
   const location = useLocation();
+
+  useEffect(() => {
+    refetch()
+  }, [refetch])
 
   const handleSearch = () => {
     const searchData: Record<string, string> = {};
@@ -65,18 +68,10 @@ export default function Dashboard() {
   const hasShownToast = useRef(false);
 
   useEffect(() => {
-    if (
-      location.state?.isLoginError &&
-      !hasShownToast.current
-    ) {
+    if (location.state?.isLoginError && !location.state?.isLogout && !hasShownToast.current) {
       hasShownToast.current = true;
-
       toast.error(t("General.pleaseLogin"));
-
-      navigate(location.pathname, {
-        replace: true,
-        state: {},
-      });
+      navigate(location.pathname, { replace: true, state: {} });
     }
   }, [location, navigate, t]);
 
@@ -104,11 +99,11 @@ export default function Dashboard() {
   return (
     <>
       <PageTitle titleKey="Dashboard.pageTitle" fallback="Elite Status" />
-      <div className="min-h-screen mx-10.5 bg-white overflow-y-hidden">
+      <div className="min-h-screen bg-white overflow-y-hidden">
 
         {/* Hero Section */}
         <div
-          className="relative h-190.75 overflow-hidden bg-white"
+          className="relative h-190.75 mx-10.5 overflow-hidden bg-white"
           style={{ borderRadius: "20px" }}
         >
           {/* Slides */}
@@ -126,18 +121,18 @@ export default function Dashboard() {
 
           {/* Content overlay */}
           <div className="relative z-10 h-full flex flex-col items-center justify-center text-center px-6 text-white">
-            <h1 className="text-5xl text-navy md:text-6xl font-bold mb-4 tracking-tight">
+            <h1 className="font-alex text-5xl text-navy font-semibold mb-4" style={{ lineHeight: "105%", letterSpacing: "4%" }}>
               {t('Dashboard.escapeTheNoise')}
             </h1>
 
-            <div className={`w-full max-w-4xl bg-white rounded-md md:rounded-full py-2 px-6 shadow-2xl`}>
-              <div className={`flex gap-2 ${isArabic ? 'flex-col md:flex-row-reverse' : 'flex-col md:flex-row'}`}>
+            <div className={`w-full max-w-2xl lg:max-w-4xl bg-white rounded-md lg:rounded-full py-2 px-4 shadow-2xl`}>
+              <div className={`flex items-center gap-2 ${isArabic ? 'flex-col lg:flex-row-reverse' : 'flex-col lg:flex-row'}`}>
                 <input
                   type="text"
                   value={destination}
                   onChange={e => setDestination(e.target.value)}
                   placeholder={t('Dashboard.searchDestinations')}
-                  className={`flex-1 px-6 py-4 rounded-2xl text-gray-900 focus:outline-none ${isArabic ? 'text-end' : ''}`}
+                  className={`flex-1 border w-full bg-white border-gray-500 lg:border-none px-6 py-4 rounded-2xl text-gray-900 focus:outline-none ${isArabic ? 'text-end' : ''}`}
                 />
                 <DatePicker
                   date={date}
@@ -145,19 +140,17 @@ export default function Dashboard() {
                   placeholder={t('Dashboard.selectDates')}
                   isArabic={isArabic}
                 />
-                <div className={`flex-1 ${isArabic ? 'text-end md:border-s-2 ps-3' : 'text-end md:border-e-2 pe-3'}`}>
-                  <Counter
+                <Counter
                     label={t('Dashboard.addGuests') || t('Properties.filter.guests')}
                     value={Number(noOfGuests) || 0}
                     onChange={(v) => setNoOfGuests(v.toString())}
                   />
-                </div>
                 <button
-                  className="bg-turquoise flex flex-row w-full md:w-auto md:justify-center md:items-center text-white px-3 py-3 rounded-full font-medium transition"
+                  className={`bg-turquoise flex flex-row w-full lg:w-auto lg:justify-center lg:items-center text-white px-3 py-3 rounded-full font-medium transition ${isArabic ? "flex-row-reverse" : "" }`}
                   onClick={handleSearch}
                 >
                   <Search className="w-8 h-8" />
-                  {/* <span className='text-center mx-auto block md:hidden'>Search</span> */}
+                  <span className='text-center mx-auto block lg:hidden'>{t("General.search")}</span>
                 </button>
               </div>
             </div>
@@ -185,16 +178,16 @@ export default function Dashboard() {
 
         {/* Best Deals Section */}
         <div className={`w-full bg-white`} >
-          <div className="max-w-7xl  mx-auto px-6 py-16">
+          <div className="max-w-339.75 mx-auto py-16">
             <div className={`flex items-center justify-between mb-10 ${isArabic ? 'flex-row-reverse' : ''}`}>
-              <h2 className={`text-4xl font-bold text-navy ${isArabic ? 'text-right' : 'text-left'}`}>
+              <h2 style={{ fontSize: '40px', lineHeight: "100%", letterSpacing: "5%" }} className={`font-alex font-semibold text-navy text-center ${isArabic ? 'sm:text-right' : 'sm:text-left'}`}>
                 {t('Dashboard.bestDealsForRent')}
               </h2>
-              <OptimizedImage src={pattern} alt="Best Deals Icon" className="hidden md:flex h-12 w-auto" />
+              <OptimizedImage src={pattern} alt="Best Deals Icon" className="hidden sm:flex h-12 w-auto" />
             </div>
-            <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-8" dir={isArabic ? 'rtl' : 'ltr'}>
+            <div className="flex flex-col justify-center items-center w-full sm:grid sm:grid-cols-1 lg:grid-cols-4 gap-[30.33px]" dir={isArabic ? 'rtl' : 'ltr'}>
               {isLoading ? (
-                Array.from({ length: 6 }).map((_, i) => <PropertyCardSkeleton key={i} />)
+                Array.from({ length: 4 }).map((_, i) => <PropertyCardSkeleton key={i} />)
               ) : properties.map((property) => (
                 <PropertyCard
                   property={property}
@@ -206,7 +199,7 @@ export default function Dashboard() {
         </div>
 
         {/* Nature Awaits Section */}
-        <div className="relative bg-white py-32 overflow-hidden">
+        <div className="relative bg-white pt-32 overflow-hidden">
 
           {/* Watermark + Images */}
           <div className="relative flex items-center justify-center">
@@ -214,8 +207,8 @@ export default function Dashboard() {
             {/* Watermark */}
             <div className="absolute inset-0 flex items-center justify-center pointer-events-none select-none bottom-[30em]">
               <p
-                style={{ fontFamily: "'Maitree', serif", fontWeight: '600', letterSpacing: '0.3em' }}
-                className="text-[8vw] font-maitree font-bold text-turquoise/10 uppercase whitespace-nowrap leading-none"
+                style={{ fontFamily: "'Maitree', serif", fontWeight: '500', letterSpacing: '11%', fontSize: "150px", lineHeight: "100%" }}
+                className="text-turquoise/10 uppercase whitespace-nowrap leading-none"
               >
                 {t('Dashboard.eliteStatus')}
               </p>
@@ -254,11 +247,11 @@ export default function Dashboard() {
           </div>
 
           {/* Text + CTA */}
-          <div className="flex flex-col text-center -translate-y-16.5 relative z-10 items-center gap-3 justify-center px-6 mt-10">
-            <h2 style={{ fontFamily: "'Maitree', serif", fontWeight: '300' }} className="text-4xl md:text-5xl text-navy mb-2">
+          <div className="flex flex-col text-center -translate-y-15.5 relative z-10 items-center gap-3 justify-center px-6 mt-10">
+            <h2 style={{ fontFamily: "'Maitree', serif", fontWeight: '400', fontSize: "40px" }} className="text-4xl md:text-5xl text-navy mb-2">
               {t('Dashboard.natureAwaits')}
             </h2>
-            <p className="text-gray-500 text-base md:text-lg max-w-4xl mx-auto leading-relaxed">
+            <p className="text-[#4A606B] text-base md:text-lg max-w-4xl mx-auto leading-relaxed">
               {t('Dashboard.natureAwaitsDescription')}
             </p>
             <a
@@ -278,9 +271,9 @@ export default function Dashboard() {
 
         {/* Plans Section */}
         <section className="flex-1 min-w-0" dir={isArabic ? 'rtl' : 'ltr'}>
-          <div className="max-w-7xl mx-auto px-6 py-16">
+          <div className="max-w-7xl mx-auto px-6 py-2">
             <div className={`flex items-center justify-between mb-10`}>
-              <h2 className={`text-4xl font-bold md:w-1/2 text-navy ${isArabic ? 'text-right' : 'text-left'}`}>
+              <h2 style={{ fontSize: "40px", letterSpacing: "5%" }} className={`font-alex font-semibold md:w-1/3 text-navy ${isArabic ? 'text-right' : 'text-left'}`}>
                 {t('Dashboard.Pricing.title')}
               </h2>
               <OptimizedImage src={pattern} alt="pattern" className="hidden md:block h-12 w-auto" />
@@ -288,43 +281,43 @@ export default function Dashboard() {
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 items-stretch">
               {isPlansLoading ? (
                 Array.from({ length: 4 }).map((_, i) => <PlanCardSkeleton key={i} />)
-              ) : 
-              plans.map((plan) => (
-                <PlanCard key={plan._id} plan={plan} />
-              ))}
+              ) :
+                plans.map((plan) => (
+                  <PlanCard key={plan._id} plan={plan} />
+                ))}
             </div>
           </div>
         </section>
 
         {/* Newsletter Section */}
         <div
-          className="relative w-full mt-16"
+          className="relative w-full mt-16 h-auto sm:min-h-91.75 px-10 py-20"
           style={{ backgroundImage: `url(${newsletterVector})`, backgroundSize: 'cover', backgroundPosition: 'center top' }}
         >
-          <div className="max-w-7xl mx-auto px-10 pt-14 pb-48">
-            <div className={`flex flex-col md:flex-row items-center justify-between gap-10 ${isArabic ? 'md:flex-row-reverse' : 'md:flex-row'}`}>
+          <div className="">
+            <div className={`flex flex-col md:flex-row w-full items-center justify-between gap-10 ${isArabic ? 'md:flex-row-reverse text-right' : 'md:flex-row'}`}>
 
               {/* Text — always on the "start" side */}
               <div className={`flex flex-col gap-3 `}>
                 <h2
-                  style={{ fontFamily: "'Maitree', serif", fontWeight: '600' }}
-                  className="text-5xl md:text-6xl text-white leading-tight"
+                  style={{ fontSize: "40px" }}
+                  className="text-white font-merienda font-semibold leading-tight"
                 >
                   {t('Dashboard.Newsletter.title')}
                 </h2>
-                <p className="text-white/70 text-base max-w-sm">
+                <p style={{ fontWeight: "400", fontSize: "18px", letterSpacing: "3%" }} className="text-[#D1DBDF] text-base max-w-sm">
                   {t('Dashboard.Newsletter.subtitle')}
                 </p>
               </div>
 
               {/* Email input — always on the "end" side */}
-              <div className={`md:bg-white/10 backdrop-blur-sm rounded-2xl p-2 md:p-3 flex flex-col w-auto md:w-auto items-center gap-3 ${isArabic ? ' md:flex-row-reverse' : ' md:flex-row'}`}>
+              <div className={`md:bg-white/10 backdrop-blur-sm rounded-2xl p-2 md:p-3 flex flex-col items-center gap-3 ${isArabic ? ' md:flex-row-reverse' : ' md:flex-row'}`}>
                 <PhoneField
                   value={phone}
                   onChange={(value) => setPhone(value)}
-                // placeholder={t('Dashboard.Newsletter.emailPlaceholder')}
-                // dir={isArabic ? 'rtl' : 'ltr'}
-                // className={`bg-white rounded-xl px-5 py-3.5 text-gray-700 placeholder-gray-400 text-sm focus:outline-none  ${isArabic ? 'text-right' : 'text-left'}`}
+                  // placeholder={t('Dashboard.Newsletter.emailPlaceholder')}
+                  // dir={isArabic ? 'rtl' : 'ltr'}
+                  className={`sm:w-full`}
                 />
                 <button disabled={!phone || !isValidPhoneNumber(phone)} onClick={handleWhatsappNewsletter} className="bg-navy text-white px-6 py-3.5 rounded-xl text-sm w-auto font-medium whitespace-nowrap hover:opacity-90 disabled:opacity-35 disabled:cursor-not-allowed transition-opacity shrink-0">
                   {t('Dashboard.Newsletter.subscribe')}
@@ -339,18 +332,18 @@ export default function Dashboard() {
         <div className="max-w-7xl mx-auto px-6 py-16">
           <div className="flex flex-col items-center text-center gap-4 mb-12">
             <h2
-              style={{ fontFamily: "'Maitree', serif", fontWeight: '600' }}
-              className={`text-5xl md:text-6xl font-bold text-navy leading-tight ${isArabic ? 'text-right' : 'text-center'}`}
+              style={{ fontSize: "40px", letterSpacing: "5%" }}
+              className={`font-alex font-semibold text-navy leading-tight ${isArabic ? 'text-right' : 'text-center'}`}
             >
               {t('Dashboard.Services.growTitle')}
             </h2>
-            <p style={{ fontFamily: "'Maitree', serif", fontWeight: '500' }} className="text-gray-400 max-w-2xl">
+            <p style={{ fontWeight: '400', letterSpacing: "3%", fontSize: "18px" }} className="text-[#4A606B] max-w-2xl">
               {t('Dashboard.Services.growSubtitle')}
             </p>
           </div>
 
           <section className="flex-1 min-w-0" dir={isArabic ? 'rtl' : 'ltr'}>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-x-30">
               {servicesLoading ? (
                 Array.from({ length: 4 }).map((_, i) => <ServiceCardSkeleton key={i} />)
               ) : (

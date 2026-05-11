@@ -28,7 +28,7 @@ export default function UpgradePlanModal({ open, onOpenChange }: Props) {
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent
         showCloseButton={false}
-        className="min-w-6xl max-h-[90vh] overflow-y-auto rounded-3xl p-0 bg-gray-50"
+        className="md:min-w-6xl max-h-[90vh] overflow-y-auto rounded-3xl p-0 bg-gray-50"
       >
         {/* Close button */}
         <DialogClose asChild>
