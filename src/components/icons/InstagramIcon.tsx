@@ -1,5 +1,3 @@
-import React from 'react';
-
 const InstagramFillIcon = ({
   size = undefined,
   color = '#000000',

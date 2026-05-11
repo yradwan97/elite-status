@@ -33,6 +33,10 @@ export interface InfoData {
     __v: number
 }
 
+export interface InfoResponse {
+    data: InfoData
+}
+
 export interface SocialMedia {
     whatsapp: string
     facebook: string
@@ -49,6 +53,10 @@ export interface PoliciesData {
   createdAt: string
   updatedAt: string
   __v: number
+}
+
+export interface PoliciesResponse {
+    data: PoliciesData
 }
 
 export interface RefundPolicy {
@@ -70,14 +78,15 @@ export interface TermsAndConditions {
 }
 
 
+
 export const commonApi = {
-    getInfo: async (): Promise<ApiResponse<InfoData>> => {
-        const response = await api.get<ApiResponse<InfoData>>('/info')
+    getInfo: async (): Promise<InfoResponse> => {
+        const response = await api.get<InfoResponse>('/info')
         return response.data
     },
 
-    getPolicies: async (): Promise<ApiResponse<PoliciesData>> => {
-        const response = await api.get<ApiResponse<PoliciesData>>('/policies')
+    getPolicies: async (): Promise<PoliciesResponse> => {
+        const response = await api.get<PoliciesResponse>('/policies')
         return response.data
     }
 }
