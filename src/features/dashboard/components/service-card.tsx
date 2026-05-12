@@ -55,7 +55,7 @@ export default function ServiceCard({ service, className }: ServiceCardProps) {
 
         {/* Text */}
         <div className="flex flex-col gap-1.5 flex-1">
-          <h3 className="text-base font-semibold text-navy">
+          <h3 className="text-base tracking-tight font-semibold text-navy">
             {isArabic ? service.titleAr : service.titleEn}
           </h3>
           <p
@@ -69,7 +69,7 @@ export default function ServiceCard({ service, className }: ServiceCardProps) {
         {/* CTA */}
         <button
           onClick={handleBookService}
-          className="self-start bg-navy w-23.25 h-9.25 cursor-pointer text-white text-sm font-medium p-2.5 rounded-full hover:opacity-90 transition-opacity"
+          className="flex items-center justify-center bg-navy w-23.25 h-9.25 cursor-pointer text-white text-sm font-medium p-2.5 rounded-full hover:opacity-90 transition-opacity"
         >
           {t("Dashboard.Services.bookNow") ?? "Book Now"}
         </button>

@@ -4,6 +4,8 @@ export interface PricingPlan {
   subtitleKey: string;
   price: number;
   info?: string;
+  checkin?: string
+  checkout?: string
 }
 
 

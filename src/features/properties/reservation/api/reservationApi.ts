@@ -79,6 +79,8 @@ export type ReservationTypeInfo = {
     type: ReservationType
     infoAr: string
     infoEn: string
+    checkin: string
+    checkout: string
 }
 
 export const reservationApi = {

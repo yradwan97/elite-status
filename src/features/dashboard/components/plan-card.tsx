@@ -23,10 +23,12 @@ const PLAN_FALLBACK_ICONS: Record<string, string> = {
   "Diamond Plan": diamondPlanIcon,
 };
 
+
+
 const PLAN_BADGES: Record<string, { label: string; className: string }> = {
-  "Gold Plan": { label: "Dashboard.Pricing.goldBadge", className: "bg-amber-600 text-amber-50" },
-  "Platinum Plan": { label: "Dashboard.Pricing.platinumBadge", className: "bg-rose-600 text-rose-50" },
-  "Diamond Plan": { label: "Dashboard.Pricing.diamondBadge", className: "bg-teal-600 text-teal-50" },
+  "Gold Plan": { label: "Dashboard.Pricing.goldBadge", className: `${i18next.language === "ar" ? 'bg-linear-to-l' : 'bg-linear-to-r'} from-[#E0A911] to-navy text-amber-50` },
+  "Platinum Plan": { label: "Dashboard.Pricing.platinumBadge", className: `${i18next.language === "ar" ? 'bg-linear-to-l' : 'bg-linear-to-r'} from-[#F92D59] to-navy text-rose-50` },
+  "Diamond Plan": { label: "Dashboard.Pricing.diamondBadge", className: `${i18next.language === "ar" ? 'bg-linear-to-l' : 'bg-linear-to-r'} from-turquoise to-navy text-teal-50` },
 };
 
 function SubscribeConfirmDialog({
@@ -66,7 +68,7 @@ function SubscribeConfirmDialog({
         </p>
 
         {/* Actions */}
-        <div className={cn("flex gap-3 mt-2", isArabic ? "flex-row-reverse" : "flex-row")}>
+        <div className={cn("flex  gap-3 mt-2", isArabic ? "flex-row-reverse" : "flex-row")}>
           <button
             onClick={onCancel}
             className="flex-1 py-2.5 rounded-xl border border-gray-200 text-sm font-medium text-gray-600 hover:bg-gray-50 transition-colors"
@@ -205,7 +207,7 @@ export default function PlanCard({ plan, isUpgrade = false }: { plan: Plan, isUp
 
         {/* Price */}
         <p className={cn("text-center text-3xl font-semibold mt-4", isFeatured ? "text-white" : "text-navy")}>
-          {plan.price} <span className="text-xl">{t("General.kwd")} / YR</span>
+          {plan.price} <span className="text-xl">{t("General.kwd")} / {t("General.year")}</span>
         </p>
 
         <hr className={cn("my-8", isFeatured ? "border-white/10" : "border-gray-100")} />
@@ -213,7 +215,7 @@ export default function PlanCard({ plan, isUpgrade = false }: { plan: Plan, isUp
         {/* Features */}
         <ul className="flex flex-col gap-3 flex-1">
           {features.map((feature, i) => (
-            <li key={i} className="flex items-start justify-end gap-2.5">
+            <li key={i} className="flex items-start justify-start gap-2.5">
               <OptimizedImage src={greenCheckIcon} className="size-5" alt="green-checkmark" />
               <span className={cn(
                 "text-xs leading-relaxed",

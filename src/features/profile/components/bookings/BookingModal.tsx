@@ -68,6 +68,7 @@ export default function BookingModal({
   if (!booking) return null;
 
   const title = isRTL ? booking.property.titleAr : booking.property.titleEn;
+  const propertyHref = `/properties/${booking.property._id}`
   const status = t(`${NS}.statusLabel.${booking.status}`);
 
   const handleCancel = () => {
@@ -143,7 +144,9 @@ export default function BookingModal({
           <div className="flex items-start justify-between gap-2">
             <div>
               <DialogTitle className="text-lg font-semibold text-gray-900 leading-snug">
+                <a href={propertyHref} target='_blank'>
                 {title}
+                </a>
               </DialogTitle>
               <p className={`mt-1 text-sm font-semibold ${STATUS_STYLES[booking.status]}`}>
                 {status}

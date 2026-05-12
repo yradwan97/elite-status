@@ -1,11 +1,10 @@
 import { Button } from "@/components/ui/button";
 import { ArrowLeft } from "lucide-react";
-import { adjustPriceForOffer, cn, hasOffer } from "@/lib/utils";
+import { adjustPriceForOffer, cn, formatTimeTo12Hour, hasOffer } from "@/lib/utils";
 import { BookingState, PricingPlan, ExtraService } from "../types/types";
 import { useTranslation } from "react-i18next";
 import { Property } from "../../api/propertiesApi";
 import i18next from "i18next";
-import { useReservationPolicies } from "../api/hooks/useReservationPolicies";
 import { OptimizedImage } from "@/components/shared/OptimizedImage";
 import planIcon from "@/assets/plan-icon.png"
 import locationIcon from "@/assets/location-icon.png"
@@ -66,18 +65,7 @@ function PriceLine({ label, value, bold = true, strong = false }: { label: strin
   );
 }
 
-const formatTimeTo12Hour = (language: string, time?: string): string => {
-  if (!time) return "";
 
-  const [hours, minutes] = time.split(":").map(Number);
-
-  const period = hours >= 12 ? (language === "ar" ? "مساء" : "PM") : (language === "ar" ? "صباحا" : "AM");
-  const formattedHours = hours % 12 || 12;
-
-  return `${formattedHours}:${minutes
-    .toString()
-    .padStart(2, "0")} ${period}`;
-};
 
 const getDiscountedPrice = (price: number, discountPercentage: number): number => {
   return price * (discountPercentage / 100)
@@ -123,7 +111,7 @@ export function ConfirmationStep({
   const language = i18next.language
 
 
-  const { checkInTime, checkOutTime } = useReservationPolicies(booking.planKey)
+  
 
   const formatBookingDates = (): string => {
     const locale = language === "ar" ? "ar-KW" : "en-US";
@@ -178,8 +166,8 @@ export function ConfirmationStep({
 
   const rentAmountValue = hasActiveOffer ? <span className="flex items-center gap-2">
     <span className="text-gray-400 line-through text-sm">{booking.planPrice} {t("General.kwd")}</span>
-    <span className="text-navy font-bold text-base">{rentAmount} {t("General.kwd")}</span>
-  </span> : <span className="text-navy font-bold text-base">{rentAmount} {t("General.kwd")}</span>
+    <span className="text-navy font-bold text-base">{adjustPriceForOffer(booking.planPrice, property)} {t("General.kwd")}</span>
+  </span> : <span className="text-navy font-bold text-base">{booking.planPrice} {t("General.kwd")}</span>
 
   
 
@@ -203,7 +191,7 @@ export function ConfirmationStep({
         <SummaryRow
           icon={clockIcon}
           label={t("Properties.Reservation.confirmation.time")}
-          value={`${formatTimeTo12Hour(language, checkInTime)} - ${formatTimeTo12Hour(language, checkOutTime)}`}
+          value={`${formatTimeTo12Hour(language, selectedPlan?.checkin)} - ${formatTimeTo12Hour(language, selectedPlan?.checkout)}`}
         />
 
         <SummaryRow
@@ -222,7 +210,7 @@ export function ConfirmationStep({
           <SummaryRow
             icon={insuranceIcon}
             label={t("Properties.Reservation.confirmation.insurance")}
-            value={`${insuranceAmount} ${t("General.kwd")}`}
+            value={`${property.insurance} ${t("General.kwd")}`}
           />
         )}
 
@@ -308,7 +296,7 @@ export function ConfirmationStep({
             <>
               <PriceLine
                 label={t("Properties.Reservation.confirmation.insurance")}
-                value={`${isDepositPrice(insuranceAmount)} ${t("General.kwd")}`}
+                value={`${insuranceAmount} ${t("General.kwd")}`}
               />
               <div className="h-px bg-gray-100" />
             </>

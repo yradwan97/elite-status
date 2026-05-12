@@ -168,3 +168,16 @@ export const isValidUrl = (url: string | undefined | null): boolean => {
 };
 
 export const scrollToTop = () => window.scrollTo({ top: 0, behavior: 'smooth' });
+
+export const formatTimeTo12Hour = (language: string, time?: string): string => {
+  if (!time) return "";
+
+  const [hours, minutes] = time.split(":").map(Number);
+
+  const period = hours >= 12 ? (language === "ar" ? "مساء" : "PM") : (language === "ar" ? "صباحا" : "AM");
+  const formattedHours = hours % 12 || 12;
+
+  return `${formattedHours}:${minutes
+    .toString()
+    .padStart(2, "0")} ${period}`;
+};

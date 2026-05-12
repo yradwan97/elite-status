@@ -343,7 +343,7 @@ export default function Dashboard() {
           </div>
 
           <section className="flex-1 min-w-0" dir={isArabic ? 'rtl' : 'ltr'}>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-x-30">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-y-8 gap-x-30">
               {servicesLoading ? (
                 Array.from({ length: 4 }).map((_, i) => <ServiceCardSkeleton key={i} />)
               ) : (

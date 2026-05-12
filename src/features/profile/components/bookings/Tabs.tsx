@@ -1,7 +1,10 @@
 import { useTranslation } from 'react-i18next';
 import { OptimizedImage } from '@/components/shared/OptimizedImage';
 import { Reservation } from '@/features/properties/reservation/api/reservationApi';
-import { CalendarDays, Clock, ShieldCheck, Banknote, FileText, Wrench } from 'lucide-react';
+import { CalendarDays, Clock, ShieldCheck, Banknote, FileText, Wrench, DollarSign, Info } from 'lucide-react';
+import { useReservationTypesInfo } from '@/features/properties/reservation/api/hooks/useReservationTypesInfo';
+import { formatTimeTo12Hour } from '@/lib/utils';
+import i18next from 'i18next';
 
 const NS = 'Account.Bookings';
 
@@ -21,7 +24,7 @@ function FieldBox({
 }) {
   return (
     <div className={`border border-gray-200 rounded-2xl p-4 ${wide ? 'col-span-2' : ''}`}>
-      <p className={`text-xs text-gray-400 flex items-center gap-1.5 mb-1.5 ${isRTL ? 'flex-row text-right' : 'flex-row-reverse text-left'}`}>
+      <p className={`text-xs text-gray-400 flex items-center gap-1.5 mb-1.5 ${isRTL ? 'flex-row-reverse' : ''}`}>
         {icon}
         <>{label}</>
       </p>
@@ -36,12 +39,16 @@ function FieldBox({
 export function InfoTab({ booking, isRTL }: { booking: Reservation; isRTL: boolean }) {
   const { t } = useTranslation();
 
+  const {typesInfo} = useReservationTypesInfo()
+
   const fmt = (iso: string) =>
     new Date(iso).toLocaleDateString('en-GB').replace(/\//g, '\\');
 
-  const ownerName  = `${booking.user.firstName} ${booking.user.lastName}`;
+  const ownerName = `${booking.user.firstName} ${booking.user.lastName}`;
   const ownerPhone = booking.user.mobileNumber;
   const ownerImage = booking.user.image;
+
+  const selectedTypeInfo = typesInfo.find((type) => type.type === booking.reservationType)
 
   return (
     <div className="space-y-8">
@@ -49,7 +56,7 @@ export function InfoTab({ booking, isRTL }: { booking: Reservation; isRTL: boole
         <h4 className={`text-sm font-semibold text-gray-900 mb-3 ${isRTL ? 'text-right' : 'text-left'}`}>
           {t(`${NS}.modal.ownerInfo`)}
         </h4>
-        <div className={`border border-gray-200 rounded-2xl p-4 flex items-center gap-4 ${isRTL ? 'flex-row' : 'flex-row-reverse justify-start'}`}>
+        <div className={`border border-gray-200 rounded-2xl p-4 flex items-center gap-4 ${isRTL ? 'flex-row-reverse' : 'flex-row justify-start'}`}>
           {ownerImage ? (
             <OptimizedImage src={ownerImage} alt={ownerName} className="w-14 h-14 rounded-full object-cover shrink-0" />
           ) : (
@@ -70,12 +77,54 @@ export function InfoTab({ booking, isRTL }: { booking: Reservation; isRTL: boole
         </h4>
         <div className="grid grid-cols-2 gap-3">
           <FieldBox icon={<CalendarDays className="w-3.5 h-3.5" />} label={t(`${NS}.modal.startDate`)} value={fmt(booking.startDate)} isRTL={isRTL} />
-          <FieldBox icon={<CalendarDays className="w-3.5 h-3.5" />} label={t(`${NS}.modal.endDate`)}   value={fmt(booking.endDate)}   isRTL={isRTL} />
-          <FieldBox icon={<Clock className="w-3.5 h-3.5" />}        label={t(`${NS}.modal.checkin`)}   value="10:00 AM"               isRTL={isRTL} />
-          <FieldBox icon={<Clock className="w-3.5 h-3.5" />}        label={t(`${NS}.modal.checkout`)}  value="2:00 PM"                isRTL={isRTL} />
+          <FieldBox icon={<CalendarDays className="w-3.5 h-3.5" />} label={t(`${NS}.modal.endDate`)} value={fmt(booking.endDate)} isRTL={isRTL} />
+          <FieldBox icon={<Clock className="w-3.5 h-3.5" />} label={t(`${NS}.modal.checkin`)} value={formatTimeTo12Hour(i18next.language, selectedTypeInfo?.checkin)} isRTL={isRTL} />
+          <FieldBox icon={<Clock className="w-3.5 h-3.5" />} label={t(`${NS}.modal.checkout`)} value={formatTimeTo12Hour(i18next.language, selectedTypeInfo?.checkout)} isRTL={isRTL} />
         </div>
       </section>
 
+
+    </div>
+  );
+}
+
+/* ── Payment Tab ───────────────────────────────────────────── */
+export function PaymentTab({ booking, isRTL }: {
+  booking: Reservation;
+  isRTL: boolean;
+}) {
+  const { t } = useTranslation();
+
+  const isDepositPrice = (price: number): number => {
+    if (booking.deposit) {
+      return price / 2
+    }
+    return price
+  }
+
+  const servicesTotal = booking.services.reduce((a, b) => a + b.price, 0)
+
+  const rentTypeLabel: Record<string, string> = {
+    WHOLE_WEEK: t(`${NS}.rentType.wholeWeek`),
+    WEEKDAYS: t(`${NS}.rentType.weekdays`),
+    WEEKENDS: t(`${NS}.rentType.weekends`),
+    DAILY: t(`${NS}.rentType.daily`),
+    DAY_USE: t(`${NS}.rentType.daily`),
+  };
+
+  return (
+    <div className="space-y-8 overflow-y-auto">
+      <section>
+        <h4 className={`text-sm font-semibold text-gray-900 mb-3 ${isRTL ? 'text-right' : 'text-left'}`}>
+          {t(`${NS}.modal.rentInfo`)}
+        </h4>
+        <div className="grid grid-cols-2 gap-3">
+          <FieldBox icon={<Banknote className="w-3.5 h-3.5" />} label={t(`${NS}.modal.rentType`)} value={rentTypeLabel[booking.reservationType] ?? booking.reservationType} isRTL={isRTL} />
+          <FieldBox icon={<Banknote className="w-3.5 h-3.5" />} label={t(`${NS}.modal.amount`)} value={`${isDepositPrice(booking.reservationPrice)} ${t(`${NS}.currency`)}`} isRTL={isRTL} />
+          <FieldBox icon={<ShieldCheck className="w-3.5 h-3.5" />} label={t(`${NS}.modal.insurance`)} value={`${booking.insurance} ${t(`${NS}.currency`)}`} isRTL={isRTL} />
+          <FieldBox icon={<ShieldCheck className="w-3.5 h-3.5" />} label={t(`${NS}.modal.services`)} value={`${isDepositPrice(servicesTotal)} ${t(`${NS}.currency`)}`} isRTL={isRTL} />
+        </div>
+      </section>
       {booking.services.length > 0 && (
         <section>
           <h4 className={`text-sm font-semibold text-gray-900 mb-3 ${isRTL ? 'text-right' : 'text-left'}`}>
@@ -89,43 +138,23 @@ export function InfoTab({ booking, isRTL }: { booking: Reservation; isRTL: boole
                   {svc.name}
                 </span>
                 <span className="text-sm font-bold text-gray-900">
-                  {svc.price} {t(`${NS}.currency`)}
+                  {isDepositPrice(svc.price)} {t(`${NS}.currency`)}
                 </span>
               </div>
             ))}
           </div>
         </section>
       )}
-    </div>
-  );
-}
 
-/* ── Payment Tab ───────────────────────────────────────────── */
-export function PaymentTab({ booking, isRTL }: {
-  booking: Reservation;
-  isRTL: boolean;
-}) {
-  const { t } = useTranslation();
+      <div className="grid grid-cols-2 gap-3">
+        <FieldBox icon={<DollarSign className="w-3.5 h-3.5" />} label={t(`${NS}.modal.net`)} value={`${booking.amount} ${t(`${NS}.currency`)}`} wide isRTL={isRTL} />
+      </div>
 
-  const rentTypeLabel: Record<string, string> = {
-    WHOLE_WEEK: t(`${NS}.rentType.wholeWeek`),
-    WEEKDAYS:   t(`${NS}.rentType.weekdays`),
-    WEEKENDS:   t(`${NS}.rentType.weekends`),
-    DAILY:      t(`${NS}.rentType.daily`),
-  };
+      <div className={`flex gap-2 items-center ${isRTL ? 'flex-row-reverse' : ''}`}>
+        <Info className='size-12 text-amber-600' />
+        <span className='text-md font-alex text-amber-600'>{t(`${NS}.modal.${booking.deposit ? 'isDeposit' : 'isTotal'}`)}</span>
+      </div>
 
-  return (
-    <div className="space-y-8">
-      <section>
-        <h4 className={`text-sm font-semibold text-gray-900 mb-3 ${isRTL ? 'text-right' : 'text-left'}`}>
-          {t(`${NS}.modal.rentInfo`)}
-        </h4>
-        <div className="grid grid-cols-2 gap-3">
-          <FieldBox icon={<Banknote className="w-3.5 h-3.5" />}    label={t(`${NS}.modal.rentType`)}  value={rentTypeLabel[booking.reservationType] ?? booking.reservationType} isRTL={isRTL} />
-          <FieldBox icon={<Banknote className="w-3.5 h-3.5" />}    label={t(`${NS}.modal.amount`)}    value={`${booking.reservationPrice} ${t(`${NS}.currency`)}`}             isRTL={isRTL} />
-          <FieldBox icon={<ShieldCheck className="w-3.5 h-3.5" />} label={t(`${NS}.modal.insurance`)} value={`${booking.insurance} ${t(`${NS}.currency`)}`} wide              isRTL={isRTL} />
-        </div>
-      </section>
 
       <a
         href={booking.invoice}

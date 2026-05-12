@@ -138,7 +138,9 @@ export default function ReservationPage() {
     const typeInfo = typesInfo.find(t => t.type === plan.key)
     return {
       ...plan,
-      info: (isRTL ? typeInfo?.infoAr : typeInfo?.infoEn) ?? t("Properties.Reservation.info.info")
+      info: (isRTL ? typeInfo?.infoAr : typeInfo?.infoEn) ?? t("Properties.Reservation.info.info"),
+      checkin: typeInfo?.checkin,
+      checkout: typeInfo?.checkout
     }
   })
   .filter((p) => p.price > 0);
