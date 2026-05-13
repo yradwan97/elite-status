@@ -65,6 +65,8 @@
     "discoverMore": "اكتشف المزيد",
     "Pricing": {
       "title": "أفضل خطة اشتراك لك",
+      "noPlans": "ليس هناك خطط متاحة",
+      "notSubscribed": "أنت لم تشترك في أي باقة بعد",
       "billedAnnually": "يتم الفوترة سنويًا.",
       "getStarted": "ابدأ الآن",
       "goldBadge": "أفضل عائد ",
@@ -115,6 +117,8 @@
     "welcome-2": "في شركة مقام النخبة",
     "alreadyHaveAccount": "لديك حساب بالفعل؟ تسجيل الدخول",
     "termsAndConditions": "الشروط والأحكام",
+    "privacyPolicy": "سياسة الخصوصية",
+    "refundPolicy": "سياسة الاسترجاع",
     "agreeTerms": { "prefix": "أوافق على", "link": "الشروط والأحكام" },
     "uploadError": "فشل في تحميل صور الهوية. يرجى المحاولة مرة أخرى.",
     "registerError": "فشل التسجيل. يرجى المحاولة مرة أخرى.",
@@ -148,7 +152,7 @@
     }
   },
   "Properties": {
-    "heading": "أفضل الشاليهات للإيجار في الكويت!",
+    "heading": "! أفضل الشاليهات للإيجار في الكويت",
     "searchPlaceholder": "ابحث هنا...",
     "search": "بحث",
     "noResults": "لا توجد عقارات",
@@ -156,6 +160,7 @@
     "priceBreakdown": "تفاصيل الأسعار",
     "wholeWeek": "الأسبوع كامل",
     "dayUse": "استخدام يومي",
+    "moreFilters": "المزيد من المرشحات",
     "firstPrice": "<value>{{price}}</value> <original>{{original}}</original> <currency>.د.ك</currency> <divider>/</divider> <period>{{period}}</period>",
     "filter": {
       "title": "تصفية حسب",
@@ -165,7 +170,8 @@
       "lounges": "الصالات",
       "facilities": "المرافق",
       "reset": "إعادة تعيين",
-      "apply": "تطبيق"
+      "apply": "تطبيق",
+      "dates": "التواريخ"
     },
     "nav": {
       "home": "الرئيسية",
@@ -279,7 +285,7 @@
         "selectDates": "اختر تواريخ إقامتك",
         "accept": "أوافق على",
         "refundPolicy": "سياسة الاسترداد",
-        "cancellationPolicy": "سياسة الإلغاء",
+        "privacyPolicy": "سياسة الخصوصية",
         "terms": "الشروط والأحكام",
         "and": "و",
         "reservedInWeekly": "يحتوي الأسبوع المحدد على أيام محجوزة، قم بتغيير الخطة أو اختر أسبوعًا آخر",

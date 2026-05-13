@@ -41,7 +41,7 @@ export default function Dashboard() {
 
   const [destination, setDestination] = useState("")
   const [noOfGuests, setNoOfGuests] = useState("")
-  const [date, setDate] = useState("")
+  const [dateRange, setDateRange] = useState({ from: "", to: "" })
   const [phone, setPhone] = useState<string | undefined>(undefined)
   const { info } = useInfo()
   const location = useLocation();
@@ -56,9 +56,8 @@ export default function Dashboard() {
     if (destination?.trim()) {
       searchData.destination = destination.trim();
     }
-    if (date) {
-      searchData.date = date;
-    }
+    if (dateRange.from) searchData.startDate = dateRange.from;
+    if (dateRange.to) searchData.endDate = dateRange.to;
     if (noOfGuests) {
       searchData.noOfGuests = noOfGuests;
     }
@@ -135,18 +134,18 @@ export default function Dashboard() {
                   className={`flex-1 border w-full bg-white border-gray-500 lg:border-none px-6 py-4 rounded-2xl text-gray-900 focus:outline-none ${isArabic ? 'text-end' : ''}`}
                 />
                 <DatePicker
-                  date={date}
-                  setDate={setDate}
+                  dateRange={dateRange}
+                  setDateRange={setDateRange}
                   placeholder={t('Dashboard.selectDates')}
                   isArabic={isArabic}
                 />
                 <Counter
-                    label={t('Dashboard.addGuests') || t('Properties.filter.guests')}
-                    value={Number(noOfGuests) || 0}
-                    onChange={(v) => setNoOfGuests(v.toString())}
-                  />
+                  label={t('Dashboard.addGuests') || t('Properties.filter.guests')}
+                  value={Number(noOfGuests) || 0}
+                  onChange={(v) => setNoOfGuests(v.toString())}
+                />
                 <button
-                  className={`bg-turquoise flex flex-row w-full lg:w-auto lg:justify-center lg:items-center text-white px-3 py-3 rounded-full font-medium transition ${isArabic ? "flex-row-reverse" : "" }`}
+                  className={`bg-turquoise flex flex-row w-full lg:w-auto lg:justify-center lg:items-center text-white px-3 py-3 rounded-full font-medium transition ${isArabic ? "flex-row-reverse" : ""}`}
                   onClick={handleSearch}
                 >
                   <Search className="w-8 h-8" />
@@ -185,15 +184,17 @@ export default function Dashboard() {
               </h2>
               <OptimizedImage src={pattern} alt="Best Deals Icon" className="hidden sm:flex h-12 w-auto" />
             </div>
-            <div className="flex flex-col justify-center items-center w-full sm:grid sm:grid-cols-1 lg:grid-cols-4 gap-[30.33px]" dir={isArabic ? 'rtl' : 'ltr'}>
-              {isLoading ? (
-                Array.from({ length: 4 }).map((_, i) => <PropertyCardSkeleton key={i} />)
-              ) : properties.map((property) => (
-                <PropertyCard
-                  property={property}
-                  key={property._id}
-                />
-              ))}
+            <div className='flex justify-center'>
+              <div className="grid grid-cols-1 lg:grid-cols-4 gap-[30.33px]" dir={isArabic ? 'rtl' : 'ltr'}>
+                {isLoading ? (
+                  Array.from({ length: 4 }).map((_, i) => <PropertyCardSkeleton key={i} />)
+                ) : properties.map((property) => (
+                  <PropertyCard
+                    property={property}
+                    key={property._id}
+                  />
+                ))}
+              </div>
             </div>
           </div>
         </div>
@@ -210,7 +211,7 @@ export default function Dashboard() {
                 style={{ fontFamily: "'Maitree', serif", fontWeight: '500', letterSpacing: '11%', fontSize: "150px", lineHeight: "100%" }}
                 className="text-turquoise/10 uppercase whitespace-nowrap leading-none"
               >
-                {t('Dashboard.eliteStatus')}
+                Elite Status
               </p>
             </div>
 
@@ -270,7 +271,7 @@ export default function Dashboard() {
         </div>
 
         {/* Plans Section */}
-        <section className="flex-1 min-w-0" dir={isArabic ? 'rtl' : 'ltr'}>
+        <section id='plans' className="flex-1 min-w-0" dir={isArabic ? 'rtl' : 'ltr'}>
           <div className="max-w-7xl mx-auto px-6 py-2">
             <div className={`flex items-center justify-between mb-10`}>
               <h2 style={{ fontSize: "40px", letterSpacing: "5%" }} className={`font-alex font-semibold md:w-1/3 text-navy ${isArabic ? 'text-right' : 'text-left'}`}>
@@ -342,7 +343,8 @@ export default function Dashboard() {
             </p>
           </div>
 
-          <section className="flex-1 min-w-0" dir={isArabic ? 'rtl' : 'ltr'}>
+          <section className="flex-1 justify-self-center min-w-0" dir={isArabic ? 'rtl' : 'ltr'}>
+            {/* <div className='flex justify-center'> */}
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-y-8 gap-x-30">
               {servicesLoading ? (
                 Array.from({ length: 4 }).map((_, i) => <ServiceCardSkeleton key={i} />)
@@ -351,6 +353,7 @@ export default function Dashboard() {
                   <ServiceCard key={service._id} service={service} />
                 ))
               )}
+              {/* </div> */}
             </div>
           </section>
         </div>

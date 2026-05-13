@@ -51,8 +51,10 @@ export const checkLoggedIn = (user: User | null): boolean => {
   }
 }
 
-export const hasOffer = (property: Property): boolean => {
-  const { start, end } = normalizeOfferDates(property.offerStartDate, property.offerEndDate)
+export const hasOffer = (property: Property, startDate?: string, endDate?: string): boolean => {
+  const checkStart = startDate ? startDate : property.offerStartDate
+  const checkEnd = endDate ? endDate : property.offerEndDate
+  const { start, end } = normalizeOfferDates(checkStart, checkEnd)
   if (!start || !end) return false
   const now = new Date()
   return !!property.offer &&
@@ -126,6 +128,70 @@ export const adjustPriceForOffer = (price: number, property: Property) => {
 
   return price
 }
+
+export const adjustReservationPriceForOffer = (
+  price: number,
+  property: Property,
+  startDate?: Date,
+  endDate?: Date
+) => {
+  if (!property.offer || property.offer === 0) return price;
+  if (!property.offerStartDate || !property.offerEndDate) return price;
+  if (!startDate || !endDate) return price;
+
+  const start = new Date(property.offerStartDate);
+  const end = new Date(property.offerEndDate);
+  const reservationStart = new Date(startDate);
+  const reservationEnd = new Date(endDate);
+
+  // Normalize offer start date to 00:00:00 UTC
+  const normalizedStart = new Date(Date.UTC(
+    start.getUTCFullYear(),
+    start.getUTCMonth(),
+    start.getUTCDate(),
+    0, 0, 0, 0
+  ));
+
+  // Normalize offer end date to 23:59:59 UTC
+  const normalizedEnd = new Date(Date.UTC(
+    end.getUTCFullYear(),
+    end.getUTCMonth(),
+    end.getUTCDate(),
+    23, 59, 59, 999
+  ));
+
+  // Normalize reservation start date to 00:00:00 UTC
+  const normalizedReservationStart = new Date(Date.UTC(
+    reservationStart.getUTCFullYear(),
+    reservationStart.getUTCMonth(),
+    reservationStart.getUTCDate(),
+    0, 0, 0, 0
+  ));
+
+  // Normalize reservation end date to 23:59:59 UTC
+  const normalizedReservationEnd = new Date(Date.UTC(
+    reservationEnd.getUTCFullYear(),
+    reservationEnd.getUTCMonth(),
+    reservationEnd.getUTCDate(),
+    23, 59, 59, 999
+  ));
+
+  // Check if the entire reservation range falls within the offer range
+  if (
+    normalizedReservationStart < normalizedStart ||
+    normalizedReservationEnd > normalizedEnd
+  ) return price;
+
+  if (property.offerRate === "PERCENTAGE") {
+    if (property.offer > 1) {
+      return price * (1 - property.offer / 100);
+    } else {
+      return price * (1 - property.offer);
+    }
+  }
+
+  return price;
+};
 
 const PRICE_MAP: { key: keyof Property; period: string }[] = [
   { key: "dayUsePrice", period: "dayUse" },

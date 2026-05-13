@@ -9,8 +9,9 @@ import { IDUploadField } from "./components/IdUploadField";
 import i18n from "@/i18n";
 import { useRegister } from "./api/hooks/useRegister";
 import { toast } from "sonner";
-import { TermsModal } from "./components/TermsModal";
+
 import { useState } from "react";
+import { PolicyModal } from "@/components/shared/PolicyModal";
 
 export function SignupForm({ onSwitch }: { onSwitch: () => void }) {
   const { t } = useTranslation();
@@ -56,7 +57,7 @@ export function SignupForm({ onSwitch }: { onSwitch: () => void }) {
 
   return (
     <>
-      <TermsModal open={termsModalOpen} onClose={() => setTermsModalOpen(false)} />
+      <PolicyModal policyKey="termsAndConditions" open={termsModalOpen} onClose={() => setTermsModalOpen(false)} />
       <form className="flex flex-col gap-4" onSubmit={handleSubmit(onSubmit)}>
         <h2 className="text-2xl font-semibold text-center">
           {t("Auth.signupTitle")}

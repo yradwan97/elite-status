@@ -1,7 +1,7 @@
 import { format } from "date-fns";
 import { Calendar as CalendarIcon } from "lucide-react";
-
-import { cn } from "@/lib/utils";           // your shadcn cn utility
+import { DateRange } from "react-day-picker";
+import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
 import {
@@ -11,27 +11,42 @@ import {
 } from "@/components/ui/popover";
 
 interface DatePickerProps {
-    date: string;                    // ISO string from your state (e.g. "2026-04-20")
-    setDate: (date: string) => void;
+    dateRange: { from: string; to: string };
+    setDateRange: (range: { from: string; to: string }) => void;
     placeholder?: string;
     isArabic?: boolean;
 }
 
-export function DatePicker({ 
-    date, 
-    setDate, 
-    placeholder = "Select date", 
-    isArabic = false 
+export function DatePicker({
+    dateRange,
+    setDateRange,
+    placeholder = "Select dates",
+    isArabic = false,
 }: DatePickerProps) {
-    
-    const selectedDate = date ? new Date(date) : undefined;
-
-    const handleSelect = (newDate: Date | undefined) => {
-        if (newDate) {
-            // Keep the same format your original input expects (YYYY-MM-DD)
-            setDate(newDate.toISOString().split('T')[0]);
-        }
+    const selected: DateRange = {
+        from: dateRange.from ? new Date(dateRange.from) : undefined,
+        to: dateRange.to ? new Date(dateRange.to) : undefined,
     };
+
+    const handleSelect = (range: DateRange | undefined) => {
+    const toLocalDate = (d: Date) => {
+        const year = d.getFullYear();
+        const month = String(d.getMonth() + 1).padStart(2, "0");
+        const day = String(d.getDate()).padStart(2, "0");
+        return `${month}/${day}/${year}`;
+    };
+
+    setDateRange({
+        from: range?.from ? toLocalDate(range.from) : "",
+        to: range?.to ? toLocalDate(range.to) : "",
+    });
+};
+
+    const label = selected.from
+        ? selected.to
+            ? `${format(selected.from, "d/M")} – ${format(selected.to, "d/M")}`
+            : format(selected.from, "d/M")
+        : placeholder;
 
     return (
         <Popover>
@@ -41,18 +56,19 @@ export function DatePicker({
                     className={cn(
                         "flex-1 px-6 py-4 rounded-2xl cursor-pointer justify-start text-left font-normal h-auto border border-gray-500 lg:border-gray-200 text-black bg-white",
                         isArabic && "text-end flex-row-reverse",
-                        !date && "text-muted-foreground"
+                        !dateRange.from && "text-muted-foreground"
                     )}
                 >
                     <CalendarIcon className="mr-3 h-5 w-5" />
-                    {date ? format(selectedDate!, "PPP") : <span>{placeholder}</span>}
+                    <span>{label}</span>
                 </Button>
             </PopoverTrigger>
             <PopoverContent className="w-auto p-0" align={isArabic ? "end" : "start"}>
                 <Calendar
-                    mode="single"
-                    selected={selectedDate}
+                    mode="range"
+                    selected={selected}
                     onSelect={handleSelect}
+                    numberOfMonths={2}
                 />
             </PopoverContent>
         </Popover>

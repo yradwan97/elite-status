@@ -2,14 +2,14 @@
 import { useState, useMemo } from "react";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
-import { Check, ArrowLeft, AlertCircle } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { ArrowLeft, AlertCircle } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { PricingPlan } from "../types/types";
 import { useReservedDates } from "../api/hooks/useReservedDates";
 import i18next from "i18next";
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Info } from 'lucide-react';
+import { TermsCheckbox } from "./TermsCheckbox";
 
 interface CalendarStepProps {
   selectedPlan: PricingPlan;
@@ -76,7 +76,7 @@ export function CalendarStep({
       const end = toMidnight(new Date(reservation.endDate));
       if (isNaN(start.getTime()) || isNaN(end.getTime())) return;
       const cur = new Date(start);
-      while (cur <= end) {
+      while (cur < end) {
         s.add(cur.toDateString());
         cur.setDate(cur.getDate() + 1);
       }
@@ -342,7 +342,7 @@ export function CalendarStep({
       </div>
 
       {/* TERMS */}
-      <label className="flex items-start gap-3 mt-8 cursor-pointer group">
+      {/* <label className="flex items-start gap-3 mt-8 cursor-pointer group">
         <div
           onClick={() => onTermsChange(!acceptedTerms)}
           className={cn(
@@ -367,7 +367,8 @@ export function CalendarStep({
             {t("Properties.Reservation.calendar.terms")}
           </span>
         </span>
-      </label>
+      </label> */}
+      <TermsCheckbox acceptedTerms={acceptedTerms} onTermsChange={onTermsChange} />
 
       {/* ACTIONS */}
       <div className="flex gap-3 mt-10">

@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { ArrowLeft } from "lucide-react";
-import { adjustPriceForOffer, cn, formatTimeTo12Hour, hasOffer } from "@/lib/utils";
+import { adjustReservationPriceForOffer, cn, formatTimeTo12Hour, hasOffer } from "@/lib/utils";
 import { BookingState, PricingPlan, ExtraService } from "../types/types";
 import { useTranslation } from "react-i18next";
 import { Property } from "../../api/propertiesApi";
@@ -95,7 +95,7 @@ export function ConfirmationStep({
   const user = useSelector(selectUser)
   const userPlan = user?.plan
   
-  const rentAmount = isDepositPrice(adjustPriceForOffer(booking.planPrice, property))
+  const rentAmount = isDepositPrice(adjustReservationPriceForOffer(booking.planPrice, property))
   const selectedServicesList = services.filter((s) => booking.services.map(s => s._id).includes(s._id));
   const servicesTotal = isDepositPrice(selectedServicesList.reduce((sum, s) => sum + s.price, 0))
   const insuranceAmount = isDepositPrice(property.insurance);
@@ -162,11 +162,11 @@ export function ConfirmationStep({
   };
 
   // const hasActiveOffer = true
-  const hasActiveOffer = hasOffer(property)
+  const hasActiveOffer = hasOffer(property, booking.startDate?.toISOString(), booking.endDate?.toISOString())
 
   const rentAmountValue = hasActiveOffer ? <span className="flex items-center gap-2">
     <span className="text-gray-400 line-through text-sm">{booking.planPrice} {t("General.kwd")}</span>
-    <span className="text-navy font-bold text-base">{adjustPriceForOffer(booking.planPrice, property)} {t("General.kwd")}</span>
+    <span className="text-navy font-bold text-base">{adjustReservationPriceForOffer(booking.planPrice, property, booking.startDate, booking.endDate)} {t("General.kwd")}</span>
   </span> : <span className="text-navy font-bold text-base">{booking.planPrice} {t("General.kwd")}</span>
 
   
@@ -324,7 +324,7 @@ export function ConfirmationStep({
 
 
         {/* discount from package subscription */}
-        <div className="border border-gray-200 shadow-lg rounded-2xl p-4 bg-white space-y-3">
+        {userPlan && <div className="border border-gray-200 shadow-lg rounded-2xl p-4 bg-white space-y-3">
           <div className="flex items-center justify-between rounded-xl px-3 py-2">
             <div className="flex gap-2 items-center">
               <OptimizedImage src={planIcon} className="size-6" alt="plan-icon" />
@@ -332,11 +332,9 @@ export function ConfirmationStep({
                 <p className="text-lg text-gray-400">
                   {t("Properties.Reservation.confirmation.packageDiscount")}
                 </p>
-                {user?.plan && (
                   <p className="text-sm font-semibold text-navy">
-                    {isRTL ? user.plan.titleAr : user.plan.titleEn}
+                    {isRTL ? userPlan.titleAr : userPlan.titleEn}
                   </p>
-                )}
               </div>
             </div>
             <Checkbox
@@ -345,7 +343,7 @@ export function ConfirmationStep({
               className="size-5 border-2 border-navy data-[state=checked]:bg-navy data-[state=checked]:border-navy"
             />
           </div>
-        </div>
+        </div>}
 
         <div className="border border-gray-200 shadow-lg rounded-2xl p-4 bg-white space-y-3">
           <div className="flex items-center justify-between">

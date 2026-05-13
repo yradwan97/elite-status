@@ -31,6 +31,8 @@ const DEFAULT_FILTERS: PropertiesFilters = {
     search: '',
     page: 1,
     limit: 12,
+    startDate: '',
+    endDate: ""
 };
 
 export function useProperties(): UsePropertiesReturn {
@@ -44,6 +46,8 @@ export function useProperties(): UsePropertiesReturn {
         bathrooms: filters.bathrooms || undefined,
         lounges: filters.lounges || undefined,
         search: filters.search || undefined,
+        startDate: filters.startDate || undefined,
+        endDate: filters.endDate || undefined,
         facilities: filters.facilities?.length ? filters.facilities : undefined,
     };
 

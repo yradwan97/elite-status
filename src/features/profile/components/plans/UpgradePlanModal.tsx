@@ -10,6 +10,8 @@ import PlanCard, { PlanCardSkeleton } from '@/features/dashboard/components/plan
 import { Plan, usePlans } from "../../api/hooks/usePlans";
 import { useSelector } from "react-redux";
 import { selectUser } from "@/store/slices/authSlice";
+import noFavourites from '@/assets/no-favourites.png';
+import { OptimizedImage } from "@/components/shared/OptimizedImage";
 
 interface Props {
   open: boolean;
@@ -21,14 +23,14 @@ export default function UpgradePlanModal({ open, onOpenChange }: Props) {
   const isArabic = i18next.language === "ar";
   const { plans, isLoading } = usePlans()
   const user = useSelector(selectUser)
-  const planIdx = plans.indexOf(plans.find((p) => p.titleEn === user?.plan?.titleEn) as Plan)
-  const remainingPlans = user?.plan ? plans.slice(planIdx < plans.length ? planIdx + 1 : plans.length ) : []
+  const planIdx = user?.plan ? plans.indexOf(plans.find((p) => p.titleEn === user?.plan?.titleEn) as Plan) : 0
+  const remainingPlans = user?.plan ? plans.slice(planIdx < plans.length ? planIdx + 1 : plans.length) : [...plans]
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent
         showCloseButton={false}
-        className="md:min-w-6xl max-h-[90vh] overflow-y-auto rounded-3xl p-0 bg-gray-50"
+        className="md:min-w-xl lg:max-w-5xl min-w-sm max-h-[90vh] overflow-y-auto rounded-3xl p-0 bg-gray-50"
       >
         {/* Close button */}
         <DialogClose asChild>
@@ -54,14 +56,17 @@ export default function UpgradePlanModal({ open, onOpenChange }: Props) {
 
           </div>
           <section className="flex-1 min-w-0" dir={isArabic ? 'rtl' : 'ltr'}>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 items-stretch">
-            {isLoading ? (
-              Array.from({length: 4}).map((_,i) => <PlanCardSkeleton key={i} />)
-            ) : 
-            remainingPlans.map((plan) => (
-              <PlanCard isUpgrade key={plan._id} plan={plan} />
-            ))}
-          </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 items-stretch">
+              {isLoading ? (
+                Array.from({ length: 4 }).map((_, i) => <PlanCardSkeleton key={i} />)
+              ) :
+                remainingPlans.length > 0 ? remainingPlans.map((plan) => (
+                  <PlanCard isUpgrade key={plan._id} plan={plan} />
+                )) : <div className="col-span-3 text-center py-20 text-gray-400">
+                  <OptimizedImage src={noFavourites} alt="No favourites" className="mx-auto my-6 w-44 h-44 opacity-70 object-contain" />
+                  <p className="text-lg font-medium">{t('Dashboard.Pricing.noPlans')}</p>
+                </div>}
+            </div>
           </section>
         </div>
       </DialogContent>

@@ -67,6 +67,8 @@
       "title": "Best Subscribe Plan For You",
       "billedAnnually": "Billed annually.",
       "getStarted": "Get Started",
+      "noPlans": "No plans available",
+      "notSubscribed": "You are not subscribed to a plan yet",
       "goldBadge": "Best ROI",
       "platinumBadge": "Most Popular",
       "diamondBadge": "Enterprise",
@@ -113,6 +115,8 @@
     "registering": "Registering...",
     "alreadyHaveAccount": "Already have an account? Login",
     "termsAndConditions": "Terms & Conditions",
+    "privacyPolicy": "Privacy Policy",
+    "refundPolicy": "Refund Policy",
     "agreeTerms": { "prefix": "I agree to the", "link": "Terms & Conditions" },
     "welcome-1": "Welcome To",
     "welcome-2": "Elite Status Company",
@@ -156,6 +160,7 @@
     "priceBreakdown": "Price Breakdown",
     "wholeWeek": "Whole Week",
     "dayUse": "Day Use",
+    "moreFilters": "More Filters",
     "firstPrice": "<value>{{price}}</value> <original>{{original}}</original> <currency>KWD</currency> <divider>/</divider> <period>{{period}}</period>",
     "filter": {
       "title": "Filter by",
@@ -165,7 +170,8 @@
       "lounges": "Lounge",
       "facilities": "Facilities",
       "reset": "Reset",
-      "apply": "Apply"
+      "apply": "Apply",
+      "dates": "Dates"
     },
     "nav": {
       "home": "Home",
@@ -279,7 +285,7 @@
         "selectDates": "Select your dates",
         "accept": "Accept",
         "refundPolicy": "Refund Policy",
-        "cancellationPolicy": "Cancellation Policy",
+        "privacyPolicy": "Privacy Policy",
         "terms": "Terms & Conditions",
         "and": "and",
         "reservedInWeekly": "Selected week has reserved days, change plan or choose another week",

@@ -52,6 +52,8 @@ export interface PropertiesFilters {
     search?: string;
     page?: number;
     limit?: number;
+    startDate?: string
+    endDate?: string
 }
 
 export interface PropertiesResponse {
@@ -121,6 +123,8 @@ export const propertiesApi = {
         if (filters.search) params.append('search', filters.search);
         if (filters.page) params.append('page', String(filters.page));
         if (filters.limit) params.append('limit', String(filters.limit));
+        if (filters.startDate) params.append('startDate', filters.startDate)
+        if (filters.endDate) params.append('endDate', filters.endDate)
 
         // facilities is multi-value: &facilities=id1&facilities=id2
         if (filters.facilities?.length) {

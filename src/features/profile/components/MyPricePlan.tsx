@@ -28,9 +28,9 @@ export default function AccountPricePlan() {
 
         {/* Current Plan */}
         <div className="bg-white border rounded-3xl p-8 mb-8">
-          <div className={`flex w-full flex-col  ${isArabic ? 'sm:flex-row-reverse' : 'sm:flex-row'} sm:items-center gap-6`}>
+          <div className={`flex w-full flex-col sm:justify-between  ${isArabic ? 'sm:flex-row-reverse' : 'sm:flex-row'} sm:items-center gap-6`}>
             {user?.plan ?
-              <div className={`flex flex-col mx-auto items-center justify-between ${isArabic ? 'sm:flex-row-reverse' : 'sm:flex-row'} gap-4`}>
+              <div className={`flex flex-col  items-center justify-between ${isArabic ? 'sm:flex-row-reverse' : 'sm:flex-row'} gap-4`}>
                 <div className="h-14 w-14 rounded-2xl flex items-center justify-center text-white">
                   <OptimizedImage src={planIcon} alt="Plan Icon" />
                 </div>
@@ -44,10 +44,10 @@ export default function AccountPricePlan() {
                 </div>
               </div>
               :
-              (<div>No Plan yet</div>)}
+              (<div className='font-alex font-medium text-xl'>{t("Dashboard.Pricing.notSubscribed")}</div>)}
 
             <button
-              className="px-6 py-3 mx-auto bg-navy text-white cursor-pointer rounded-2xl font-medium flex items-center"
+              className="px-6 py-3 mx-auto sm:mx-0 bg-navy text-white cursor-pointer rounded-2xl font-medium flex items-center"
               onClick={() => setOpenUpgradeModal(true)}
             >
               {user?.plan ? t("Account.PricePlan.Upgrade") : t("Account.PricePlan.Subscribe")}
@@ -61,7 +61,7 @@ export default function AccountPricePlan() {
             <h2 className={`font-semibold ${isArabic ? 'text-right' : 'text-left'} text-lg`}>{t("Account.PricePlan.YourPlanTracking")}</h2>
           </div>
 
-          <div className="hidden md:block overflow-x-auto">
+          <div className="hidden lg:block overflow-x-auto">
             {/* dir attribute ensures the table itself flips for RTL */}
             <table className="w-full" dir={isArabic ? 'rtl' : 'ltr'}>
               <thead>
@@ -100,7 +100,7 @@ export default function AccountPricePlan() {
             </table>
           </div>
 
-          <div className="md:hidden divide-y">
+          <div className="lg:hidden divide-y">
             {trackingData.map((row, index) => (
               <div key={index} className="px-5 py-4 flex flex-col gap-2">
                 <div className={`flex items-center justify-between ${isArabic ? 'flex-row-reverse' : ''}`}>
