@@ -52,8 +52,8 @@ export interface PropertiesFilters {
     search?: string;
     page?: number;
     limit?: number;
-    startDate?: string
-    endDate?: string
+    startDate?: Date
+    endDate?:Date
 }
 
 export interface PropertiesResponse {
@@ -108,6 +108,13 @@ export interface AdsResponse {
     data: Ad[]
 }
 
+const toLocalDate = (d: Date) => {
+  const year = d.getFullYear();
+  const month = String(d.getMonth() + 1).padStart(2, "0");
+  const day = String(d.getDate()).padStart(2, "0");
+  return `${month}/${day}/${year}`;
+};
+
 export const propertiesApi = {
     /**
      * Fetch paginated & filtered properties.
@@ -123,8 +130,8 @@ export const propertiesApi = {
         if (filters.search) params.append('search', filters.search);
         if (filters.page) params.append('page', String(filters.page));
         if (filters.limit) params.append('limit', String(filters.limit));
-        if (filters.startDate) params.append('startDate', filters.startDate)
-        if (filters.endDate) params.append('endDate', filters.endDate)
+        if (filters.startDate) params.append('startDate', toLocalDate(filters.startDate))
+        if (filters.endDate) params.append('endDate', toLocalDate(filters.endDate))
 
         // facilities is multi-value: &facilities=id1&facilities=id2
         if (filters.facilities?.length) {

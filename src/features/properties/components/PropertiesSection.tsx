@@ -74,7 +74,7 @@ export default function PropertiesSection() {
 
     const location = useLocation()
     const navigate = useNavigate()
-    const passedSearch = location.state?.params as Record<string, string> | undefined
+    const passedSearch = location.state?.params as {destination: string | undefined, noOfGuests: string | undefined, startDate: Date | undefined, endDate: Date | undefined }
 
     useEffect(() => {
         if (location.state) {
@@ -91,14 +91,14 @@ export default function PropertiesSection() {
         bedrooms: filters.bedrooms ?? 0,
         bathrooms: filters.bathrooms ?? 0,
         lounges: filters.lounges ?? 0,
-        startDate: passedSearch?.startDate ?? (filters.startDate ?? ''),  // ← add
-        endDate: passedSearch?.endDate ?? (filters.endDate ?? ''),
+        startDate: passedSearch?.startDate ?? (filters.startDate ?? undefined),  // ← add
+        endDate: passedSearch?.endDate ?? (filters.endDate ?? undefined),
 
         facilities: filters.facilities ?? [] as string[],
 
         search: passedSearch?.destination
             ? passedSearch.destination
-            : (filters.search ?? ''),
+            : (filters.search ?? undefined),
     });
 
     const [facilitiesOpen, setFacilitiesOpen] = useState(true);
@@ -118,14 +118,15 @@ export default function PropertiesSection() {
     };
 
     useEffect(function readSearchParamsFromRoutingEvent() {
-        if (passedSearch && (passedSearch.destination || passedSearch.noOfGuests || passedSearch.date)) {
+        if (passedSearch && (passedSearch.destination || passedSearch.noOfGuests || passedSearch.startDate || passedSearch.endDate)) {
 
             // eslint-disable-next-line react-hooks/set-state-in-effect
             setDraft(prev => ({
                 ...prev,
                 search: passedSearch.destination || prev.search,
                 guests: passedSearch.noOfGuests ? Number(passedSearch.noOfGuests) : prev.guests,
-                // date: passedSearch.date || prev.date,
+                startDate: passedSearch.startDate,
+                endDate: passedSearch.endDate
             }));
 
             handleApply();
@@ -133,7 +134,7 @@ export default function PropertiesSection() {
     }, []);
 
     const handleReset = () => {
-        const empty = { guests: 0, bedrooms: 0, bathrooms: 0, lounges: 0, facilities: [], search: '', startDate: '', endDate: '' };
+        const empty = { guests: 0, bedrooms: 0, bathrooms: 0, lounges: 0, facilities: [], search: '', startDate: undefined, endDate: undefined };
         setDraft(empty);
         resetFilters();
     };

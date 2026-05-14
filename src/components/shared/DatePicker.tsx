@@ -11,8 +11,8 @@ import {
 } from "@/components/ui/popover";
 
 interface DatePickerProps {
-    dateRange: { from: string; to: string };
-    setDateRange: (range: { from: string; to: string }) => void;
+    dateRange: { from: Date | undefined; to: Date | undefined };
+    setDateRange: (range: { from: Date | undefined; to: Date | undefined }) => void;
     placeholder?: string;
     isArabic?: boolean;
 }
@@ -24,21 +24,16 @@ export function DatePicker({
     isArabic = false,
 }: DatePickerProps) {
     const selected: DateRange = {
-        from: dateRange.from ? new Date(dateRange.from) : undefined,
-        to: dateRange.to ? new Date(dateRange.to) : undefined,
-    };
+    from: dateRange.from ?? undefined,
+    to: dateRange.to ?? undefined,
+};
 
     const handleSelect = (range: DateRange | undefined) => {
-    const toLocalDate = (d: Date) => {
-        const year = d.getFullYear();
-        const month = String(d.getMonth() + 1).padStart(2, "0");
-        const day = String(d.getDate()).padStart(2, "0");
-        return `${day}/${month}/${year}`;
-    };
+    
 
     setDateRange({
-        from: range?.from ? toLocalDate(range.from) : "",
-        to: range?.to ? toLocalDate(range.to) : "",
+        from: range?.from ? range.from : undefined,
+        to: range?.to ? range.to : undefined,
     });
 };
 

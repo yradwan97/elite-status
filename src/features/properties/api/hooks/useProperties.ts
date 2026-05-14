@@ -31,8 +31,8 @@ const DEFAULT_FILTERS: PropertiesFilters = {
     search: '',
     page: 1,
     limit: 12,
-    startDate: '',
-    endDate: ""
+    startDate: undefined,
+    endDate: undefined
 };
 
 export function useProperties(): UsePropertiesReturn {

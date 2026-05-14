@@ -41,7 +41,7 @@ export default function Dashboard() {
 
   const [destination, setDestination] = useState("")
   const [noOfGuests, setNoOfGuests] = useState("")
-  const [dateRange, setDateRange] = useState({ from: "", to: "" })
+  const [dateRange, setDateRange] = useState<{ from: Date | undefined; to: Date | undefined }>({ from: undefined, to: undefined })
   const [phone, setPhone] = useState<string | undefined>(undefined)
   const { info } = useInfo()
   const location = useLocation();
@@ -51,7 +51,12 @@ export default function Dashboard() {
   }, [refetch])
 
   const handleSearch = () => {
-    const searchData: Record<string, string> = {};
+    const searchData: {destination: string | undefined, noOfGuests: string | undefined, startDate: Date | undefined, endDate: Date | undefined } = {
+      destination: undefined,
+      noOfGuests: undefined,
+      startDate: undefined,
+      endDate: undefined
+    };
 
     if (destination?.trim()) {
       searchData.destination = destination.trim();
