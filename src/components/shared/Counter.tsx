@@ -10,7 +10,7 @@ export default function Counter({
     onChange: (v: number) => void;
 }) {
     return (
-        <div className={ `flex items-center w-auto gap-2 py-3 border-b border-gray-100 last:border-0 ${i18next.language === 'ar' ? 'flex-row-reverse' : ''}`}>
+        <div className={ `flex items-center justify-between w-auto gap-2 py-3 border-b border-gray-100 last:border-0 ${i18next.language === 'ar' ? 'flex-row-reverse' : ''}`}>
             <span className="flex text-sm font-medium text-end text-gray-700">{label}</span>
             <div className={`flex items-center gap-2 ${i18next.language === 'ar' ? 'flex-row-reverse' : ''}`}>
                 <button
