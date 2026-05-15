@@ -7,7 +7,7 @@ import { PageTitle } from '@/components/shared/PageTitle';
 import ServiceCard, { ServiceCardSkeleton } from "./components/service-card";
 import PlanCard, { PlanCardSkeleton } from './components/plan-card';
 
-import eliteHomepageBg from '@/assets/elite-homepage-bg.png';
+import hero1 from '@/assets/hero-1.jpeg';
 import hero3 from '@/assets/hero-3.jpeg';
 import hero2 from '@/assets/hero-2.jpeg';
 import carouselLast from '@/assets/carousel-last.png';
@@ -88,7 +88,7 @@ export default function Dashboard() {
   }
 }, [location, navigate]);
 
-  const slides = [eliteHomepageBg, hero2, hero3];
+  const slides = [hero1, hero2, hero3];
   const [current, setCurrent] = useState(0);
 
   useEffect(() => {

@@ -25,7 +25,7 @@ export default function UpgradePlanModal({ open, onOpenChange }: Props) {
   const { plans, isLoading } = usePlans()
   const user = useSelector(selectUser)
   const hasActivePlan = isPlanActive(user?.plan)
-  const planIdx = hasActivePlan ? plans.indexOf(plans.find((p) => p.titleEn === user?.plan?.titleEn) as Plan) : 0
+  const planIdx = hasActivePlan ? plans.indexOf(plans.find((p) => p._id === user?.plan?._id) as Plan) : 0
   const remainingPlans = hasActivePlan ? plans.slice(planIdx < plans.length ? planIdx + 1 : plans.length) : [...plans]
 
   return (
