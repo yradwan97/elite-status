@@ -78,6 +78,15 @@ export function Header() {
     navigate('/');
   }
 
+  const goToPlans = () => {
+  setIsOpen(false);
+  if (location.pathname === '/') {
+    document.getElementById('plans')?.scrollIntoView({ behavior: 'smooth' });
+  } else {
+    navigate('/', { state: { scrollTo: 'plans' } });
+  }
+};
+
   return (
     <>
       <header className={`sticky top-0 z-50 w-full bg-white border-b shadow-sm`}>
@@ -101,7 +110,7 @@ export function Header() {
                     <nav className="flex flex-col gap-6 text-lg font-medium text-center">
                       <a href="/" className="text-navy font-semibold transition-colors">{t("Dashboard.home")}</a>
                       <a href="/properties" className="text-navy font-semibold transition-colors">{t("Dashboard.chalets")}</a>
-                      <a href="#plans" className="text-navy font-semibold transition-colors">{t("Dashboard.pricingPlan")}</a>
+                      <button onClick={goToPlans} className="text-navy font-semibold transition-colors">{t("Dashboard.pricingPlan")}</button>
                       <a href="/owner-services" className="text-navy font-semibold transition-colors">{t("Dashboard.ownerServices")}</a>
                       {/* <a href="/contact" className="text-navy font-semibold transition-colors">{t("Dashboard.contactUs")}</a> */}
                     </nav>

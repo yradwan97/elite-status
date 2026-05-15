@@ -1,5 +1,6 @@
 import { OptimizedImage } from '@/components/shared/OptimizedImage';
 import { useUser } from '@/features/auth/api/hooks/useUser';
+import { isPlanActive } from '@/lib/utils';
 import { RootState } from '@/store';
 import i18next from 'i18next';
 import { Menu } from 'lucide-react';
@@ -50,7 +51,7 @@ export default function ProfileHeader({ onMenuClick }: Props) {
               </div>)}
             <div>
               <div className="font-semibold text-2xl text-navy">{user?.firstName} {user?.lastName}</div>
-              {user?.plan && (
+              {user?.plan && isPlanActive(user?.plan) && (
                 <span
                   onClick={() => navigate("/account", { state: { page: "price-plan" } })}
                   className="text-sm text-emerald-600 font-medium underline cursor-pointer"

@@ -96,7 +96,7 @@ export default function PlanCard({ plan, isUpgrade = false }: { plan: Plan, isUp
 
   const isFeatured = plan.titleEn === "Platinum Plan";
   const features = isArabic ? plan.featuresAr ?? [] : plan.featuresEn ?? [];
-  const icon = PLAN_FALLBACK_ICONS[plan.titleEn];
+  const icon = plan.icon ?? PLAN_FALLBACK_ICONS[plan.titleEn];
   const badge = PLAN_BADGES[plan.titleEn];
   const planName = isArabic ? plan.titleAr : plan.titleEn;
 

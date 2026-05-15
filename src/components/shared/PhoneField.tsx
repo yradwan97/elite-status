@@ -11,7 +11,7 @@ interface PhoneFieldProps {
 
 export default function PhoneField({ value, onChange, disabled = false, className }: PhoneFieldProps) {
   return (
-    <div className={`border rounded-lg px-3 py-2 transition-colors ${
+    <div dir="ltr" className={`border rounded-lg px-3 py-2 transition-colors ${
       disabled ? "bg-gray-100 border-gray-200 cursor-default" : "bg-white"
     }`}>
       <PhoneInput
@@ -21,6 +21,7 @@ export default function PhoneField({ value, onChange, disabled = false, classNam
         onChange={(val) => onChange(val || "")}
         disabled={disabled}
         className={cn("w-full outline-none", className)}
+        dir={"ltr"}
       />
     </div>
   );

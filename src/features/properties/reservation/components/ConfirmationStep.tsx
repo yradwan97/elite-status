@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { ArrowLeft } from "lucide-react";
-import { adjustReservationPriceForOffer, cn, formatTimeTo12Hour, hasOffer } from "@/lib/utils";
+import { adjustReservationPriceForOffer, cn, formatTimeTo12Hour, hasOffer, isPlanActive } from "@/lib/utils";
 import { BookingState, PricingPlan, ExtraService } from "../types/types";
 import { useTranslation } from "react-i18next";
 import { Property } from "../../api/propertiesApi";
@@ -324,7 +324,7 @@ export function ConfirmationStep({
 
 
         {/* discount from package subscription */}
-        {userPlan && <div className="border border-gray-200 shadow-lg rounded-2xl p-4 bg-white space-y-3">
+        {userPlan && isPlanActive(userPlan) && <div className="border border-gray-200 shadow-lg rounded-2xl p-4 bg-white space-y-3">
           <div className="flex items-center justify-between rounded-xl px-3 py-2">
             <div className="flex gap-2 items-center">
               <OptimizedImage src={planIcon} className="size-6" alt="plan-icon" />

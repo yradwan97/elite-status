@@ -79,6 +79,15 @@ export default function Dashboard() {
     }
   }, [location, navigate, t]);
 
+  useEffect(() => {
+  if (location.state?.scrollTo === 'plans') {
+    setTimeout(() => {
+      document.getElementById('plans')?.scrollIntoView({ behavior: 'smooth' });
+    }, 100); // small delay to let the page render
+    navigate(location.pathname, { replace: true, state: {} });
+  }
+}, [location, navigate]);
+
   const slides = [eliteHomepageBg, hero2, hero3];
   const [current, setCurrent] = useState(0);
 
@@ -321,8 +330,6 @@ export default function Dashboard() {
                 <PhoneField
                   value={phone}
                   onChange={(value) => setPhone(value)}
-                  // placeholder={t('Dashboard.Newsletter.emailPlaceholder')}
-                  // dir={isArabic ? 'rtl' : 'ltr'}
                   className={`sm:w-full`}
                 />
                 <button disabled={!phone || !isValidPhoneNumber(phone)} onClick={handleWhatsappNewsletter} className="bg-navy text-white px-6 py-3.5 rounded-xl text-sm w-auto font-medium whitespace-nowrap hover:opacity-90 disabled:opacity-35 disabled:cursor-not-allowed transition-opacity shrink-0">

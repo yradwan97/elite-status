@@ -1,5 +1,5 @@
 import { Property } from "@/features/properties/api/propertiesApi";
-import { User } from "@/store/slices/authSlice";
+import { User, UserPlan } from "@/store/slices/authSlice";
 import { clsx, type ClassValue } from "clsx"
 import { t } from "i18next";
 import { toast } from "sonner";
@@ -247,3 +247,7 @@ export const formatTimeTo12Hour = (language: string, time?: string): string => {
     .toString()
     .padStart(2, "0")} ${period}`;
 };
+
+export const isPlanActive = (plan: UserPlan | undefined) => {
+  return !!plan && new Date(plan.expirationDate) > new Date()
+}

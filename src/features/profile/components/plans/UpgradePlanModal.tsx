@@ -12,6 +12,7 @@ import { useSelector } from "react-redux";
 import { selectUser } from "@/store/slices/authSlice";
 import noFavourites from '@/assets/no-favourites.png';
 import { OptimizedImage } from "@/components/shared/OptimizedImage";
+import { isPlanActive } from "@/lib/utils";
 
 interface Props {
   open: boolean;
@@ -23,8 +24,9 @@ export default function UpgradePlanModal({ open, onOpenChange }: Props) {
   const isArabic = i18next.language === "ar";
   const { plans, isLoading } = usePlans()
   const user = useSelector(selectUser)
-  const planIdx = user?.plan ? plans.indexOf(plans.find((p) => p.titleEn === user?.plan?.titleEn) as Plan) : 0
-  const remainingPlans = user?.plan ? plans.slice(planIdx < plans.length ? planIdx + 1 : plans.length) : [...plans]
+  const hasActivePlan = isPlanActive(user?.plan)
+  const planIdx = hasActivePlan ? plans.indexOf(plans.find((p) => p.titleEn === user?.plan?.titleEn) as Plan) : 0
+  const remainingPlans = hasActivePlan ? plans.slice(planIdx < plans.length ? planIdx + 1 : plans.length) : [...plans]
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>

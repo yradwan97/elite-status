@@ -2,7 +2,7 @@ import { useTranslation } from 'react-i18next';
 import { OptimizedImage } from '@/components/shared/OptimizedImage';
 import planIcon from '@/assets/planIcon.png';
 import i18next from 'i18next';
-import { formatDate } from '@/lib/utils';
+import { formatDate, isPlanActive } from '@/lib/utils';
 import { useState } from 'react';
 import UpgradePlanModal from './plans/UpgradePlanModal';
 import { useDiscountedReservations } from '@/features/properties/reservation/api/hooks/useDiscountedReservations';
@@ -29,7 +29,7 @@ export default function AccountPricePlan() {
         {/* Current Plan */}
         <div className="bg-white border rounded-3xl p-8 mb-8">
           <div className={`flex w-full flex-col sm:justify-between  ${isArabic ? 'sm:flex-row-reverse' : 'sm:flex-row'} sm:items-center gap-6`}>
-            {user?.plan ?
+            {user?.plan && isPlanActive(user.plan) ?
               <div className={`flex flex-col  items-center justify-between ${isArabic ? 'sm:flex-row-reverse' : 'sm:flex-row'} gap-4`}>
                 <div className="h-14 w-14 rounded-2xl flex items-center justify-center text-white">
                   <OptimizedImage src={planIcon} alt="Plan Icon" />
@@ -50,7 +50,7 @@ export default function AccountPricePlan() {
               className="px-6 py-3 mx-auto sm:mx-0 bg-navy text-white cursor-pointer rounded-2xl font-medium flex items-center"
               onClick={() => setOpenUpgradeModal(true)}
             >
-              {user?.plan ? t("Account.PricePlan.Upgrade") : t("Account.PricePlan.Subscribe")}
+              {(user?.plan && isPlanActive(user?.plan)) ? t("Account.PricePlan.Upgrade") : t("Account.PricePlan.Subscribe")}
             </button>
           </div>
         </div>
