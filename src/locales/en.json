@@ -224,6 +224,7 @@
       },
       "facilities": {
         "seeMore": "See More",
+        "seeLess": "See Less",
         "none": "No facilities listed"
       },
       "doc": {

@@ -63,6 +63,8 @@ export default function PropertyDetails() {
     // Description expand
     const [descExpanded, setDescExpanded] = useState(false);
 
+    const [showAllFacilities, setShowAllFacilities] = useState(false);
+
     //Wishlist
     const [isFavourite, setIsFavourite] = useState(property?.isFavourite || false);
 
@@ -124,11 +126,8 @@ export default function PropertyDetails() {
     const mapEmbedUrl = `https://maps.googleapis.com/maps/api/staticmap?center=${property.lat},${property.long}&zoom=14&size=600x300&markers=color:red%7C${property.lat},${property.long}&key=${GOOGLE_MAPS_API_KEY}`;
     const navigationUrl = `https://www.google.com/maps/dir/?api=1&destination=${property.lat},${property.long}`;
 
-    const MAX_VISIBLE_FACILITIES = 5;
-    const visibleFacilities = (property.facilities || []).slice(0, MAX_VISIBLE_FACILITIES);
-    const hiddenFacilitiesCount = (property.facilities || []).length > MAX_VISIBLE_FACILITIES
-        ? property.facilities.length - MAX_VISIBLE_FACILITIES
-        : 0;
+    const maxVisibleFacilities = 5;
+    const visibleFacilities = (property.facilities || []).slice(0, showAllFacilities ? property.facilities.length : maxVisibleFacilities);
 
 
     const handleFavouriteToggle = () => {
@@ -463,27 +462,30 @@ export default function PropertyDetails() {
                                         <Skeleton className="w-12 h-3" />
                                     </div>
                                 ))
-                            ) : property.facilities.length > 0 ? <div className="flex flex-wrap gap-3">
+                            ) : property.facilities.length > 0 ? 
+                            <div className="flex flex-wrap gap-3">
                                 {visibleFacilities.map((f: Facility) => (
                                     <div
                                         key={f._id}
-                                        className="flex flex-col items-center gap-2.5 border bg-white shadow-md border-gray-200 rounded-[5px] px-5 py-2.5 min-w-20 w-30.5 h-21.75 text-center"
+                                        className="flex flex-col items-center justify-center gap-2.5 border bg-white shadow-md border-gray-200 rounded-[5px]  min-w-20 w-30.5 h-21.75 text-center"
                                     >
-                                        <OptimizedImage className="size-10 p-1" src={f.icon!} alt={`${f.titleEn}-icon`} />
-                                        <span className="text-xs text-gray-600 font-medium">
+                                        <OptimizedImage className="size-10 pt-2.5" src={f.icon!} alt={`${f.titleEn}-icon`} />
+                                        <span className="text-xs flex font-medium text-gray-600">
                                             {i18next.language === "ar" ? f.titleAr : f.titleEn}
                                         </span>
                                     </div>
                                 ))}
-                                {hiddenFacilitiesCount > 0 && (
-                                    <div className="flex flex-col items-center justify-center gap-1.5 border border-gray-200 rounded-xl px-5 py-3 min-w-20 text-center cursor-pointer hover:bg-gray-50 transition-colors">
-                                        <span className="text-xl">•••</span>
-                                        <span className="text-xs text-gray-600 font-medium">
-                                            {t("Properties.Details.facilities.seeMore")}
-                                        </span>
-                                    </div>
-                                )}
-                            </div> : <p>{t("Properties.Details.facilities.none")}</p>}
+
+                                <button onClick={() => setShowAllFacilities(!showAllFacilities)} className="flex flex-col items-center justify-center gap-1.5 border border-gray-200 rounded-xl px-5 py-3 min-w-20 text-center cursor-pointer hover:bg-gray-50 transition-colors">
+                                    <span className="text-xl">•••</span>
+                                    <span className="text-xs text-gray-600 font-medium">
+                                        {showAllFacilities ? t("Properties.Details.facilities.seeLess") : t("Properties.Details.facilities.seeMore")}
+                                    </span>
+                                </button>
+
+                            </div> 
+                            : 
+                            <p>{t("Properties.Details.facilities.none")}</p>}
                         </div>
 
                         {/* Documents */}
