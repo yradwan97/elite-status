@@ -74,7 +74,7 @@ export default function OwnerServices() {
           )}
 
           <section className="flex-1 min-w-0" dir={isArabic ? 'rtl' : 'ltr'}>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-y-8 gap-x-30">
               {isLoading
                 ? Array.from({ length: 8 }).map((_, i) => (
                     <ServiceCardSkeleton key={i} />

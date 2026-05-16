@@ -7,7 +7,7 @@ import { PageTitle } from '@/components/shared/PageTitle';
 import ServiceCard, { ServiceCardSkeleton } from "./components/service-card";
 import PlanCard, { PlanCardSkeleton } from './components/plan-card';
 
-import hero1 from '@/assets/hero-1.jpeg';
+import hero1 from '@/assets/hero-1.png';
 import hero3 from '@/assets/hero-3.jpeg';
 import hero2 from '@/assets/hero-2.jpeg';
 import carouselLast from '@/assets/carousel-last.png';

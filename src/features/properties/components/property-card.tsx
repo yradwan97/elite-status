@@ -181,9 +181,9 @@ export function PropertyCard({ property, isFromFavourites = false }: PropertyCar
                 </h3>
 
                 {/* Location */}
-                <div className={`flex items-center gap-1.25 text-gray-600 text-sm ${isArabic ? 'text-start' : 'text-end'}`}>
+                <div className={`flex items-center gap-1.25 text-gray-600 text-sm ${isArabic ? 'text-start' : ''}`}>
                     <MapPin className="w-4 h-4 shrink-0" />
-                    <span>{property.address}</span>
+                    <span className='line-clamp-1 mx-0 px-0'>{property.address.trim()}</span>
                 </div>
 
                 {/* Price — dailyPrice is the display price */}

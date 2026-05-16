@@ -91,11 +91,10 @@ export function Header() {
     <>
       <header className={`sticky top-0 z-50 w-full bg-white border-b shadow-sm`}>
         <div className="max-w-7xl mx-auto">
-
           <div className={`flex h-16 items-center justify-between px-6 ${isArabic ? 'flex-row-reverse' : ''}`}>
 
             {/* Left Side */}
-            <div className={`flex items-center gap-8 ${isArabic ? 'flex-row-reverse' : ''}`}>
+            <div className={`flex items-center w-auto md:w-1/3 md:justify-start gap-8 ${isArabic ? 'flex-row-reverse' : ''}`}>
               <Sheet open={isOpen} onOpenChange={setIsOpen}>
                 <SheetTrigger asChild>
                   <Button variant="ghost" size="icon">
@@ -173,12 +172,12 @@ export function Header() {
             </div>
 
             {/* Center Logo */}
-            <div className="flex justify-center cursor-pointer" onClick={goToHome}>
+            <div className="flex justify-center w-auto md:w-1/3 cursor-pointer" onClick={goToHome}>
               <OptimizedImage src={logo} alt="Elite Status" className="h-12 md:h-14 object-contain" />
             </div>
 
             {/* Right Side */}
-            <div className={`flex items-center gap-6 ${isArabic ? 'flex-row-reverse' : ''}`}>
+            <div className={`flex items-center w-auto md:w-1/3 md:justify-end gap-6 ${isArabic ? 'flex-row-reverse' : ''}`}>
               <div className="hidden md:flex items-center bg-gray-100 rounded-full p-1 text-sm font-medium">
                 <button
                   onClick={() => changeLanguage('en')}
