@@ -30,6 +30,15 @@ import { useInfo } from '@/common/api/hooks/useInfo';
 import { isValidPhoneNumber } from 'react-phone-number-input';
 import { usePlans } from '../profile/api/hooks/usePlans';
 
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
+} from '@/components/ui/carousel';
+import Autoplay from 'embla-carousel-autoplay';
+
 export default function Dashboard() {
   const { t } = useTranslation();
   const isArabic = i18next.language === 'ar';
@@ -51,7 +60,7 @@ export default function Dashboard() {
   }, [refetch])
 
   const handleSearch = () => {
-    const searchData: {destination: string | undefined, noOfGuests: string | undefined, startDate: Date | undefined, endDate: Date | undefined } = {
+    const searchData: { destination: string | undefined, noOfGuests: string | undefined, startDate: Date | undefined, endDate: Date | undefined } = {
       destination: undefined,
       noOfGuests: undefined,
       startDate: undefined,
@@ -80,13 +89,13 @@ export default function Dashboard() {
   }, [location, navigate, t]);
 
   useEffect(() => {
-  if (location.state?.scrollTo === 'plans') {
-    setTimeout(() => {
-      document.getElementById('plans')?.scrollIntoView({ behavior: 'smooth' });
-    }, 100); // small delay to let the page render
-    navigate(location.pathname, { replace: true, state: {} });
-  }
-}, [location, navigate]);
+    if (location.state?.scrollTo === 'plans') {
+      setTimeout(() => {
+        document.getElementById('plans')?.scrollIntoView({ behavior: 'smooth' });
+      }, 100); // small delay to let the page render
+      navigate(location.pathname, { replace: true, state: {} });
+    }
+  }, [location, navigate]);
 
   const slides = [hero1, hero2, hero3];
   const [current, setCurrent] = useState(0);
@@ -285,22 +294,58 @@ export default function Dashboard() {
         </div>
 
         {/* Plans Section */}
-        <section id='plans' className="flex-1 min-w-0" dir={isArabic ? 'rtl' : 'ltr'}>
+        {/* Plans Section */}
+        <section id="plans" className="flex-1 min-w-0" dir={isArabic ? 'rtl' : 'ltr'}>
           <div className="max-w-7xl mx-auto px-6 py-2">
-            <div className={`flex items-center justify-between mb-10`}>
-              <h2 style={{ fontSize: "40px", letterSpacing: "5%" }} className={`font-alex font-semibold md:w-1/3 text-navy ${isArabic ? 'text-right' : 'text-left'}`}>
+            <div className="flex items-center justify-between mb-10">
+              <h2
+                style={{ fontSize: '40px', letterSpacing: '5%' }}
+                className={`font-alex font-semibold md:w-1/3 text-navy ${isArabic ? 'text-right' : 'text-left'}`}
+              >
                 {t('Dashboard.Pricing.title')}
               </h2>
               <OptimizedImage src={pattern} alt="pattern" className="hidden md:block h-12 w-auto" />
             </div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 items-stretch">
-              {isPlansLoading ? (
-                Array.from({ length: 4 }).map((_, i) => <PlanCardSkeleton key={i} />)
-              ) :
-                plans.map((plan) => (
-                  <PlanCard key={plan._id} plan={plan} />
-                ))}
-            </div>
+
+            {isPlansLoading ? (
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 items-stretch">
+                {Array.from({ length: 4 }).map((_, i) => <PlanCardSkeleton key={i} />)}
+              </div>
+            ) : (
+              <Carousel
+                dir={isArabic ? 'rtl' : 'ltr'}
+                opts={{
+                  align: 'start',
+                  loop: true,
+                  direction: isArabic ? 'rtl' : 'ltr',
+                }}
+                plugins={[
+                  Autoplay({ delay: 3000, stopOnMouseEnter: true, stopOnInteraction: false }),
+                ]}
+                className="w-full"
+              >
+                <CarouselContent className="-ml-6">
+                  {plans.map((plan) => (
+                    <CarouselItem
+                      key={plan._id}
+                      className="pl-6 basis-full md:basis-1/2 lg:basis-1/4"
+                    >
+                      <PlanCard plan={plan} />
+                    </CarouselItem>
+                  ))}
+                </CarouselContent>
+
+                {/* Prev/Next — positioned to the right, matching your existing style */}
+                <div className={`flex justify-end gap-3 mt-6 ${isArabic ? 'flex-row-reverse' : ''}`}>
+                  <CarouselPrevious
+                    className={`static translate-y-0 w-10 h-10 rounded-full border border-navy text-navy hover:bg-navy hover:text-white transition-colors ${isArabic ? 'rotate-180' : ''}`}
+                  />
+                  <CarouselNext
+                    className={`static translate-y-0 w-10 h-10 rounded-full border border-navy text-navy hover:bg-navy hover:text-white transition-colors ${isArabic ? 'rotate-180' : ''}`}
+                  />
+                </div>
+              </Carousel>
+            )}
           </div>
         </section>
 
