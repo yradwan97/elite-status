@@ -265,7 +265,7 @@ export default function PropertiesSection() {
                                 </button>
 
                                 {facilitiesOpen && (
-                                    <div className="mt-2 space-y-2">
+                                    <div className="mt-2 space-y-2 overflow-y-auto max-h-29 pr-1">
                                         {isFacilitiesLoading ? (
                                             Array.from({ length: 4 }).map((_, i) => (
                                                 <div key={i} className="h-5 bg-gray-100 rounded animate-pulse" />
@@ -439,7 +439,7 @@ export default function PropertiesSection() {
                                 </div>
 
                                 {/* Facilities */}
-                                <div className="mt-4">
+                                <div className="mt-4 overflow-y-auto max-h-[60dvh] pr-1">
                                     <button
                                         onClick={() => setFacilitiesOpen(o => !o)}
                                         className={`flex items-center justify-between w-full py-2 text-sm font-semibold text-navy ${isArabic ? 'flex-row-reverse' : ''}`}
