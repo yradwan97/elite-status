@@ -13,14 +13,15 @@ build_frontend:
     - main
 
   script:
-    - echo "installing ..."
-    - npm install typescript --legacy-peer-deps
+    - echo "Installing dependencies..."
+    - npm ci --legacy-peer-deps
+
     - echo "Building React app..."
     - npm run build
 
   artifacts:
     paths:
-      - build/
+      - dist/
     expire_in: 1 hour
 
 deploy_frontend:
@@ -42,7 +43,7 @@ deploy_frontend:
 
     - |
       sshpass -p "$SERVER_PASSWORD" rsync -avz -e "ssh -o StrictHostKeyChecking=no" \
-      build/ $SERVER_USER@$SERVER_HOST:/var/www/elite-status/
+      dist/ $SERVER_USER@$SERVER_HOST:/var/www/elite-status/
 
     - |
       sshpass -p "$SERVER_PASSWORD" ssh -o StrictHostKeyChecking=no \
