@@ -14,7 +14,7 @@ build_frontend:
 
   script:
     - echo "Installing dependencies..."
-    - npm install
+    - npm ci --legacy-peer-deps --include=dev
     - echo "Building React app..."
     - npm run build
 
