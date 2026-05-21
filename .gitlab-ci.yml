@@ -14,7 +14,7 @@ build_frontend:
 
   script:
     - echo "installing ..."
-    - npm install
+    - npm install --legacy-peer-deps
     - echo "Building React app..."
     - npm run build
 

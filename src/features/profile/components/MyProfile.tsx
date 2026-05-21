@@ -229,7 +229,7 @@ export default function AccountProfile() {
                     <SelectValue placeholder={t('Account.Profile.Nationality')} />
                   </SelectTrigger>
                   <SelectContent>
-                    {countryOptions.map((country) => (
+                    {countryOptions.map((country: any) => (
                       <SelectItem key={country.value} value={country.value}>
                         {country.label}
                       </SelectItem>
