@@ -7,15 +7,14 @@ variables:
 
 build_frontend:
   stage: build
-  image: node:18
+  image: node:20
 
   only:
     - main
 
   script:
-    - echo
-    - npm ci
-
+    - echo "installing ..."
+    - npm install
     - echo "Building React app..."
     - npm run build
 
