@@ -359,6 +359,7 @@
         "chalet": "Chalet",
         "total": "Total Amount",
         "packageDiscount": "Package Subscription Discount",
+        "notEligible": "Sorry, this chalet is exluded from subscription discount offers",
         "goldPackage": "Gold Package",
         "net": "Net Amount",
         "deposit": "50% (Deposit)",

@@ -333,15 +333,15 @@ export function ConfirmationStep({
                   {t("Properties.Reservation.confirmation.packageDiscount")}
                 </p>
                   <p className="text-sm font-semibold text-navy">
-                    {isRTL ? userPlan.titleAr : userPlan.titleEn}
+                    {property.isPlanEligible ? (isRTL ? userPlan.titleAr : userPlan.titleEn) : t("Properties.Reservation.confirmation.notEligible") }
                   </p>
               </div>
             </div>
-            <Checkbox
+            {property.isPlanEligible ? <Checkbox
               checked={booking.usePlan}
               onCheckedChange={(checked) => onPlanSelectionChange(checked === true)}
               className="size-5 border-2 border-navy data-[state=checked]:bg-navy data-[state=checked]:border-navy"
-            />
+            /> : null}
           </div>
         </div>}
 
