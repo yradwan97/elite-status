@@ -9,6 +9,9 @@ import {
   DialogTitle,
 } from '@/components/ui/dialog';
 import { useDeleteAccount } from '../api/hooks/useDeleteAccount';
+import { clearCredentials } from '@/store/slices/authSlice';
+import { useDispatch } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 
 
 type TabId = 'profile' | 'booking' | 'price-plan' | 'favourite';
@@ -24,6 +27,8 @@ export default function Sidebar({ activeTab, onTabChange, isMobile = false, onCl
   const { t } = useTranslation();
   const isArabic = i18next.language === 'ar';
   const isRTL = isArabic;
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
   const { mutate: deleteAccount, isPending } = useDeleteAccount();
@@ -41,6 +46,13 @@ export default function Sidebar({ activeTab, onTabChange, isMobile = false, onCl
     });
   };
 
+  const handleLogout = () => {
+      navigate("/", { state: { isLogout: true } });
+      setTimeout(() => {
+        dispatch(clearCredentials());
+      }, 300)
+    };
+
   return (
     <>
       <div className="w-full h-full bg-white border-r flex flex-col">
@@ -56,7 +68,7 @@ export default function Sidebar({ activeTab, onTabChange, isMobile = false, onCl
                     onTabChange(tab.id);
                     if (isMobile && onClose) onClose();
                   }}
-                  className={`w-full flex ${isArabic ? 'flex-row-reverse' : 'flex-row'} items-center gap-3 px-5 py-3.5 rounded-2xl text-left transition-all ${
+                  className={`w-full flex ${isArabic ? 'flex-row-reverse' : 'flex-row'} items-center cursor-pointer gap-3 px-5 py-3.5 rounded-2xl text-left transition-all ${
                     isActive ? 'bg-navy text-white' : 'hover:bg-gray-100 text-gray-700'
                   }`}
                 >
@@ -69,14 +81,17 @@ export default function Sidebar({ activeTab, onTabChange, isMobile = false, onCl
         </div>
 
         <div className="mt-auto border-t p-6 space-y-2">
-          <button className={`w-full flex ${isArabic ? 'flex-row-reverse' : 'flex-row'} items-center gap-3 px-5 py-3 text-gray-700 hover:bg-gray-100 rounded-2xl`}>
+          <button
+            onClick={handleLogout}
+            className={`w-full flex ${isArabic ? 'flex-row-reverse' : 'flex-row'} items-center cursor-pointer gap-3 px-5 py-3 text-gray-700 hover:bg-gray-100 rounded-2xl`}
+          >
             <LogOut className="w-5 h-5" />
             <span>{t('Account.Sidebar.Logout')}</span>
           </button>
 
           <button
             onClick={() => setDeleteModalOpen(true)}
-            className={`w-full flex ${isArabic ? 'flex-row-reverse' : 'flex-row'} items-center gap-3 px-5 py-3 text-red-600 hover:bg-red-50 rounded-2xl`}
+            className={`w-full flex ${isArabic ? 'flex-row-reverse' : 'flex-row'} items-center cursor-pointer gap-3 px-5 py-3 text-red-600 hover:bg-red-50 rounded-2xl`}
           >
             <Trash2 className="w-5 h-5" />
             <span>{t('Account.Sidebar.DeleteAccount')}</span>

@@ -98,7 +98,7 @@ export function Header() {
             <div className={`flex relative items-center w-auto md:w-1/3 md:justify-start gap-8 ${isArabic ? 'flex-row-reverse' : ''}`}>
               <Sheet open={isOpen} onOpenChange={setIsOpen}>
                 <SheetTrigger asChild>
-                  <Button variant="ghost" size="icon">
+                  <Button variant="ghost" className='cursor-pointer' size="icon">
                     <Menu className="h-6 w-6" />
                   </Button>
                 </SheetTrigger>

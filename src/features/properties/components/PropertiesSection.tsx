@@ -198,14 +198,14 @@ export default function PropertiesSection() {
                                 />
                                 <button
                                     onClick={() => setMobileFilterOpen(true)}
-                                    className="bg-white sm:hidden text-navy justify-center border border-navy px-5 py-2.5 rounded-xl text-sm font-semibold flex items-center gap-2 hover:bg-navy/90 hover:text-white transition-colors"
+                                    className="bg-white sm:hidden cursor-pointer text-navy justify-center border border-navy px-5 py-2.5 rounded-xl text-sm font-semibold flex items-center gap-2 hover:bg-navy/90 hover:text-white transition-colors"
                                 >
                                     <Filter className="w-4 h-4" />
                                     {t('Properties.moreFilters')}
                                 </button>
                                 <button
                                     onClick={handleApply}
-                                    className="bg-navy text-white justify-center px-5 py-2.5 rounded-xl text-sm font-semibold flex items-center gap-2 hover:bg-navy/90 transition-colors"
+                                    className="bg-navy text-white cursor-pointer justify-center px-5 py-2.5 rounded-xl text-sm font-semibold flex items-center gap-2 hover:bg-navy/90 transition-colors"
                                 >
                                     <Search className="w-4 h-4" />
                                     {t('Properties.search')}
@@ -220,7 +220,7 @@ export default function PropertiesSection() {
 
                     {/* ── Filter Sidebar ── */}
                     <aside className="w-56 shrink-0 sticky top-6 hidden sm:flex flex-col gap-6">
-                        <div className="bg-white max-h-197.75 rounded-2xl shadow-sm border border-gray-100 p-5">
+                        <div className="bg-white max-h-208.75 rounded-2xl shadow-sm border border-gray-100 p-5">
                             <div className={`flex items-center gap-2 mb-4 ${isArabic ? 'flex-row-reverse' : ''}`}>
                                 <SlidersHorizontal className="w-4 h-4 text-navy" />
                                 <h2 className="font-semibold text-navy text-sm">
@@ -379,13 +379,13 @@ export default function PropertiesSection() {
                             <div className="flex gap-2 mt-6">
                                 <button
                                     onClick={handleReset}
-                                    className="flex-1 py-2 text-sm font-semibold border border-gray-200 rounded-xl text-gray-600 hover:bg-gray-50 transition-colors"
+                                    className="flex-1 py-2 text-sm cursor-pointer font-semibold border border-gray-200 rounded-xl text-gray-600 hover:bg-gray-50 transition-colors"
                                 >
                                     {t('Properties.filter.reset')}
                                 </button>
                                 <button
                                     onClick={handleApply}
-                                    className="flex-1 py-2 text-sm font-semibold bg-navy text-white rounded-xl hover:bg-navy/90 transition-colors"
+                                    className="flex-1 py-2 text-sm cursor-pointer font-semibold bg-navy text-white rounded-xl hover:bg-navy/90 transition-colors"
                                 >
                                     {t('Properties.filter.apply')}
                                 </button>
@@ -640,7 +640,7 @@ export default function PropertiesSection() {
                                         handleReset();
                                         setMobileFilterOpen(false);
                                     }}
-                                    className="flex-1 py-2.5 text-sm font-semibold border border-gray-200 rounded-xl text-gray-600 hover:bg-gray-50 transition-colors"
+                                    className="flex-1 py-2.5 cursor-pointer text-sm font-semibold border border-gray-200 rounded-xl text-gray-600 hover:bg-gray-50 transition-colors"
                                 >
                                     {t('Properties.filter.reset')}
                                 </button>
@@ -649,7 +649,7 @@ export default function PropertiesSection() {
                                         handleApply();
                                         setMobileFilterOpen(false);
                                     }}
-                                    className="flex-1 py-2.5 text-sm font-semibold bg-navy text-white rounded-xl hover:bg-navy/90 transition-colors"
+                                    className="flex-1 py-2.5 cursor-pointer text-sm font-semibold bg-navy text-white rounded-xl hover:bg-navy/90 transition-colors"
                                 >
                                     {t('Properties.filter.apply')}
                                 </button>

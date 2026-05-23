@@ -54,12 +54,14 @@ export default function ProfileHeader({ onMenuClick }: Props) {
             <div>
               <div className="font-semibold text-2xl text-navy">{user?.firstName} {user?.lastName}</div>
               
-              <div dir={isArabic ? "rtl" : "ltr"} className="flex w-fit text-gray-500 items-center gap-2">
-                {t('Account.Profile.userId') ?? 'User ID:'}
-                <span className="text-sm text-gray-500">
-                  {user?.userId}
-                </span>
-              </div>
+              {user?.userId && (
+                <div dir={isArabic ? "rtl" : "ltr"} className="flex w-fit text-gray-500 items-center gap-2">
+                  {t('Account.Profile.userId') ?? 'User ID:'}
+                  <span className="text-sm text-gray-500">
+                    {user?.userId}
+                  </span>
+                </div>
+              )}
               {user?.plan && isPlanActive(user?.plan) && (
                 <span
                   onClick={() => navigate("/account", { state: { page: "price-plan" } })}

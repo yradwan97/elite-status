@@ -180,14 +180,14 @@ const PlanPage = () => {
           </ul>
         </div>
 
-        <div dir={isArabic ? "rtl" : "ltr"} className="w-full flex flex-col rounded-[10px] p-5 shadow-lg justify-start items-start bg-[#f9f9f9]">
+        {plan.terms && <div dir={isArabic ? "rtl" : "ltr"} className="w-full flex flex-col rounded-[10px] p-5 shadow-lg justify-start items-start bg-[#f9f9f9]">
           <p style={{ lineHeight: "100%", fontSize: "18px", letterSpacing: "2%" }} className={cn("font-normal mt-4", "text-navy")}>
             {t('Plans.policy')}
           </p>
           <p style={{ lineHeight: "100%", fontSize: "16px", letterSpacing: "2%" }} className={cn("text-xs leading-relaxed mt-3")}>
             {sanitized}
           </p>
-        </div>
+        </div>}
 
         <div className="w-full mb-19">
           <button onClick={() => setDialogOpen(true)} type="button" className="w-full h-12 rounded-[8px] bg-navy hover:bg-navy/80 cursor-pointer transition-colors text-white font-medium">

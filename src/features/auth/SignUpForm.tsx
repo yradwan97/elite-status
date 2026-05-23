@@ -170,14 +170,14 @@ export function SignupForm({ onSwitch }: { onSwitch: () => void }) {
           </div>
         </div>
 
-        <button type="submit" disabled={isPending} className="bg-navy text-white py-3 text-lg rounded-lg font-medium">
+        <button type="submit" disabled={isPending} className="bg-navy cursor-pointer text-white py-3 text-lg rounded-lg font-medium">
           {isPending ? t("Auth.registering") : t("Auth.register")}
         </button>
 
         <button
           type="button"
           onClick={onSwitch}
-          className="border py-3 rounded-lg font-medium text-lg"
+          className="border py-3 cursor-pointer rounded-lg font-medium text-lg"
         >
           {t("Auth.alreadyHaveAccount")}
         </button>

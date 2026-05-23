@@ -117,14 +117,14 @@ export default function BookingModal({
     <TabsTrigger
       key="info"
       value="info"
-      className="rounded-lg data-[state=active]:bg-navy data-[state=active]:text-white font-medium transition-colors"
+      className="rounded-lg cursor-pointer data-[state=active]:bg-navy data-[state=active]:text-white font-medium transition-colors"
     >
       {t(`${NS}.modal.info`)}
     </TabsTrigger>,
     <TabsTrigger
       key="payment"
       value="payment"
-      className="rounded-lg data-[state=active]:bg-navy data-[state=active]:text-white font-medium transition-colors"
+      className="rounded-lg cursor-pointer data-[state=active]:bg-navy data-[state=active]:text-white font-medium transition-colors"
     >
       {t(`${NS}.modal.payment`)}
     </TabsTrigger>,
@@ -156,7 +156,7 @@ export default function BookingModal({
             <div className="relative" ref={menuRef}>
               <button
                 onClick={() => setMenuOpen((v) => !v)}
-                className="p-1.5 rounded-full hover:bg-gray-100 transition-colors"
+                className="p-1.5 rounded-full cursor-pointer hover:bg-gray-100 transition-colors"
                 aria-label={t(`${NS}.modal.menu`)}
               >
                 <MoreVertical className="w-5 h-5 text-gray-500" />
@@ -169,7 +169,7 @@ export default function BookingModal({
                   <button
                     onClick={handleCancel}
                     disabled={booking.status !== "ACTIVE"}
-                    className="flex disabled:cursor-not-allowed disabled:opacity-65 items-center gap-3 w-full px-4 py-3 rounded-2xl text-sm text-gray-700 hover:bg-gray-50 transition-colors"
+                    className="flex disabled:cursor-not-allowed cursor-pointer disabled:opacity-65 items-center gap-3 w-full px-4 py-3 rounded-2xl text-sm text-gray-700 hover:bg-gray-50 transition-colors"
                   >
                     {/* cancel icon */}
                     <img src={reservationCancelIcon} />
@@ -178,7 +178,7 @@ export default function BookingModal({
                   <button
                     onClick={handleRequestService}
                     disabled={booking.status !== "ACTIVE"}
-                    className="flex disabled:cursor-not-allowed disabled:opacity-65 items-center gap-3 w-full px-4 py-3 rounded-2xl text-sm text-gray-700 hover:bg-gray-50 transition-colors"
+                    className="flex disabled:cursor-not-allowed cursor-pointer disabled:opacity-65 items-center gap-3 w-full px-4 py-3 rounded-2xl text-sm text-gray-700 hover:bg-gray-50 transition-colors"
                   >
                     {/* service icon */}
                     <img src={requestServiceIcon} />

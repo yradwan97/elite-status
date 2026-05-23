@@ -59,7 +59,7 @@ export default function AccountBooking() {
               key={tab.value}
               onClick={() => setStatusFilter(tab.value)}
               className={[
-                'px-5 py-2.5 text-sm font-medium transition-colors border-b-2 -mb-px',
+                'px-5 py-2.5 text-sm cursor-pointer font-medium transition-colors border-b-2 -mb-px',
                 'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-navy',
                 isActive
                   ? 'border-navy text-navy'
