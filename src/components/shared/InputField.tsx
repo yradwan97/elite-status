@@ -61,7 +61,7 @@ export default function InputField<T extends FieldValues>({
           <button
             type="button"
             onClick={() => setShow((s) => !s)}
-            className={`absolute top-1/2 -translate-y-1/2 text-gray-400
+            className={`absolute top-1/2 cursor-pointer -translate-y-1/2 text-gray-400
               ${isRTL ? "left-3" : "right-3"}`}
           >
             {show ? <EyeOff size={18} className="text-black" /> : <Eye size={18} className="text-black" />}

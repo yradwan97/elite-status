@@ -40,6 +40,10 @@ export interface Property {
     offerStartDate: string | null,
     offerEndDate: string | null,
     video: string | null
+    beachRow?: number
+    area?: string
+    phaseNo?: string
+    isPlanEligible?: boolean
     tags: { titleAr: string, titleEn: string, _id: string }[]
 }
 
@@ -54,6 +58,9 @@ export interface PropertiesFilters {
     limit?: number;
     startDate?: Date
     endDate?:Date
+    beachRow?: number
+    area?: string
+    phaseNo?: number
 }
 
 export interface PropertiesResponse {
@@ -104,6 +111,12 @@ export type Ad = {
     updatedAt: string
 }
 
+export type Area = {
+    key: string
+    titleAr: string
+    titleEn: string
+}
+
 export interface AdsResponse {
     data: Ad[]
 }
@@ -132,6 +145,9 @@ export const propertiesApi = {
         if (filters.limit) params.append('limit', String(filters.limit));
         if (filters.startDate) params.append('startDate', toLocalDate(filters.startDate))
         if (filters.endDate) params.append('endDate', toLocalDate(filters.endDate))
+        if (filters.beachRow) params.append('beachRow', String(filters.beachRow))
+        if (filters.area) params.append('area', filters.area)
+        if (filters.phaseNo) params.append('phaseNo', String(filters.phaseNo))
 
         // facilities is multi-value: &facilities=id1&facilities=id2
         if (filters.facilities?.length) {
@@ -181,6 +197,11 @@ export const propertiesApi = {
 
     getAds: async (): Promise<ApiResponse<Ad>> => {
         const response = await axios.get<ApiResponse<Ad>>("/ads")
+        return response.data;
+    },
+
+    getAreas: async (): Promise<ApiResponse<Area>> => {
+        const response = await axios.get<ApiResponse<Area>>("/static/area")
         return response.data;
     }
 };

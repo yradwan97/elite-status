@@ -82,7 +82,7 @@ export function LoginForm({ setMode, onClose }: { setMode: Dispatch<SetStateActi
         {t("Auth.forgetPassword")}
       </div>
 
-      <button disabled={isPending} type="submit" className="bg-navy text-white py-3 text-lg rounded-lg font-medium">
+      <button disabled={isPending} type="submit" className="bg-navy cursor-pointer text-white py-3 text-lg rounded-lg font-medium">
         {t("Auth.login")}
       </button>
 
@@ -97,7 +97,7 @@ export function LoginForm({ setMode, onClose }: { setMode: Dispatch<SetStateActi
       <button
         type="button"
         onClick={() => setMode("signup")}
-        className="border py-3 rounded-lg font-medium text-lg"
+        className="border cursor-pointer py-3 rounded-lg font-medium text-lg"
       >
         {t("Auth.createAccount")}
       </button>

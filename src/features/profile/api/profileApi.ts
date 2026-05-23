@@ -106,6 +106,11 @@ export const profileApi = {
         return response.data
     },
 
+    getPlan: async (planId: string) => {
+        const response = await api.get(`/plans/${planId}`);
+        return response.data
+    },
+
     subscribeToPlan: async (planId: string) => {
         const response = await api.post("/plans/subscription", {plan: planId})
         return response.data;

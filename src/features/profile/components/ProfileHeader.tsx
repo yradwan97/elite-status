@@ -5,6 +5,7 @@ import { RootState } from '@/store';
 import i18next from 'i18next';
 import { Menu } from 'lucide-react';
 import { useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 
@@ -17,6 +18,7 @@ export default function ProfileHeader({ onMenuClick }: Props) {
   const user = useSelector((state: RootState) => state.auth.user);
   const isArabic = i18next.language === "ar"
   const { refetch } = useUser()
+  const {t} = useTranslation()
   const navigate = useNavigate()
 
   useEffect(() => {
@@ -46,15 +48,22 @@ export default function ProfileHeader({ onMenuClick }: Props) {
             {user?.image ? (
               <OptimizedImage src={user.image as string} alt='user-image' className='size-14' />
             ) : (
-              <div className="h-10 w-10 bg-navy rounded-full flex items-center justify-center text-white text-xl font-bold">
+              <div className="h-14 w-14 bg-navy rounded-full flex items-center justify-center text-white text-xl font-bold">
                 {getInitials(user?.firstName || '', user?.lastName || '')}
               </div>)}
             <div>
               <div className="font-semibold text-2xl text-navy">{user?.firstName} {user?.lastName}</div>
+              
+              <div dir={isArabic ? "rtl" : "ltr"} className="flex w-fit text-gray-500 items-center gap-2">
+                {t('Account.Profile.userId') ?? 'User ID:'}
+                <span className="text-sm text-gray-500">
+                  {user?.userId}
+                </span>
+              </div>
               {user?.plan && isPlanActive(user?.plan) && (
                 <span
                   onClick={() => navigate("/account", { state: { page: "price-plan" } })}
-                  className="text-sm text-emerald-600 font-medium underline cursor-pointer"
+                  className="text-turquoise font-medium hover:underline cursor-pointer"
                 >
                   {isArabic ? user.plan.titleAr : user.plan.titleEn}
                 </span>

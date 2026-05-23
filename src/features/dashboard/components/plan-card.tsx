@@ -31,7 +31,7 @@ const PLAN_BADGES: Record<string, { label: string; className: string }> = {
   "Diamond Plan": { label: "Dashboard.Pricing.diamondBadge", className: `${i18next.language === "ar" ? 'bg-linear-to-l' : 'bg-linear-to-r'} from-turquoise to-navy text-teal-50` },
 };
 
-function SubscribeConfirmDialog({
+export function SubscribeConfirmDialog({
   open,
   planName,
   onConfirm,
@@ -87,7 +87,7 @@ function SubscribeConfirmDialog({
   );
 }
 
-export default function PlanCard({ plan, isUpgrade = false }: { plan: Plan, isUpgrade?: boolean }) {
+export default function PlanCard({ plan, isUpgrade = false, isRouting = false }: { plan: Plan, isUpgrade?: boolean, isRouting?: boolean }) {
   const { t } = useTranslation();
   const navigate = useNavigate()
   const isArabic = i18next.language === "ar";
@@ -101,6 +101,8 @@ export default function PlanCard({ plan, isUpgrade = false }: { plan: Plan, isUp
   const planName = isArabic ? plan.titleAr : plan.titleEn;
 
   const subscribeToPlanMutation = useSubscribeToPlan()
+
+  const isPlanComplete = plan.capacity > 0 && plan.activeSubscription > 0 && plan.capacity === plan.activeSubscription;
 
   const onConfirmSubscribe = async () => {
     setDialogOpen(false);
@@ -228,17 +230,41 @@ export default function PlanCard({ plan, isUpgrade = false }: { plan: Plan, isUp
         </ul>
 
         {/* CTA */}
-        <button
-          onClick={() => {
-            if (checkLoggedIn(user)) setDialogOpen(true)
-          }}
-          className={cn(
-            "mt-6 w-full py-3 rounded-xl text-sm font-medium transition-opacity hover:opacity-90",
-            isFeatured ? "bg-[#CEA926] text-white" : "bg-navy text-white"
-          )}
-        >
-          {isUpgrade ? t("General.upgrade") : t("Dashboard.Pricing.getStarted")}
-        </button>
+        {isPlanComplete ? (
+          <button
+            disabled
+            className={cn(
+              "mt-6 w-full py-3 rounded-xl text-sm font-medium transition-opacity",
+              "bg-navy/70 text-white"
+            )}
+          >
+            {t("Dashboard.Pricing.complete")}
+          </button> 
+          ) : isRouting ? (
+          <button
+            onClick={() => {
+              if (checkLoggedIn(user)) navigate(`/plans/${plan._id}`)
+            }}
+            className={cn(
+              "mt-6 w-full py-3 rounded-xl cursor-pointer text-sm font-medium transition-opacity hover:opacity-90",
+              isFeatured ? "bg-[#CEA926] text-white" : "bg-navy text-white"
+            )}
+          >
+            {t("Dashboard.Pricing.getStarted")}
+          </button>
+        ) : (
+          <button
+            onClick={() => {
+              if (checkLoggedIn(user)) setDialogOpen(true)
+            }}
+            className={cn(
+              "mt-6 w-full py-3 rounded-xl cursor-pointer text-sm font-medium transition-opacity hover:opacity-90",
+              isFeatured ? "bg-[#CEA926] text-white" : "bg-navy text-white"
+            )}
+          >
+            {isUpgrade ? t("General.upgrade") : t("Dashboard.Pricing.getStarted")}
+          </button>
+        )}
 
       </div>
     </div>

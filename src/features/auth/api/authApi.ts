@@ -8,6 +8,7 @@ export interface RegisterPayload {
   mobileNumber: string;
   IDFront: string;
   IDBack: string;
+  nationalID: string;
 }
 
 export const authApi = {
@@ -20,7 +21,8 @@ export const authApi = {
     formData.append("mobileNumber", payload.mobileNumber);
     formData.append("IDFront", payload.IDFront);
     formData.append("IDBack", payload.IDBack);
-
+    formData.append("nationalID", payload.nationalID);
+    
     const { data } = await axios.post("/auth/register", formData);
     return data;
   },

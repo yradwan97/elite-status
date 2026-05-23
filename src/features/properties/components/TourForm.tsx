@@ -143,7 +143,7 @@ export function TourForm({ onSubmit, onWhatsapp, isSubmitting = false }: TourFor
                 <Button
                     type="submit"
                     disabled={isSubmitting}
-                    className="w-full bg-navy hover:bg-[#243760] text-white rounded-xl h-11 font-semibold disabled:opacity-60"
+                    className="w-full bg-navy cursor-pointer hover:bg-[#243760] text-white rounded-xl h-11 font-semibold disabled:opacity-60"
                 >
                     {t("Properties.Details.tour.submit")}
                 </Button>
@@ -159,7 +159,7 @@ export function TourForm({ onSubmit, onWhatsapp, isSubmitting = false }: TourFor
 
             <Button
                 type="button"
-                className="w-full mt-3 bg-[#25D366] hover:bg-[#1db954] text-white rounded-xl h-11 font-semibold gap-2"
+                className="w-full mt-3 bg-[#25D366] cursor-pointer hover:bg-[#1db954] text-white rounded-xl h-11 font-semibold gap-2"
                 onClick={onWhatsapp}
             >
                 <MessageCircle className="w-4 h-4" />

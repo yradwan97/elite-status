@@ -19,7 +19,13 @@
   },
   "Footer": {
     "socialMediaLinks": "Social Media",
-    "copyright": "Copyright © {{year}} by Echo Soft"
+    "copyright": "Copyright © {{year}} by Echo Soft",
+    "followUs": "Follow Us",
+    "policies": "Policies",
+    "Support": "Support",
+    "whatsapp": "WhatsApp:",
+    "email": "Email:",
+    "phone": "Phone:"
   },
   "Header": {
     "menu": "Menu",
@@ -40,7 +46,7 @@
     "findYourChalet": "Discover premium chalets in beautiful locations",
     "searchDestinations": "Search destinations",
     "selectDates": "Select dates",
-    "addGuests": "Add guests",
+    "addRooms": "No of rooms",
     "search": "Search",
     "bestDealsForRent": "Best Deals For Rent!",
     "discoverOurTopProperties": "Handpicked luxury chalets with sea view",
@@ -76,7 +82,8 @@
       "confirmBody": "You are about to subscribe to the {{plan}}. Do you wish to proceed? You will be redirected to a payment gateway to complete your payment",
       "confirm": "Confirm",
       "subsciptionFailed": "Failed to subscribe to selected plan: {{error}}",
-      "subsciptionSuccess": "Subscription proccessed successfully"
+      "subsciptionSuccess": "Subscription proccessed successfully",
+      "complete": "Plan is currently full"
     },
     "Newsletter": {
       "title": "Showcase Your Chalet to the World",
@@ -92,6 +99,16 @@
       "readMore": "Click to read more",
       "whatsappMessage": "Hi, I'm interested in booking the {{title}} service. Please provide me with more details and availability. Thank you!"
     }
+  },
+  "Plans": {
+    "pageTitle": "Plan Details - Elite Status",
+    "subscribe": "Subscribe Now",
+    "features": "Features",
+    "title": "Ready To Join Us?",
+    "description": "Subscribe now and enjoy exclusive offers, special discounts, and premium booking benefits designed just for you.",
+    "planFeatures": "Plan Features",
+    "policy": "Plan Policy",
+    "subscibeNow": "Subscribe Now"
   },
   "Auth": {
     "loginTitle": "Sign Into Your Account",
@@ -111,6 +128,7 @@
     "idVerification": "ID Verification",
     "idFront": "ID Front",
     "idBack": "ID Back",
+    "nationalID": "National ID",
     "register": "Register",
     "registering": "Registering...",
     "alreadyHaveAccount": "Already have an account? Login",
@@ -138,7 +156,9 @@
       "phoneInvalid": "Invalid phone number",
       "acceptTerms": "You must accept terms",
       "fileTooLarge": "File must be under 10MB",
-      "fileInvalidType": "Only JPG, PNG, WebP, or PDF allowed"
+      "fileInvalidType": "Only JPG, PNG, WebP, or PDF allowed",
+      "nationalIDLength": "National ID must be exactly 12 characters",
+      "nationalIDStart": "National ID must start with 2 or 3"
     },
     "resetPassword": {
       "title": "Reset Password",
@@ -171,7 +191,18 @@
       "facilities": "Facilities",
       "reset": "Reset",
       "apply": "Apply",
-      "dates": "Dates"
+      "dates": "Dates",
+      "area": "Area",
+      "phase": "Phase No",
+      "beachRow": "Beach Row",
+      "phaseValue": "Phase {{phase}}",
+      "row": {
+        "1": "First Row",
+        "2": "Second Row",
+        "3": "Third Row",
+        "4": "Fourth Row",
+        "5": "Fifth Row"
+      }
     },
     "nav": {
       "home": "Home",
@@ -207,7 +238,20 @@
         "description": "Description",
         "facilities": "Facilities",
         "documents": "Documents",
-        "location": "Location",
+        "location": {
+          "title": "Location",
+          "area": "Area",
+          "phase": "Phase No",
+          "phaseValue": "Phase {{phase}}",
+          "beachRow": "Beach Row",
+          "row": {
+            "1": "First Row",
+            "2": "Second Row",
+            "3": "Third Row",
+            "4": "Fourth Row",
+            "5": "Fifth Row"
+          }
+        },
         "video": "Video",
         "watchVideo": "Watch video"
       },
@@ -337,7 +381,7 @@
         "dayUseSub": "Sunday - Wednesday"
       },
       "info": {
-        "info":"Info",
+        "info": "Info",
         "50": "Pay 50% of the booking amount now to confirm your reservation. The remaining balance must be paid before check-in (up to 48 hours prior to arrival), or upon arrival depending on the booking policy. Please note: the deposit payment is non-refundable in case of cancellation and is subject to the Refund Policy.",
         "100": "Pay the full booking amount now to instantly secure your chalet reservation. In case of cancellation, any eligible refund amount will be processed according to the Refund Policy."
       },
@@ -383,6 +427,7 @@
       "CurrentPassword": "Current Password",
       "NewPassword": "New Password",
       "ConfirmNewPassword": "Confirm New Password",
+      "userId": "Membership ID:",
       "Saving": "Saving…",
       "SaveChanges": "Save Changes",
       "Cancel": "Cancel",

@@ -20,6 +20,11 @@ export const getSignupSchema = (t: TFunction<"translation", undefined>) =>
         message: t("Auth.validation.phoneInvalid"),
       }),
 
+      nationalID: z
+        .string()
+        .length(12, t("Auth.validation.nationalIDLength"))
+        .regex(/^[23]/, t("Auth.validation.nationalIDStart")),
+
       password: z
         .string()
         .min(8, t("Auth.validation.passwordMin")),

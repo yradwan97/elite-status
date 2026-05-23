@@ -10,6 +10,7 @@ interface RegisterFormPayload {
   email: string;
   password: string;
   mobileNumber: string;
+  nationalID: string;
   IDFront: File;
   IDBack: File;
 }
@@ -42,6 +43,7 @@ export function useRegister({ onSuccess, onError }: UseRegisterOptions = {}) {
         email: payload.email,
         password: payload.password,
         mobileNumber: payload.mobileNumber,
+        nationalID: payload.nationalID,
         IDFront,
         IDBack,
       });

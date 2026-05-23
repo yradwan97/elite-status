@@ -18,6 +18,7 @@ import { WhatsAppFAB } from './components/layout/WhatsAppFAB';
 import { useOnlineStatus } from './hooks/use-is-online';
 import { OfflineBanner } from './components/layout/OfflineBanner';
 import { scrollToTop } from './lib/utils';
+import PlanPage from './features/plans/PlanPage';
 
 function App() {
 
@@ -49,6 +50,7 @@ function App() {
           <Route path="/" element={<Dashboard />} />
           <Route path="/properties" element={<PropertiesSection />} />
           <Route path="/properties/:id" element={<PropertyDetails />} />
+          <Route path="/plans/:id" element={<PlanPage />} />
           <Route
             path="/properties/:id/reservation"
             element={

@@ -39,6 +39,10 @@ import bathroomIcon from "@/assets/bathroom-icon.png"
 import userIcon from "@/assets/user-icon.png"
 import loungeIcon from "@/assets/lounge-icon.png";
 import { TourForm, TourFormValues } from "./TourForm";
+import { useAreas } from "../api/hooks/useAreas";
+import areaIcon from "@/assets/area-icon.png";
+import phaseIcon from "@/assets/phase-icon.png";
+import beachRowIcon from "@/assets/beach-row-icon.png";
 
 
 const Skeleton = ({ className }: { className?: string }) => (
@@ -53,6 +57,8 @@ export default function PropertyDetails() {
     const user = useSelector((state: RootState) => state.auth.user);
 
     const { property, isLoading, refetch } = useProperty(id);
+    const { areas } = useAreas();
+    const selectedArea = areas.find(a => a.key === property?.area);
     const { info } = useInfo();
 
 
@@ -462,30 +468,30 @@ export default function PropertyDetails() {
                                         <Skeleton className="w-12 h-3" />
                                     </div>
                                 ))
-                            ) : property.facilities.length > 0 ? 
-                            <div className="flex flex-wrap gap-3">
-                                {visibleFacilities.map((f: Facility) => (
-                                    <div
-                                        key={f._id}
-                                        className="flex flex-col items-center justify-center gap-2.5 border bg-white shadow-md border-gray-200 rounded-[5px]  min-w-20 w-30.5 h-21.75 text-center"
-                                    >
-                                        <OptimizedImage className="size-10 pt-2.5" src={f.icon!} alt={`${f.titleEn}-icon`} />
-                                        <span className="text-xs flex font-medium text-gray-600">
-                                            {i18next.language === "ar" ? f.titleAr : f.titleEn}
+                            ) : property.facilities.length > 0 ?
+                                <div className="flex flex-wrap gap-3">
+                                    {visibleFacilities.map((f: Facility) => (
+                                        <div
+                                            key={f._id}
+                                            className="flex flex-col items-center justify-center gap-2.5 border bg-white shadow-md border-gray-200 rounded-[5px]  min-w-20 w-30.5 h-21.75 text-center"
+                                        >
+                                            <OptimizedImage className="size-10 pt-2.5" src={f.icon!} alt={`${f.titleEn}-icon`} />
+                                            <span className="text-xs flex font-medium text-gray-600">
+                                                {i18next.language === "ar" ? f.titleAr : f.titleEn}
+                                            </span>
+                                        </div>
+                                    ))}
+
+                                    <button onClick={() => setShowAllFacilities(!showAllFacilities)} className="flex flex-col items-center justify-center gap-1.5 border border-gray-200 rounded-xl px-5 py-3 min-w-20 text-center cursor-pointer hover:bg-gray-50 transition-colors">
+                                        <span className="text-xl">•••</span>
+                                        <span className="text-xs text-gray-600 font-medium">
+                                            {showAllFacilities ? t("Properties.Details.facilities.seeLess") : t("Properties.Details.facilities.seeMore")}
                                         </span>
-                                    </div>
-                                ))}
+                                    </button>
 
-                                <button onClick={() => setShowAllFacilities(!showAllFacilities)} className="flex flex-col items-center justify-center gap-1.5 border border-gray-200 rounded-xl px-5 py-3 min-w-20 text-center cursor-pointer hover:bg-gray-50 transition-colors">
-                                    <span className="text-xl">•••</span>
-                                    <span className="text-xs text-gray-600 font-medium">
-                                        {showAllFacilities ? t("Properties.Details.facilities.seeLess") : t("Properties.Details.facilities.seeMore")}
-                                    </span>
-                                </button>
-
-                            </div> 
-                            : 
-                            <p>{t("Properties.Details.facilities.none")}</p>}
+                                </div>
+                                :
+                                <p>{t("Properties.Details.facilities.none")}</p>}
                         </div>
 
                         {/* Documents */}
@@ -520,9 +526,50 @@ export default function PropertyDetails() {
 
                         {/* Location / Map */}
                         <div className="rounded-lg shadow-lg bg-[#f9f9f9] p-4">
-                            <h2 className="text-base font-bold text-navy mb-3">
-                                {t("Properties.Details.section.location")}
+                            <h2 className="text-base font-bold text-navy mb-5.75">
+                                {t("Properties.Details.section.location.title")}
                             </h2>
+                            <div className="flex gap-10">
+                                <div className="flex gap-10 mb-5 ">
+                                    <div className="flex flex-col items-start gap-2 text-sm text-gray-600">
+                                        <span style={{ letterSpacing: "0", lineHeight: "100%", fontSize: "12px" }} className="font-normal text-gray-400">
+                                            {t("Properties.Details.section.location.area")}
+                                        </span>
+                                        <div className="flex gap-2.5 items-center ">
+                                            <OptimizedImage src={areaIcon} className="size-6" alt="Area" />
+                                            <span style={{ letterSpacing: "0", lineHeight: "100%", fontSize: "14px" }} className="font-medium text-navy">
+                                                {(isRTL ? selectedArea?.titleAr : selectedArea?.titleEn) || t("Properties.Details.section.location.unknown")}
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div className="flex gap-10 mb-5 ">
+                                    <div className="flex flex-col items-start gap-2 text-sm text-gray-600">
+                                        <span style={{ letterSpacing: "0", lineHeight: "100%", fontSize: "12px" }} className="font-normal text-gray-400">
+                                            {t("Properties.Details.section.location.phase")}
+                                        </span>
+                                        <div className="flex gap-2.5 items-center ">
+                                            <OptimizedImage src={phaseIcon} className="size-6" alt="Phase" />
+                                            <span style={{ letterSpacing: "0", lineHeight: "100%", fontSize: "14px" }} className="font-medium text-navy">
+                                                {t(`Properties.Details.section.location.phaseValue`, { phase: property.phaseNo })}
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div className="flex gap-10 mb-5 ">
+                                    <div className="flex flex-col items-start gap-2 text-sm text-gray-600">
+                                        <span style={{ letterSpacing: "0", lineHeight: "100%", fontSize: "12px" }} className="font-normal text-gray-400">
+                                            {t("Properties.Details.section.location.beachRow")}
+                                        </span>
+                                        <div className="flex gap-2.5 items-center ">
+                                            <OptimizedImage src={beachRowIcon} className="size-6" alt="Beach View" />
+                                            <span style={{ letterSpacing: "0", lineHeight: "100%", fontSize: "14px" }} className="font-medium text-navy">
+                                                {t(`Properties.Details.section.location.row.${property.beachRow}`)}
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                             {isLoading ? (
                                 <div className="rounded-2xl overflow-hidden border border-gray-200">
                                     {/* map area */}
@@ -534,6 +581,7 @@ export default function PropertyDetails() {
                                     </div>
                                 </div>
                             ) : <div className="rounded-2xl overflow-hidden border border-gray-200 relative">
+
                                 {GOOGLE_MAPS_API_KEY ? (
                                     <OptimizedImage
                                         src={mapEmbedUrl}
@@ -555,7 +603,7 @@ export default function PropertyDetails() {
                                     <Button
                                         variant="outline"
                                         size="sm"
-                                        className="text-navy border-navy hover:bg-navy hover:text-white transition-colors gap-1.5"
+                                        className="text-navy cursor-pointer border-navy hover:bg-navy hover:text-white transition-colors gap-1.5"
                                         onClick={() => window.open(navigationUrl, "_blank")}
                                     >
                                         <Navigation className="w-4 h-4" />
@@ -640,23 +688,23 @@ export default function PropertyDetails() {
 
                 {/* ── All Photos Modal ── */}
                 <Dialog open={showAllPhotos} onOpenChange={setShowAllPhotos}>
-                    <DialogContent className="max-w-3xl w-full rounded-2xl p-6">
+                    <DialogContent className="w-full min-w-[80dvw] rounded-2xl p-6">
                         <DialogHeader>
                             <DialogTitle className="text-navy">
                                 {t("Properties.Details.gallery.allPhotos")}
                             </DialogTitle>
                         </DialogHeader>
-                        <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 max-h-[70vh] overflow-y-auto mt-2">
+                        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 max-h-[80vh] overflow-y-auto mt-2">
                             {images.map((img, i) => (
                                 <div
                                     key={i}
-                                    className="relative aspect-square overflow-hidden rounded-xl cursor-pointer group"
+                                    className="relative overflow-hidden rounded-xl cursor-pointer group"
                                     onClick={() => setLightboxImage(img)}
                                 >
                                     <OptimizedImage
                                         src={img}
                                         alt={`Photo ${i + 1}`}
-                                        className="w-full h-full object-contain group-hover:scale-105 transition-transform duration-200"
+                                        className="object-contain group-hover:scale-105 transition-transform duration-200"
                                     />
                                     <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-all duration-200 flex items-center justify-center">
                                         <ZoomIn className="w-6 h-6 text-white opacity-0 group-hover:opacity-100 transition-opacity drop-shadow" />
@@ -669,7 +717,7 @@ export default function PropertyDetails() {
 
                 {/* ── Lightbox Modal ── */}
                 <Dialog open={!!lightboxImage} onOpenChange={() => setLightboxImage(null)}>
-                    <DialogContent className="max-w-6xl w-full p-0 border-2 rounded-4xl overflow-hidden">
+                    <DialogContent className="min-w-[65dvw] p-0 border-2 rounded-4xl overflow-hidden">
                         {lightboxImage && (() => {
                             const currentIndex = images.indexOf(lightboxImage);
                             const hasPrev = currentIndex > 0;

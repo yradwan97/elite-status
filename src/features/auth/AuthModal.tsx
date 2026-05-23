@@ -23,7 +23,7 @@ export default function AuthModal({ open, onOpenChange }: Props) {
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange} >
-      <DialogContent className="w-225! max-w-[95vw]! p-0 overflow-hidden rounded-2xl">
+      <DialogContent className="w-235! max-w-[95vw]! p-0 overflow-hidden rounded-2xl">
         <div className="grid grid-cols-2 ">
           
           {/* LEFT IMAGE */}

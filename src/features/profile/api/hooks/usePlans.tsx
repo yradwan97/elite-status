@@ -7,10 +7,13 @@ export type Plan = {
   titleAr: string
   titleEn: string
   price: number
+  terms: string
   reservationDiscount: number
   insuranceDiscount: number
   extraServicesDiscount: number
   periodOfTime: number
+  capacity: number
+  activeSubscription: number
   featuresEn: string[]
   featuresAr: string[]
   createdAt: string
@@ -29,7 +32,7 @@ export interface PlansResponse {
 
 export const usePlans = (): PlansResponse => {
     const { data, isFetching, error, refetch } = useQuery({
-        queryKey: ['properties', 'favourites'],
+        queryKey: ['plans'],
         queryFn:  () => profileApi.getPlans(),
         placeholderData: (prev) => prev, // keeps previous data visible while fetching next page
     });

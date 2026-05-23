@@ -39,6 +39,7 @@ export function SignupForm({ onSwitch }: { onSwitch: () => void }) {
       lastName: data.lastName,
       email: data.email,
       password: data.password,
+      nationalID: data.nationalID,
       mobileNumber: data.mobileNumber,
       IDFront: data.IDFront,
       IDBack: data.IDBack,
@@ -83,6 +84,14 @@ export function SignupForm({ onSwitch }: { onSwitch: () => void }) {
           register={register}
           placeholder={t("Auth.email")}
           error={errors.email?.message}
+        />
+
+        <InputField
+          name="nationalID"
+          type="number"
+          register={register}
+          placeholder={t("Auth.nationalID")}
+          error={errors.nationalID?.message}
         />
 
         <Controller

@@ -49,7 +49,7 @@ export default function Dashboard() {
   const navigate = useNavigate()
 
   const [destination, setDestination] = useState("")
-  const [noOfGuests, setNoOfGuests] = useState("")
+  const [noOfRooms, setNoOfRooms] = useState("")
   const [dateRange, setDateRange] = useState<{ from: Date | undefined; to: Date | undefined }>({ from: undefined, to: undefined })
   const [phone, setPhone] = useState<string | undefined>(undefined)
   const { info } = useInfo()
@@ -60,9 +60,9 @@ export default function Dashboard() {
   }, [refetch])
 
   const handleSearch = () => {
-    const searchData: { destination: string | undefined, noOfGuests: string | undefined, startDate: Date | undefined, endDate: Date | undefined } = {
+    const searchData: { destination: string | undefined, noOfRooms: string | undefined, startDate: Date | undefined, endDate: Date | undefined } = {
       destination: undefined,
-      noOfGuests: undefined,
+      noOfRooms: undefined,
       startDate: undefined,
       endDate: undefined
     };
@@ -72,8 +72,8 @@ export default function Dashboard() {
     }
     if (dateRange.from) searchData.startDate = dateRange.from;
     if (dateRange.to) searchData.endDate = dateRange.to;
-    if (noOfGuests) {
-      searchData.noOfGuests = noOfGuests;
+    if (noOfRooms) {
+      searchData.noOfRooms = noOfRooms;
     }
     navigate('/properties', { state: { params: searchData } })
   }
@@ -163,12 +163,12 @@ export default function Dashboard() {
                   isArabic={isArabic}
                 />
                 <Counter
-                  label={t('Dashboard.addGuests') || t('Properties.filter.guests')}
-                  value={Number(noOfGuests) || 0}
-                  onChange={(v) => setNoOfGuests(v.toString())}
+                  label={t('Dashboard.addRooms') || t('Properties.filter.guests')}
+                  value={Number(noOfRooms) || 0}
+                  onChange={(v) => setNoOfRooms(v.toString())}
                 />
                 <button
-                  className={`bg-turquoise flex flex-row w-full lg:w-auto lg:justify-center lg:items-center text-white px-3 py-3 rounded-full font-medium transition ${isArabic ? "flex-row-reverse" : ""}`}
+                  className={`bg-turquoise cursor-pointer flex flex-row w-full lg:w-auto lg:justify-center lg:items-center text-white px-3 py-3 rounded-full font-medium transition ${isArabic ? "flex-row-reverse" : ""}`}
                   onClick={handleSearch}
                 >
                   <Search className="w-8 h-8" />
@@ -294,7 +294,6 @@ export default function Dashboard() {
         </div>
 
         {/* Plans Section */}
-        {/* Plans Section */}
         <section id="plans" className="flex-1 min-w-0" dir={isArabic ? 'rtl' : 'ltr'}>
           <div className="max-w-7xl mx-auto px-6 py-2">
             <div className="flex items-center justify-between mb-10">
@@ -330,7 +329,7 @@ export default function Dashboard() {
                       key={plan._id}
                       className="pl-6 basis-full md:basis-1/2 lg:basis-1/4"
                     >
-                      <PlanCard plan={plan} />
+                      <PlanCard plan={plan} isRouting/>
                     </CarouselItem>
                   ))}
                 </CarouselContent>
@@ -338,10 +337,10 @@ export default function Dashboard() {
                 {/* Prev/Next — positioned to the right, matching your existing style */}
                 <div className={`flex justify-end gap-3 mt-6 ${isArabic ? 'flex-row-reverse' : ''}`}>
                   <CarouselPrevious
-                    className={`static translate-y-0 w-10 h-10 rounded-full border border-navy text-navy hover:bg-navy hover:text-white transition-colors ${isArabic ? 'rotate-180' : ''}`}
+                    className={`static cursor-pointer translate-y-0 w-10 h-10 rounded-full border border-navy text-navy hover:bg-navy hover:text-white transition-colors ${isArabic ? 'rotate-180' : ''}`}
                   />
                   <CarouselNext
-                    className={`static translate-y-0 w-10 h-10 rounded-full border border-navy text-navy hover:bg-navy hover:text-white transition-colors ${isArabic ? 'rotate-180' : ''}`}
+                    className={`static cursor-pointer translate-y-0 w-10 h-10 rounded-full border border-navy text-navy hover:bg-navy hover:text-white transition-colors ${isArabic ? 'rotate-180' : ''}`}
                   />
                 </div>
               </Carousel>
@@ -377,7 +376,7 @@ export default function Dashboard() {
                   onChange={(value) => setPhone(value)}
                   className={`sm:w-full`}
                 />
-                <button disabled={!phone || !isValidPhoneNumber(phone)} onClick={handleWhatsappNewsletter} className="bg-navy text-white px-6 py-3.5 rounded-xl text-sm w-auto font-medium whitespace-nowrap hover:opacity-90 disabled:opacity-35 disabled:cursor-not-allowed transition-opacity shrink-0">
+                <button disabled={!phone || !isValidPhoneNumber(phone)} onClick={handleWhatsappNewsletter} className="bg-navy text-white px-6 cursor-pointer py-3.5 rounded-xl text-sm w-auto font-medium whitespace-nowrap hover:opacity-90 disabled:opacity-35 disabled:cursor-not-allowed transition-opacity shrink-0">
                   {t('Dashboard.Newsletter.subscribe')}
                 </button>
               </div>

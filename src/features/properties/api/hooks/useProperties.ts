@@ -48,6 +48,9 @@ export function useProperties(): UsePropertiesReturn {
         search: filters.search || undefined,
         startDate: filters.startDate || undefined,
         endDate: filters.endDate || undefined,
+        beachRow: filters.beachRow || undefined,
+        area: filters.area || undefined,
+        phaseNo: filters.phaseNo || undefined,
         facilities: filters.facilities?.length ? filters.facilities : undefined,
     };
 

@@ -43,16 +43,17 @@ export interface SocialMedia {
     tiktok: string
     instagram: string
     snapchat: string
+    youtube: string
 }
 
 export interface PoliciesData {
-  _id: string
-  refundPolicy: RefundPolicy
-  privacyPolicy: PrivacyPolicy
-  termsAndConditions: TermsAndConditions
-  createdAt: string
-  updatedAt: string
-  __v: number
+    _id: string
+    refundPolicy: RefundPolicy
+    privacyPolicy: PrivacyPolicy
+    termsAndConditions: TermsAndConditions
+    createdAt: string
+    updatedAt: string
+    __v: number
 }
 
 export interface PoliciesResponse {
@@ -60,21 +61,21 @@ export interface PoliciesResponse {
 }
 
 export interface RefundPolicy {
-  en: string
-  ar: string
-  _id: string
+    en: string
+    ar: string
+    _id: string
 }
 
 export interface PrivacyPolicy {
-  en: string
-  ar: string
-  _id: string
+    en: string
+    ar: string
+    _id: string
 }
 
 export interface TermsAndConditions {
-  en: string
-  ar: string
-  _id: string
+    en: string
+    ar: string
+    _id: string
 }
 
 

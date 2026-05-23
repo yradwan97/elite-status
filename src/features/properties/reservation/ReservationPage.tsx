@@ -270,7 +270,7 @@ export default function ReservationPage() {
               selectedPlanKey={booking.planKey}
               onPlanSelect={(key, price) => {
                 if (!booking.planKey || booking.planKey !== key) {
-                  setBooking((b) => ({ ...b, planKey: key, planPrice: price }))
+                  setBooking((b) => ({ ...b, planKey: key, planPrice: price, startDate: undefined, endDate: undefined }))
                 } else if (booking.planKey === key) {
                   setBooking((b) => ({ ...b, planKey: null, planPrice: 0, startDate: undefined, endDate: undefined, acceptedTerms: false }))
                 }

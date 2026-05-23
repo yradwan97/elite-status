@@ -125,7 +125,7 @@ function Calendar({
           defaultClassNames.outside
         ),
         disabled: cn(
-          "text-muted-foreground opacity-50",
+          "text-muted-foreground opacity-50 [&:has([data-in-range])]:opacity-100 [&:has([data-in-range])]:text-foreground",
           defaultClassNames.disabled
         ),
         hidden: cn("invisible", defaultClassNames.hidden),
@@ -192,8 +192,8 @@ function CalendarDayButton({
     if (modifiers.focused) ref.current?.focus()
   }, [modifiers.focused])
 
-  // "reserved" is a custom modifier passed from the parent via `modifiers` prop
   const isReserved = !!modifiers.reserved
+  const isInRange = modifiers.range_middle || modifiers.range_end || modifiers.range_start
 
   return (
     <Button
@@ -211,19 +211,20 @@ function CalendarDayButton({
       data-range-end={modifiers.range_end}
       data-range-middle={modifiers.range_middle}
       data-reserved={isReserved || undefined}
+      data-in-range={isInRange || undefined}
       className={cn(
-        // Base styles
         "relative isolate z-10 flex aspect-square size-auto w-full min-w-(--cell-size) flex-col gap-1 border-0 leading-none font-normal",
         "group-data-[focused=true]/day:relative group-data-[focused=true]/day:z-10 group-data-[focused=true]/day:border-ring group-data-[focused=true]/day:ring-[3px] group-data-[focused=true]/day:ring-ring/50",
-        // Range / selected styles
         "data-[range-end=true]:rounded-(--cell-radius) data-[range-end=true]:rounded-r-(--cell-radius) data-[range-end=true]:bg-primary data-[range-end=true]:text-primary-foreground",
         "data-[range-middle=true]:rounded-none data-[range-middle=true]:bg-muted data-[range-middle=true]:text-foreground",
         "data-[range-start=true]:rounded-(--cell-radius) data-[range-start=true]:rounded-l-(--cell-radius) data-[range-start=true]:bg-primary data-[range-start=true]:text-primary-foreground",
         "data-[selected-single=true]:bg-primary data-[selected-single=true]:text-primary-foreground",
         "dark:hover:text-foreground [&>span]:text-xs [&>span]:opacity-70",
-        // Reserved day: red background, still disabled visually
+        // Reserved day styles
         isReserved &&
-          "!bg-red-200 !text-red-500 hover:!bg-red-100 hover:!text-red-500 opacity-90 cursor-not-allowed",
+        "!bg-red-200 !text-red-500 hover:!bg-red-100 hover:!text-red-500 opacity-90 cursor-not-allowed",
+        // ✅ Override disabled opacity for range days so they look fully active
+        isInRange && !isReserved && "!opacity-100 cursor-default",
         defaultClassNames.day,
         className
       )}

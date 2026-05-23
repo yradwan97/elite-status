@@ -16,6 +16,7 @@ export interface User {
     IDBack: string;
     gender?: "male" | "female";
     nationality?: string;
+    userId?: string;
     image?: File | string | null;
     plan?: UserPlan
 }

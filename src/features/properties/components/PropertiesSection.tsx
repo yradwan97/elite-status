@@ -14,6 +14,8 @@ import { cn } from '@/lib/utils';
 import { useAds } from '../api/hooks/useAds';
 import { DatePicker } from '@/components/shared/DatePicker';
 import { PropertyCardSkeleton } from './property-card-skeleton';
+import { useAreas } from '../api/hooks/useAreas';
+import { SelectContent, SelectItem, SelectTrigger, SelectValue, Select } from '@/components/ui/select';
 
 
 export default function PropertiesSection() {
@@ -22,7 +24,7 @@ export default function PropertiesSection() {
     const [mobileFilterOpen, setMobileFilterOpen] = useState(false);
     const [adPanelOpen, setAdPanelOpen] = useState(false);
     const [adCarouselIndex, setAdCarouselIndex] = useState(0);
-
+    const { areas } = useAreas()
 
 
     const {
@@ -74,7 +76,7 @@ export default function PropertiesSection() {
 
     const location = useLocation()
     const navigate = useNavigate()
-    const passedSearch = location.state?.params as {destination: string | undefined, noOfGuests: string | undefined, startDate: Date | undefined, endDate: Date | undefined }
+    const passedSearch = location.state?.params as { destination: string | undefined, noOfRooms: string | undefined, startDate: Date | undefined, endDate: Date | undefined }
 
     useEffect(() => {
         if (location.state) {
@@ -84,15 +86,17 @@ export default function PropertiesSection() {
 
     // Local draft state for filter panel (applied only on "Apply")
     const [draft, setDraft] = useState({
-        guests: passedSearch?.noOfGuests
-            ? Number(passedSearch.noOfGuests)
-            : (filters.guests ?? 0),
-
-        bedrooms: filters.bedrooms ?? 0,
+        guests: 0,
+        bedrooms: passedSearch?.noOfRooms
+            ? Number(passedSearch.noOfRooms) : (filters.bedrooms ?? 0),
         bathrooms: filters.bathrooms ?? 0,
         lounges: filters.lounges ?? 0,
         startDate: passedSearch?.startDate ?? (filters.startDate ?? undefined),  // ← add
         endDate: passedSearch?.endDate ?? (filters.endDate ?? undefined),
+
+        beachRow: filters.beachRow ?? 0,
+        phaseNo: filters.phaseNo ?? 0,
+        area: filters.area ?? undefined,
 
         facilities: filters.facilities ?? [] as string[],
 
@@ -113,18 +117,21 @@ export default function PropertiesSection() {
             search: draft.search,
             startDate: draft.startDate,
             endDate: draft.endDate,
+            beachRow: draft.beachRow,
+            phaseNo: draft.phaseNo,
+            area: draft.area,
             page: 1,
         });
     };
 
     useEffect(function readSearchParamsFromRoutingEvent() {
-        if (passedSearch && (passedSearch.destination || passedSearch.noOfGuests || passedSearch.startDate || passedSearch.endDate)) {
+        if (passedSearch && (passedSearch.destination || passedSearch.noOfRooms || passedSearch.startDate || passedSearch.endDate)) {
 
             // eslint-disable-next-line react-hooks/set-state-in-effect
             setDraft(prev => ({
                 ...prev,
                 search: passedSearch.destination || prev.search,
-                guests: passedSearch.noOfGuests ? Number(passedSearch.noOfGuests) : prev.guests,
+                bedrooms: passedSearch.noOfRooms ? Number(passedSearch.noOfRooms) : prev.bedrooms,
                 startDate: passedSearch.startDate,
                 endDate: passedSearch.endDate
             }));
@@ -134,7 +141,7 @@ export default function PropertiesSection() {
     }, []);
 
     const handleReset = () => {
-        const empty = { guests: 0, bedrooms: 0, bathrooms: 0, lounges: 0, facilities: [], search: '', startDate: undefined, endDate: undefined };
+        const empty = { guests: 0, bedrooms: 0, bathrooms: 0, lounges: 0, facilities: [], search: '', beachRow: 0, phaseNo: 0, area: undefined, startDate: undefined, endDate: undefined };
         setDraft(empty);
         resetFilters();
     };
@@ -213,12 +220,75 @@ export default function PropertiesSection() {
 
                     {/* ── Filter Sidebar ── */}
                     <aside className="w-56 shrink-0 sticky top-6 hidden sm:flex flex-col gap-6">
-                        <div className="bg-white max-h-153.75 rounded-2xl shadow-sm border border-gray-100 p-5">
+                        <div className="bg-white max-h-197.75 rounded-2xl shadow-sm border border-gray-100 p-5">
                             <div className={`flex items-center gap-2 mb-4 ${isArabic ? 'flex-row-reverse' : ''}`}>
                                 <SlidersHorizontal className="w-4 h-4 text-navy" />
                                 <h2 className="font-semibold text-navy text-sm">
                                     {t('Properties.filter.title')}
                                 </h2>
+                            </div>
+
+                            <div dir={isArabic ? "rtl" : "ltr"} className="mt-3">
+                                <label className={`text-sm font-semibold text-navy mb-2 block ${isArabic ? 'text-right' : ''}`}>
+                                    {t('Properties.filter.area')}
+                                </label>
+                                <Select onValueChange={(v) => setDraft({ ...draft, area: v })}>
+                                    <SelectTrigger
+                                        className={cn(
+                                            "w-full flex items-center justify-between rounded-xl border border-gray-200 px-4 py-2 text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-navy/20 focus:border-navy transition-all",
+                                            isArabic && "text-right"
+                                        )}
+                                    >
+                                        <SelectValue placeholder={t('Properties.filter.area')} />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                        {areas?.map(area => (
+                                            <SelectItem className={`${isArabic ? 'justify-end' : 'justify-start'}`} key={area.key} value={area.key}>
+                                                {isArabic ? area.titleAr : area.titleEn}
+                                            </SelectItem>
+                                        ))}
+                                    </SelectContent>
+                                </Select>
+                            </div>
+                            <div dir={isArabic ? "rtl" : "ltr"} className="mt-3">
+                                <label className={`text-sm font-semibold text-navy mb-2 block ${isArabic ? 'text-right' : ''}`}>
+                                    {t('Properties.filter.phase')}
+                                </label>
+                                <Select
+                                    value={draft.phaseNo?.toString()}
+                                    onValueChange={v => setDraft(p => ({ ...p, phaseNo: Number(v) }))}
+                                >
+                                    <SelectTrigger className="w-full flex items-center justify-between rounded-xl border border-gray-200 px-4 py-2 text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-navy/20 focus:border-navy transition-all">
+                                        <SelectValue placeholder={t('Properties.filter.phase')} />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                        {Array.from({ length: 8 }, (_, i) => i + 1).map(phase => (
+                                            <SelectItem className={`${isArabic ? 'justify-end' : 'justify-start'}`} key={phase} value={phase.toString()}>
+                                                {t(`Properties.filter.phaseValue`, { phase })}
+                                            </SelectItem>
+                                        ))}
+                                    </SelectContent>
+                                </Select>
+                            </div>
+                            <div dir={isArabic ? "rtl" : "ltr"} className="mt-3 mb-3">
+                                <label className={`text-sm font-semibold text-navy mb-2 block ${isArabic ? 'text-right' : ''}`}>
+                                    {t('Properties.filter.beachRow')}
+                                </label>
+                                <Select
+                                    value={draft.beachRow?.toString()}
+                                    onValueChange={v => setDraft(p => ({ ...p, beachRow: Number(v) }))}
+                                >
+                                    <SelectTrigger className="w-full flex items-center justify-between rounded-xl border border-gray-200 px-4 py-2 text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-navy/20 focus:border-navy transition-all">
+                                        <SelectValue placeholder={t('Properties.filter.beachRow')} />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                        {Array.from({ length: 5 }, (_, i) => i + 1).map(row => (
+                                            <SelectItem className={`${isArabic ? 'justify-end' : 'justify-start'}`} key={row} value={row.toString()}>
+                                                {t(`Properties.filter.row.${row}`)}
+                                            </SelectItem>
+                                        ))}
+                                    </SelectContent>
+                                </Select>
                             </div>
 
                             {/* Counters */}
@@ -242,6 +312,18 @@ export default function PropertiesSection() {
                                 value={draft.lounges}
                                 onChange={v => setDraft(p => ({ ...p, lounges: v }))}
                             />
+                            {/* <Counter
+                                label={t('Properties.filter.phase')}
+                                value={draft.phaseNo}
+                                onChange={v => setDraft(p => ({ ...p, phaseNo: v }))}
+                            />
+                            <Counter
+                                label={t('Properties.filter.beachRow')}
+                                value={draft.beachRow}
+                                onChange={v => setDraft(p => ({ ...p, beachRow: v }))}
+                            /> */}
+
+
                             <div className="mt-4">
                                 <p className={`text-sm font-semibold text-navy mb-2 ${isArabic ? 'text-right' : ''}`}>
                                     {t('Properties.filter.dates')}
@@ -403,6 +485,69 @@ export default function PropertiesSection() {
                                 </button>
                             </div>
 
+                            <div dir={isArabic ? "rtl" : "ltr"} className="mt-3 px-5">
+                                    <label className={`text-sm font-semibold text-navy mb-2 block ${isArabic ? 'text-right' : ''}`}>
+                                        {t('Properties.filter.area')}
+                                    </label>
+                                    <Select onValueChange={(v) => setDraft({ ...draft, area: v })}>
+                                        <SelectTrigger
+                                            className={cn(
+                                                "w-full flex items-center justify-between rounded-xl border border-gray-200 px-4 py-2 text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-navy/20 focus:border-navy transition-all",
+                                                isArabic && "text-right"
+                                            )}
+                                        >
+                                            <SelectValue placeholder={t('Properties.filter.area')} />
+                                        </SelectTrigger>
+                                        <SelectContent>
+                                            {areas?.map(area => (
+                                                <SelectItem className={`${isArabic ? 'justify-end' : 'justify-start'}`} key={area.key} value={area.key}>
+                                                    {isArabic ? area.titleAr : area.titleEn}
+                                                </SelectItem>
+                                            ))}
+                                        </SelectContent>
+                                    </Select>
+                                </div>
+                                <div dir={isArabic ? "rtl" : "ltr"} className="mt-3 px-5">
+                                    <label className={`text-sm font-semibold text-navy mb-2 block ${isArabic ? 'text-right' : ''}`}>
+                                        {t('Properties.filter.phase')}
+                                    </label>
+                                    <Select
+                                        value={draft.phaseNo?.toString()}
+                                        onValueChange={v => setDraft(p => ({ ...p, phaseNo: Number(v) }))}
+                                    >
+                                        <SelectTrigger className="w-full flex items-center justify-between rounded-xl border border-gray-200 px-4 py-2 text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-navy/20 focus:border-navy transition-all">
+                                            <SelectValue placeholder={t('Properties.filter.phase')} />
+                                        </SelectTrigger>
+                                        <SelectContent>
+                                            {Array.from({ length: 8 }, (_, i) => i + 1).map(phase => (
+                                                <SelectItem className={`${isArabic ? 'justify-end' : 'justify-start'}`} key={phase} value={phase.toString()}>
+                                                    {t(`Properties.filter.phaseValue`, { phase })}
+                                                </SelectItem>
+                                            ))}
+                                        </SelectContent>
+                                    </Select>
+                                </div>
+                                <div dir={isArabic ? "rtl" : "ltr"} className="mt-3 mb-3 px-5">
+                                    <label className={`text-sm font-semibold text-navy mb-2 block ${isArabic ? 'text-right' : ''}`}>
+                                        {t('Properties.filter.beachRow')}
+                                    </label>
+                                    <Select
+                                        value={draft.beachRow?.toString()}
+                                        onValueChange={v => setDraft(p => ({ ...p, beachRow: Number(v) }))}
+                                    >
+                                        <SelectTrigger className="w-full flex items-center justify-between rounded-xl border border-gray-200 px-4 py-2 text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-navy/20 focus:border-navy transition-all">
+                                            <SelectValue placeholder={t('Properties.filter.beachRow')} />
+                                        </SelectTrigger>
+                                        <SelectContent>
+                                            {Array.from({ length: 5 }, (_, i) => i + 1).map(row => (
+                                                <SelectItem className={`${isArabic ? 'justify-end' : 'justify-start'}`} key={row} value={row.toString()}>
+                                                    {t(`Properties.filter.row.${row}`)}
+                                                </SelectItem>
+                                            ))}
+                                        </SelectContent>
+                                    </Select>
+                                </div>
+
                             {/* Scrollable content */}
                             <div className="flex-1 overflow-y-auto px-5 py-4">
                                 <Counter
@@ -425,7 +570,17 @@ export default function PropertiesSection() {
                                     value={draft.lounges}
                                     onChange={v => setDraft(p => ({ ...p, lounges: v }))}
                                 />
-
+                                {/* <Counter
+                                    label={t('Properties.filter.phase')}
+                                    value={draft.phaseNo}
+                                    onChange={v => setDraft(p => ({ ...p, phaseNo: v }))}
+                                />
+                                <Counter
+                                    label={t('Properties.filter.beachRow')}
+                                    value={draft.beachRow}
+                                    onChange={v => setDraft(p => ({ ...p, beachRow: v }))}
+                                /> */}
+                                
                                 <div className="mt-4">
                                     <p className={`text-sm font-semibold text-navy mb-2 ${isArabic ? 'text-right' : ''}`}>
                                         {t('Properties.filter.dates')}
