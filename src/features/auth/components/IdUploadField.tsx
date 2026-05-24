@@ -1,6 +1,6 @@
 import { OptimizedImage } from "@/components/shared/OptimizedImage";
 import i18next from "i18next";
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useDropzone } from "react-dropzone";
 
 interface IDUploadFieldProps {
@@ -23,6 +23,13 @@ export function IDUploadField({
   const [preview, setPreview] = useState<string | null>(initialPreview);
   const [lightboxOpen, setLightboxOpen] = useState(false);
   const isArabic = i18next.language === "ar";
+
+  useEffect(() => {
+    if (initialPreview) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
+      setPreview(initialPreview);
+    }
+  }, [initialPreview]);
 
   const onDrop = useCallback(
     (acceptedFiles: File[]) => {

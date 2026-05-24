@@ -1,5 +1,5 @@
 import logo from "@/assets/elite-status-logo.png";
-import cards from "@/assets/cards.png";
+import cards from "@/assets/cards.svg";
 import { SocialIcon } from 'react-social-icons';
 import { useTranslation } from "react-i18next";
 import { OptimizedImage } from "../shared/OptimizedImage";
@@ -120,7 +120,7 @@ export function Footer() {
           <OptimizedImage
             src={cards}
             alt="Elite Status"
-            className="h-8 mx-auto mb-4 flex object-contain w-auto"
+            className="sm:h-5.75 sm:w-30 mx-auto mb-4 flex object-contain w-auto"
           />
           <div className="bg-black/40 border-t translate-y-2.5 border-white/10 h-11.25 py-4 text-center text-sm text-white/60">
           {t("Footer.copyright", { year: new Date().getFullYear() })}

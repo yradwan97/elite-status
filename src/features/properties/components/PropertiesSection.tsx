@@ -324,7 +324,7 @@ export default function PropertiesSection() {
                             /> */}
 
 
-                            <div className="mt-4">
+                            <div className="mt-4 flex flex-col gap-1 w-full">
                                 <p className={`text-sm font-semibold text-navy mb-2 ${isArabic ? 'text-right' : ''}`}>
                                     {t('Properties.filter.dates')}
                                 </p>
@@ -581,7 +581,7 @@ export default function PropertiesSection() {
                                     onChange={v => setDraft(p => ({ ...p, beachRow: v }))}
                                 /> */}
 
-                                <div className="mt-4">
+                                <div className="mt-4 flex flex-col gap-1 w-full">
                                     <p className={`text-sm font-semibold text-navy mb-2 ${isArabic ? 'text-right' : ''}`}>
                                         {t('Properties.filter.dates')}
                                     </p>

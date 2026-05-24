@@ -38,12 +38,13 @@ import {
   CarouselPrevious,
 } from '@/components/ui/carousel';
 import Autoplay from 'embla-carousel-autoplay';
+import { useIsMobile } from '@/hooks/use-mobile';
 
 export default function Dashboard() {
   const { t } = useTranslation();
   const isArabic = i18next.language === 'ar';
 
-  const { properties, isLoading, refetch } = useProperties()
+  const { properties, isLoading, refetch, setFilters } = useProperties()
   const { services, isLoading: servicesLoading } = useOwnerServices(1)
   const { plans, isLoading: isPlansLoading } = usePlans()
   const navigate = useNavigate()
@@ -54,10 +55,14 @@ export default function Dashboard() {
   const [phone, setPhone] = useState<string | undefined>(undefined)
   const { info } = useInfo()
   const location = useLocation();
+  const isMobile = useIsMobile()
 
   useEffect(() => {
     refetch()
-  }, [refetch])
+    setFilters({
+      limit: isMobile ? 4 : 8,
+    })
+  }, [refetch, isMobile, setFilters])
 
   const handleSearch = () => {
     const searchData: { destination: string | undefined, noOfRooms: string | undefined, startDate: Date | undefined, endDate: Date | undefined } = {
@@ -208,7 +213,7 @@ export default function Dashboard() {
               <OptimizedImage src={pattern} alt="Best Deals Icon" className="hidden sm:flex h-12 w-auto" />
             </div>
             <div className='flex justify-center'>
-              <div className="grid grid-cols-1 lg:grid-cols-4 gap-[30.33px]" dir={isArabic ? 'rtl' : 'ltr'}>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-[30.33px]" dir={isArabic ? 'rtl' : 'ltr'}>
                 {isLoading ? (
                   Array.from({ length: 4 }).map((_, i) => <PropertyCardSkeleton key={i} />)
                 ) : properties.map((property) => (

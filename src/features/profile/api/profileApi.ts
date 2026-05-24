@@ -11,6 +11,7 @@ export type ProfileUpdateData = {
     IDFront?: File | string | null;
     IDBack?: File | string | null;
     image?: File | string | null;
+    nationalID?: string | null;
 };
 
 export type ChangePasswordData = {
@@ -80,6 +81,7 @@ export const profileApi = {
             IDFront: IDFrontUrl,
             IDBack: IDBackUrl,
             image: imageUrl,
+            nationalID: data.nationalID || undefined,
         };
 
         const response = await api.put("/users", payload);

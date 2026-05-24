@@ -5,8 +5,6 @@ import { Controller, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { getProfileSchema } from '@/features/auth/schemas/signupSchema';
 import { z as zod } from 'zod';
-import { useSelector } from 'react-redux';
-import { RootState } from '@/store';
 import { Camera, Lock } from 'lucide-react';
 import PhoneField from '@/components/shared/PhoneField';
 import InputField from '@/components/shared/InputField';
@@ -24,6 +22,7 @@ import { useUpdateProfile } from '../api/hooks/useUpdateProfile';
 import { ProfileUpdateData } from '../api/profileApi';
 import { OptimizedImage } from '@/components/shared/OptimizedImage';
 import { ChangePasswordModal } from './profile/ChangePasswordModal';
+import { useUser } from '@/features/auth/api/hooks/useUser';
 
 export default function AccountProfile() {
   const { t } = useTranslation();
@@ -33,7 +32,7 @@ export default function AccountProfile() {
   const [isChangePasswordOpen, setIsChangePasswordOpen] = useState(false);
 
   const isArabic = i18next.language === 'ar';
-  const user = useSelector((state: RootState) => state.auth.user);
+  const {user} = useUser()
   const updateProfileMutation = useUpdateProfile();
 
   const schema = getProfileSchema(t);
@@ -53,6 +52,13 @@ export default function AccountProfile() {
 
   useEffect(() => {
     reset({
+      IDFront: null,
+      IDBack: null,
+    })
+  }, [])
+
+  useEffect(() => {
+    reset({
       firstName: user?.firstName ?? '',
       lastName: user?.lastName ?? '',
       email: user?.email ?? '',
@@ -63,6 +69,7 @@ export default function AccountProfile() {
       gender: user?.gender ?? null,
       nationality: user?.nationality ?? null,
       image: user?.image ?? null,
+      nationalID: user?.nationalID ?? '',
     });
   }, [user, reset])
 
@@ -92,6 +99,7 @@ export default function AccountProfile() {
       IDFront: data.IDFront,
       IDBack: data.IDBack,
       image: avatarFile || (typeof data.image === 'string' ? data.image : undefined),
+      nationalID: data.nationalID,
     };
 
     updateProfileMutation.mutate(updateData, {
@@ -151,14 +159,25 @@ export default function AccountProfile() {
           />
         </div>
 
-        {/* Email */}
-        <InputField
-          name="email"
-          register={register}
-          placeholder={t('Auth.email')}
-          error={errors.email?.message}
-          disabled={!isEditing}
-        />
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          {/* Email */}
+          <InputField
+            name="email"
+            register={register}
+            placeholder={t('Auth.email')}
+            error={errors.email?.message}
+            disabled
+          />
+  
+          {/* National ID */}
+          <InputField
+            name="nationalID"
+            register={register}
+            placeholder={t('Auth.nationalID')}
+            error={errors.nationalID?.message}
+            disabled
+          />
+        </div>
 
         {/* Phone */}
         <Controller
@@ -229,7 +248,7 @@ export default function AccountProfile() {
                     <SelectValue placeholder={t('Account.Profile.Nationality')} />
                   </SelectTrigger>
                   <SelectContent>
-                    {countryOptions.map((country: any) => (
+                    {countryOptions.map((country: {value: string; label: string}) => (
                       <SelectItem key={country.value} value={country.value}>
                         {country.label}
                       </SelectItem>

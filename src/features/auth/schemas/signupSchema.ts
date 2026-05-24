@@ -62,6 +62,10 @@ export function getProfileSchema(t: TFunction) {
     mobileNumber: z.string().refine(isValidPhoneNumber, {
       message: t("Auth.validation.phoneInvalid"),
     }),
+    nationalID: z
+        .string()
+        .length(12, t("Auth.validation.nationalIDLength"))
+        .regex(/^[23]/, t("Auth.validation.nationalIDStart")),
     terms: z.boolean().optional(),
     gender: z
       .enum(["male", "female"], {

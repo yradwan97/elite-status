@@ -142,7 +142,7 @@ export const propertiesApi = {
         if (filters.lounges) params.append('lounges', String(filters.lounges));
         if (filters.search) params.append('search', filters.search);
         if (filters.page) params.append('page', String(filters.page));
-        if (filters.limit) params.append('limit', String(filters.limit));
+        if (filters.limit) params.append('size', String(filters.limit));
         if (filters.startDate) params.append('startDate', toLocalDate(filters.startDate))
         if (filters.endDate) params.append('endDate', toLocalDate(filters.endDate))
         if (filters.beachRow) params.append('beachRow', String(filters.beachRow))

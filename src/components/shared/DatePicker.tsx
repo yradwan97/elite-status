@@ -49,7 +49,7 @@ export function DatePicker({
                 <Button
                     variant="outline"
                     className={cn(
-                        "flex-1 px-6 py-4 rounded-2xl cursor-pointer justify-start text-left font-normal h-auto border border-gray-500 lg:border-gray-200 text-black bg-white",
+                        "flex-1 px-6 py-4 w-auto rounded-2xl cursor-pointer justify-start text-left font-normal h-auto border border-gray-500 lg:border-gray-200 text-black bg-white",
                         isArabic && "text-end flex-row-reverse",
                         !dateRange.from && "text-muted-foreground"
                     )}

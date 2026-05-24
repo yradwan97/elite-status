@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next'
 import { useNavigate, useParams } from 'react-router-dom'
 import bgImage from "@/assets/plans-bg.png"
 import { OptimizedImage } from '@/components/shared/OptimizedImage'
-import planIcon from "@/assets/planIcon.png"
+import planIcon from "@/assets/stash_plan.svg"
 import { cn } from '@/lib/utils'
 import i18next from '@/i18n'
 import greenCheckIcon from "@/assets/green-check.png"
@@ -174,6 +174,7 @@ const PlanPage = () => {
                 <OptimizedImage src={greenCheckIcon} className="size-5" alt="green-checkmark" />
                 <span style={{ lineHeight: "100%", fontSize: "12px", letterSpacing: "0%" }} className={cn("text-xs leading-relaxed")}>
                   {feature}
+
                 </span>
               </li>
             ))}

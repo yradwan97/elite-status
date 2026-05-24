@@ -19,6 +19,7 @@ export interface User {
     userId?: string;
     image?: File | string | null;
     plan?: UserPlan
+    nationalID?: string | null;
 }
 
 interface AuthState {
