@@ -32,7 +32,7 @@ export default function AccountProfile() {
   const [isChangePasswordOpen, setIsChangePasswordOpen] = useState(false);
 
   const isArabic = i18next.language === 'ar';
-  const {user} = useUser()
+  const {user, refetch} = useUser()
   const updateProfileMutation = useUpdateProfile();
 
   const schema = getProfileSchema(t);
@@ -105,6 +105,7 @@ export default function AccountProfile() {
     updateProfileMutation.mutate(updateData, {
       onSuccess: () => {
         reset({ ...data, image: updateData.image ?? data.image });
+        refetch()
         setAvatarPreview(null);
         setAvatarFile(null);
         setIsEditing(false);

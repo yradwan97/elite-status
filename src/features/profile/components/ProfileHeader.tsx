@@ -46,7 +46,7 @@ export default function ProfileHeader({ onMenuClick }: Props) {
           <div className="flex items-center gap-3">
 
             {user?.image ? (
-              <OptimizedImage src={user.image as string} alt='user-image' className='size-14' />
+              <OptimizedImage src={user.image as string} alt='user-image' className='size-14 rounded-full' />
             ) : (
               <div className="h-14 w-14 bg-navy rounded-full flex items-center justify-center text-white text-xl font-bold">
                 {getInitials(user?.firstName || '', user?.lastName || '')}

@@ -204,7 +204,7 @@ export function Header() {
                   <PopoverTrigger asChild>
                     <button className="flex items-center gap-2 text-base font-medium hover:cursor-pointer transition-colors">
                       {userName}
-                      {(user?.image && typeof user.image === "string" && isValidUrl(user.image)) ? <OptimizedImage className='size-8' src={user.image} alt='user-image' /> : <UserCircle className="h-4 w-4" />}
+                      {(user?.image && typeof user.image === "string" && isValidUrl(user.image)) ? <OptimizedImage className='size-8 rounded-full' src={user.image} alt='user-image' /> : <UserCircle className="h-4 w-4" />}
                     </button>
                   </PopoverTrigger>
                   <PopoverContent align="end" className="w-48 p-2 flex flex-col gap-1">
