@@ -243,7 +243,7 @@ export default function PropertiesSection() {
                                     </SelectTrigger>
                                     <SelectContent>
                                         {areas?.map(area => (
-                                            <SelectItem className={`${isArabic ? 'justify-end' : 'justify-start'}`} key={area.key} value={area.key}>
+                                            <SelectItem key={area.key} value={area.key}>
                                                 {isArabic ? area.titleAr : area.titleEn}
                                             </SelectItem>
                                         ))}
@@ -263,7 +263,7 @@ export default function PropertiesSection() {
                                     </SelectTrigger>
                                     <SelectContent>
                                         {Array.from({ length: 8 }, (_, i) => i + 1).map(phase => (
-                                            <SelectItem className={`${isArabic ? 'justify-end' : 'justify-start'}`} key={phase} value={phase.toString()}>
+                                            <SelectItem key={phase} value={phase.toString()}>
                                                 {t(`Properties.filter.phaseValue`, { phase })}
                                             </SelectItem>
                                         ))}
@@ -283,7 +283,7 @@ export default function PropertiesSection() {
                                     </SelectTrigger>
                                     <SelectContent>
                                         {Array.from({ length: 5 }, (_, i) => i + 1).map(row => (
-                                            <SelectItem className={`${isArabic ? 'justify-end' : 'justify-start'}`} key={row} value={row.toString()}>
+                                            <SelectItem key={row} value={row.toString()}>
                                                 {t(`Properties.filter.row.${row}`)}
                                             </SelectItem>
                                         ))}
@@ -485,7 +485,10 @@ export default function PropertiesSection() {
                                 </button>
                             </div>
 
-                            <div dir={isArabic ? "rtl" : "ltr"} className="mt-3 px-5">
+
+                            {/* Scrollable content */}
+                            <div className="flex-1 overflow-y-auto px-5 py-4">
+                                <div dir={isArabic ? "rtl" : "ltr"} className="mt-3 px-5">
                                     <label className={`text-sm font-semibold text-navy mb-2 block ${isArabic ? 'text-right' : ''}`}>
                                         {t('Properties.filter.area')}
                                     </label>
@@ -500,7 +503,7 @@ export default function PropertiesSection() {
                                         </SelectTrigger>
                                         <SelectContent>
                                             {areas?.map(area => (
-                                                <SelectItem className={`${isArabic ? 'justify-end' : 'justify-start'}`} key={area.key} value={area.key}>
+                                                <SelectItem key={area.key} value={area.key}>
                                                     {isArabic ? area.titleAr : area.titleEn}
                                                 </SelectItem>
                                             ))}
@@ -520,7 +523,7 @@ export default function PropertiesSection() {
                                         </SelectTrigger>
                                         <SelectContent>
                                             {Array.from({ length: 8 }, (_, i) => i + 1).map(phase => (
-                                                <SelectItem className={`${isArabic ? 'justify-end' : 'justify-start'}`} key={phase} value={phase.toString()}>
+                                                <SelectItem key={phase} value={phase.toString()}>
                                                     {t(`Properties.filter.phaseValue`, { phase })}
                                                 </SelectItem>
                                             ))}
@@ -540,16 +543,13 @@ export default function PropertiesSection() {
                                         </SelectTrigger>
                                         <SelectContent>
                                             {Array.from({ length: 5 }, (_, i) => i + 1).map(row => (
-                                                <SelectItem className={`${isArabic ? 'justify-end' : 'justify-start'}`} key={row} value={row.toString()}>
+                                                <SelectItem key={row} value={row.toString()}>
                                                     {t(`Properties.filter.row.${row}`)}
                                                 </SelectItem>
                                             ))}
                                         </SelectContent>
                                     </Select>
                                 </div>
-
-                            {/* Scrollable content */}
-                            <div className="flex-1 overflow-y-auto px-5 py-4">
                                 <Counter
                                     label={t('Properties.filter.guests')}
                                     value={draft.guests}
@@ -580,7 +580,7 @@ export default function PropertiesSection() {
                                     value={draft.beachRow}
                                     onChange={v => setDraft(p => ({ ...p, beachRow: v }))}
                                 /> */}
-                                
+
                                 <div className="mt-4">
                                     <p className={`text-sm font-semibold text-navy mb-2 ${isArabic ? 'text-right' : ''}`}>
                                         {t('Properties.filter.dates')}

@@ -42,10 +42,10 @@
   },
   "Dashboard": {
     "pageTitle": "Elite Status - Find Your Dream Chalet",
-    "escapeTheNoise": "Escape the Noise, Find Your Chalet.",
+    "escapeTheNoise": "Moments of tranquility begin here... A stay worthy of your status.",
     "findYourChalet": "Discover premium chalets in beautiful locations",
-    "searchDestinations": "Search destinations",
-    "selectDates": "Select dates",
+    "searchDestinations": "Search for chalets",
+    "selectDates": "Select reservation dates",
     "addRooms": "No of rooms",
     "search": "Search",
     "bestDealsForRent": "Best Deals For Rent!",
@@ -86,14 +86,14 @@
       "complete": "Plan is currently full"
     },
     "Newsletter": {
-      "title": "Showcase Your Chalet to the World",
+      "title": "List your chalet with us",
       "subtitle": "Submit your phone number and let our team handle the rest. We'll help market our chalet to the right audience!",
       "emailPlaceholder": "enter your number ...",
       "subscribe": "Send Number",
       "whatsappMessage": "Hi, I'm interested in receiving updates about Elite status. This is my preferred mode of communication. Thank you!"
     },
     "Services": {
-      "growTitle": "Grow Your Rental Income",
+      "growTitle": "Integrated services for owners",
       "growSubtitle": "Keep your chalet in perfect condition with our trusted repair and maintenance solutions",
       "bookNow": "Book Now",
       "readMore": "Click to read more",
@@ -283,7 +283,7 @@
         "startFrom": "Rent Start From"
       },
       "tour": {
-        "title": "Schedule a Tour !",
+        "title": "Reserve a chalet 'payment at company HQ'",
         "name": "Name",
         "namePlaceholder": "Type your name",
         "email": "Email",
@@ -292,12 +292,12 @@
         "phonePlaceholder": "Type your mobile number",
         "message": "Message",
         "messagePlaceholder": "Write your message",
-        "submit": "Reserve a Tour",
+        "submit": "Reserve a chalet",
         "or": "OR",
         "whatsapp": "Reserve on Whatsapp",
-        "success": "Tour request sent successfully!",
-        "error": "Failed to send tour request. Please try again.",
-        "whatsappMessage": "I would like to schedule a tour for your property, '{{title}}'. Please let me know the available dates and times. Thank you!",
+        "success": "Request sent successfully!",
+        "error": "Failed to send request. Please try again.",
+        "whatsappMessage": "I would like to reserve your property, '{{title}}'. Please let me know the available dates and times. Thank you!",
         "validation": {
           "name": "Name is required",
           "email": "Email is required",
