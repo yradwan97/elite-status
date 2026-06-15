@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { ArrowLeft } from "lucide-react";
-import { adjustReservationPriceForOffer, cn, formatTimeTo12Hour, hasOffer, isPlanActive } from "@/lib/utils";
+import { adjustReservationPriceForOffer, cn, formatDateNoTimeZone, formatTimeTo12Hour, hasOffer, isPlanActive } from "@/lib/utils";
 import { BookingState, PricingPlan, ExtraService } from "../types/types";
 import { useTranslation } from "react-i18next";
 import { Property } from "../../api/propertiesApi";
@@ -92,13 +92,20 @@ export function ConfirmationStep({
     return price
   }
 
+  const zeroDepositPrice = (price: number): number => {
+    if (booking.paymentOption === "50") {
+      return 0
+    }
+    return price
+  }
+
   const user = useSelector(selectUser)
   const userPlan = user?.plan
   
   const rentAmount = isDepositPrice(adjustReservationPriceForOffer(booking.planPrice, property))
   const selectedServicesList = services.filter((s) => booking.services.map(s => s._id).includes(s._id));
-  const servicesTotal = isDepositPrice(selectedServicesList.reduce((sum, s) => sum + s.price, 0))
-  const insuranceAmount = isDepositPrice(property.insurance);
+  const servicesTotal = zeroDepositPrice(selectedServicesList.reduce((sum, s) => sum + s.price, 0))
+  const insuranceAmount = zeroDepositPrice(property.insurance);
 
   const subtotal = rentAmount + servicesTotal + insuranceAmount;
 
@@ -144,7 +151,8 @@ export function ConfirmationStep({
 
     // WHOLE_WEEK / WEEK_DAYS / WEEK_END: Use startDate to endDate from booking
     if (
-      planKey === "WHOLE_WEEK" ||
+      planKey === "WHOLE_WEEK_SUNDAY" ||
+      planKey === "WHOLE_WEEK_THURSDAY" ||
       planKey === "WEEK_DAYS" ||
       planKey === "WEEK_END"
     ) {
@@ -162,7 +170,7 @@ export function ConfirmationStep({
   };
 
   // const hasActiveOffer = true
-  const hasActiveOffer = hasOffer(property, booking.startDate?.toISOString(), booking.endDate?.toISOString())
+  const hasActiveOffer = hasOffer(property, formatDateNoTimeZone(booking.startDate), formatDateNoTimeZone(booking.endDate))
 
   const rentAmountValue = hasActiveOffer ? <span className="flex items-center gap-2">
     <span className="text-gray-400 line-through text-sm">{booking.planPrice} {t("General.kwd")}</span>
@@ -307,7 +315,7 @@ export function ConfirmationStep({
               <PriceLine
                 key={s._id}
                 label={isRTL ? s.titleAr : s.titleEn}
-                value={`${isDepositPrice(s.price)} ${t("General.kwd")}`}
+                value={`${zeroDepositPrice(s.price)} ${t("General.kwd")}`}
               />
               {i < selectedServicesList.length - 1 && <div className="h-px bg-gray-100 last:hidden" />}
             </>

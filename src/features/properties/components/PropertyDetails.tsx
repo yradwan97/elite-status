@@ -1,7 +1,7 @@
 import { useLayoutEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
-import { useTranslation } from "react-i18next";
+import { Trans, useTranslation } from "react-i18next";
 import {
     Heart,
     Share2,
@@ -19,7 +19,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { useProperty } from "../api/hooks/useProperty";
-import { checkLoggedIn, cn, isValidUrl } from "@/lib/utils";
+import { adjustPriceForOffer, checkLoggedIn, cn, getFirstPriceAndPeriodKey, getRemainingPricesAndPeriodKeys, hasOffer, isValidUrl } from "@/lib/utils";
 import { Facility } from "../api/propertiesApi";
 import i18next from "i18next";
 import DOMPurify from "dompurify";
@@ -60,6 +60,11 @@ export default function PropertyDetails() {
     const { areas } = useAreas();
     const selectedArea = areas.find(a => a.key === property?.area);
     const { info } = useInfo();
+    const hasActiveOffer = hasOffer(property)
+    const originalPrice = getFirstPriceAndPeriodKey(property);
+    const discountedPrice = hasActiveOffer
+        ? adjustPriceForOffer(originalPrice.price, property!)
+        : originalPrice.price;
 
 
     // Gallery state
@@ -109,12 +114,14 @@ export default function PropertyDetails() {
         );
     }
 
-    const priceRows = [
-        { label: t('Dashboard.weekdays', 'Weekdays'), value: property.weekdaysPrice },
-        { label: t('Dashboard.weekend', 'Weekend'), value: property.weekendPrice },
-        { label: t('Dashboard.wholeWeek', 'Whole Week'), value: property.wholeWeekPrice },
-        { label: t('Dashboard.dayUse', 'Day Use'), value: property.dayUsePrice },
-    ];
+    // const priceRows = getRemainingPricesAndPeriodKeys(property)
+    const priceRows = getRemainingPricesAndPeriodKeys(property).map(item => ({
+        ...item,
+        originalPrice: item.price,
+        discountedPrice: hasActiveOffer
+            ? adjustPriceForOffer(item.price, property)
+            : item.price
+    }));
 
     const title = isRTL ? property.titleAr : property.titleEn;
     const description = isRTL ? property.descriptionAr : property.descriptionEn;
@@ -631,36 +638,62 @@ export default function PropertyDetails() {
                                         </div>
                                         <div>
                                             <p className="text-xs text-gray-400">{t("Properties.Details.rent.startFrom")}</p>
-                                            <div className="flex flex-row gap-2">
-                                                <p className="text-xl font-bold text-navy">
-                                                    {property.dailyPrice} <span className="text-sm font-medium">{t("General.kwd")}</span>
-                                                </p>
+                                            <div className="flex flex-row gap-0.5">
+                                                {/* <span className="text-sm font-medium text-navy"> */}
+                                                    <Trans
+                                                        i18nKey="Properties.firstPrice"
+                                                        values={{
+                                                            price: hasActiveOffer ? discountedPrice : originalPrice.price,
+                                                            period: t(originalPrice.periodKey),
+                                                            original: originalPrice.price
+                                                        }}
+                                                        components={{
+                                                            value: (
+                                                                <span className="text-sm font-medium text-amber-500" />
+                                                            ),
+                                                            currency: <span className="text-sm font-medium text-gray-500" />,
+                                                            divider: <span className="text-sm text-gray-400" />,
+                                                            period: <span className="text-sm text-gray-400" />,
+                                                            // New component for strikethrough original price
+                                                            original: <span className={` ${hasActiveOffer ? "" : "hidden"} text-sm text-gray-400 line-through ml-2`} />
+                                                        }}
+                                                    />
+                                                    {/* <span className="text-sm font-medium">{t("General.kwd")}</span> */}
+                                                {/* </span> */}
                                                 <HoverCard openDelay={100} closeDelay={100}>
                                                     <HoverCardTrigger asChild>
                                                         <button className="ms-1 text-gray-400 hover:text-navy transition-colors">
                                                             <Info className="w-3.5 h-3.5" />
                                                         </button>
                                                     </HoverCardTrigger>
-                                                    <HoverCardContent
-                                                        side="top"
-                                                        align={'end'}
-                                                        className="w-52 p-3"
-                                                    >
-                                                        <p className="text-xs text-center font-semibold text-navy mb-2">
+                                                    <HoverCardContent side="top" align="end" className="w-60 p-3">
+                                                        <p className="text-xs text-center font-semibold text-navy mb-3">
                                                             {t('Properties.priceBreakdown', 'Price Breakdown')}
                                                         </p>
-                                                        <div className="space-y-1.5">
-                                                            {priceRows.map(({ label, value }) => (
-                                                                <div key={label} className={`flex ${isRTL ? 'flex-row-reverse' : ''} items-center justify-between`}>
-                                                                    <span className="text-xs text-gray-500">{label}</span>
+                                                        <div className="space-y-2">
+                                                            {/* Remaining Prices */}
+                                                            {priceRows.map(({ price, discountedPrice, periodKey }, i) => (
+                                                                <div key={i} className={`flex ${isRTL ? 'flex-row-reverse' : ''} items-center justify-between`}>
+                                                                    <div>
+                                                                        <span className="text-amber-500">
+                                                                            {hasActiveOffer ? discountedPrice : price}
+                                                                        </span>
+                                                                        {hasActiveOffer && (
+                                                                            <span className="text-xs text-gray-400 line-through ml-2">
+                                                                                {price}
+                                                                            </span>
+                                                                        )}
+                                                                        <span className="text-gray-500 text-xs ml-1">{t("General.kwd")}</span>
+                                                                    </div>
                                                                     <span className="text-xs font-semibold text-amber-500">
-                                                                        {value} {t("General.kwd")}
+                                                                        {t(periodKey)}
                                                                     </span>
                                                                 </div>
                                                             ))}
                                                         </div>
                                                     </HoverCardContent>
                                                 </HoverCard>
+
                                             </div>
                                         </div>
                                     </div>

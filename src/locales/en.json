@@ -323,7 +323,8 @@
     },
     "Reservation": {
       "pricing": {
-        "title": "Pricing Plan"
+        "title": "Pricing Plan",
+        "viewEvents": "View Events"
       },
       "calendar": {
         "title": "Select Dates",
@@ -375,15 +376,18 @@
         "weekend": "Weekend",
         "weekendSub": "Thursday - Saturday",
         "wholeWeek": "Whole Week",
+        "wholeWeekThursday": "Whole Week",
         "wholeWeekSub": "Sunday - Saturday",
+        "wholeWeekThursdaySub": "Thursday - Wednesday",
         "dailyStay": "Daily (With Stay)",
         "dailyStaySub": "Sunday - Wednesday",
         "dayUse": "Daily (Day Use)",
-        "dayUseSub": "Sunday - Wednesday"
+        "dayUseSub": "Sunday - Wednesday",
+        "event": "Events"
       },
       "info": {
         "info": "Info",
-        "50": "Pay 50% of the booking amount now to confirm your reservation. The remaining balance must be paid before check-in (up to 48 hours prior to arrival), or upon arrival depending on the booking policy. Please note: the deposit payment is non-refundable in case of cancellation and is subject to the Refund Policy.",
+        "50": "Pay 50% of the rent amount now to confirm your reservation. The remaining balance must be paid before check-in (up to 48 hours prior to arrival), or upon arrival depending on the booking policy. Please note: the deposit payment is non-refundable in case of cancellation and is subject to the Refund Policy.",
         "100": "Pay the full booking amount now to instantly secure your chalet reservation. In case of cancellation, any eligible refund amount will be processed according to the Refund Policy."
       },
       "next": "Next",
@@ -396,7 +400,8 @@
     "pricePeriods": {
       "daily": "Day",
       "dayUse": "Day use",
-      "weekly": "Week",
+      "weeklyS": "Week (Sun - Sat)",
+      "weeklyT": "Week (Thu - Wed)",
       "weekdays": "Weekdays",
       "weekends": "Weekends"
     }
@@ -527,7 +532,7 @@
         "downloadInvoice": "Download Invoice",
         "net": "Net Amount",
         "services": "Services",
-        "isDeposit": "This invoice represents a 50% deposit to confirm your booking. The remaining balance will be paid according to booking policies",
+        "isDeposit": "This invoice represents a 50% deposit of the rent only to confirm your booking. The remaining balance will be paid according to booking policies",
         "isTotal": "This invoice represents the full booking amount. No additional payments are required"
       },
       "services": {

@@ -37,7 +37,7 @@ export default function ReservationPage() {
   const navigate = useNavigate();
   const { t } = useTranslation();
   const isRTL = i18next.language === "ar";
-  
+
 
   const { property, isLoading, error } = useProperty(id);
 
@@ -46,7 +46,7 @@ export default function ReservationPage() {
   const { paymentMethods, isLoading: isPaymentMethodsLoading } =
     usePaymentMethods();
 
-  const {typesInfo} = useReservationTypesInfo()
+  const { typesInfo } = useReservationTypesInfo()
 
   console.log(typesInfo)
 
@@ -59,14 +59,19 @@ export default function ReservationPage() {
     acceptedTerms: false,
     services: [],
     paymentMethod: "1",
-    paymentOption: "50",
-    usePlan: false
+    paymentOption: "100",
+    usePlan: false,
+    eventId: undefined
   });
 
   useEffect(() => {
     scrollToTop()
   }, [currentStep])
 
+
+  useEffect(() => {
+    console.log(booking)
+  }, [booking])
   const createReservation = useReservationMutation()
 
   const goNext = useCallback(() => {
@@ -116,34 +121,47 @@ export default function ReservationPage() {
       price: property.weekendPrice ?? 0,
     },
     {
-      key: "WHOLE_WEEK" as const,
+      key: "WHOLE_WEEK_SUNDAY" as const,
       labelKey: "Properties.Reservation.plan.wholeWeek",
       subtitleKey: "Properties.Reservation.plan.wholeWeekSub",
-      price: property.wholeWeekPrice ?? 0,
+      price: property.wholeWeekSundayPrice ?? 0,
+    },
+    {
+      key: "WHOLE_WEEK_THURSDAY" as const,
+      labelKey: "Properties.Reservation.plan.wholeWeekThursday",
+      subtitleKey: "Properties.Reservation.plan.wholeWeekThursdaySub",
+      price: property.wholeWeekThursdayPrice ?? 0,
+    },
+    {
+      key: "EVENTS" as const,
+      labelKey: "Properties.Reservation.plan.event",
+      // subtitleKey: "Properties.Reservation.plan.eventSub",
+      price: null
     },
     {
       key: "DAILY" as const,
       labelKey: "Properties.Reservation.plan.dailyStay",
-      subtitleKey: "Properties.Reservation.plan.dailyStaySub",
+      // subtitleKey: "Properties.Reservation.plan.dailyStaySub",
       price: property.dailyPrice ?? 0,
     },
     {
       key: "DAY_USE" as const,
       labelKey: "Properties.Reservation.plan.dayUse",
-      subtitleKey: "Properties.Reservation.plan.dayUseSub",
+      // subtitleKey: "Properties.Reservation.plan.dayUseSub",
       price: property.dayUsePrice ?? 0,
     },
   ]
-  .map((plan) => {
-    const typeInfo = typesInfo.find(t => t.type === plan.key)
-    return {
-      ...plan,
-      info: (isRTL ? typeInfo?.infoAr : typeInfo?.infoEn) ?? t("Properties.Reservation.info.info"),
-      checkin: typeInfo?.checkin,
-      checkout: typeInfo?.checkout
-    }
-  })
-  .filter((p) => p.price > 0);
+    .map((plan) => {
+      const typeInfo = typesInfo.find(t => t.type === plan.key)
+      return {
+        ...plan,
+        info: (isRTL ? typeInfo?.infoAr : typeInfo?.infoEn) ?? t("Properties.Reservation.info.info"),
+        checkin: typeInfo?.checkin,
+        checkout: typeInfo?.checkout
+      }
+    })
+    .filter((p) => (p.price !== null && p.price > 0) || (p.price == null && property.events?.length > 0))
+    .sort((a, b) => (b.price ?? 0) - (a.price ?? 0));
 
   const onPay = () => {
     setPaymentModalOpen(true);
@@ -157,7 +175,7 @@ export default function ReservationPage() {
     }
 
     const payload: CreateReservationPayload = {
-      startDate: formatDate({date: booking.startDate, format: 'short'}),
+      startDate: formatDate({ date: booking.startDate, format: 'short' }),
       reservationType: booking.planKey,
       paymentMethod: paymentMethodId,
       deposit: booking.paymentOption === "50",
@@ -174,7 +192,7 @@ export default function ReservationPage() {
           payload
         );
 
-        queryClient.invalidateQueries({queryKey: ['discounted-reservations', 'reservations']})
+      queryClient.invalidateQueries({ queryKey: ['discounted-reservations', 'reservations'] })
 
       const paymentWindow = window.open(
         ""
@@ -228,7 +246,7 @@ export default function ReservationPage() {
       console.error(error);
     }
   };
- 
+
   return (
     <>
       <PageTitle titleKey="" fallback={title} />
@@ -267,12 +285,42 @@ export default function ReservationPage() {
             <PricingStep
               property={property}
               plans={plans}
-              selectedPlanKey={booking.planKey}
-              onPlanSelect={(key, price) => {
-                if (!booking.planKey || booking.planKey !== key) {
-                  setBooking((b) => ({ ...b, planKey: key, planPrice: price, startDate: undefined, endDate: undefined }))
-                } else if (booking.planKey === key) {
-                  setBooking((b) => ({ ...b, planKey: null, planPrice: 0, startDate: undefined, endDate: undefined, acceptedTerms: false }))
+              booking={booking}
+              onPlanSelect={(key, price, eventId) => {
+                if (key === "EVENTS") {
+                  // Selecting an event — replace whatever was selected
+                  const selectedEvent = property.events.find((e) => e._id === eventId);
+                  if (selectedEvent) {
+                    setBooking((b) => ({
+                      ...b,
+                      planKey: "EVENTS",
+                      planPrice: price as number,
+                      startDate: new Date(selectedEvent.event.startDate),
+                      endDate: new Date(selectedEvent.event.endDate),
+                      eventId,
+                    }));
+                  }
+                } else if (booking.planKey === key && !booking.eventId) {
+                  // Tapping the same non-event plan — deselect
+                  setBooking((b) => ({
+                    ...b,
+                    planKey: null,
+                    planPrice: 0,
+                    startDate: undefined,
+                    endDate: undefined,
+                    acceptedTerms: false,
+                  }));
+                } else {
+                  // Selecting a normal plan — replace any existing selection (plan or event)
+                  setBooking((b) => ({
+                    ...b,
+                    planKey: key,
+                    planPrice: price as number,
+                    startDate: undefined,
+                    endDate: undefined,
+                    eventId: undefined,
+                    acceptedTerms: false,
+                  }));
                 }
               }}
               onNext={goNext}
@@ -283,6 +331,7 @@ export default function ReservationPage() {
           {currentStep === "calendar" && (
             <CalendarStep
               selectedPlan={plans.find((p) => p.key === booking.planKey) as PricingPlan}
+              booking={booking}
               startDate={booking.startDate}
               endDate={booking.endDate}
               acceptedTerms={booking.acceptedTerms}
@@ -290,7 +339,7 @@ export default function ReservationPage() {
               onTermsChange={(v) => setBooking((b) => ({ ...b, acceptedTerms: v }))}
               onNext={goNext}
               onBack={goBack}
-              propertyId={id}
+              property={property}
             />
           )}
 

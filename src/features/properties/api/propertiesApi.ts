@@ -1,5 +1,6 @@
 import { ApiPaginationResponse, ApiResponse } from '@/common/api/commonApi';
 import axios from '@/lib/axios';
+import { Event } from '../reservation/types/types';
 
 export interface Facility {
     _id: string;
@@ -27,6 +28,8 @@ export interface Property {
     weekdaysPrice: number;
     weekendPrice: number;
     wholeWeekPrice: number;
+    wholeWeekSundayPrice: number;
+    wholeWeekThursdayPrice: number;
     dailyPrice: number;
     dayUsePrice: number;
     facilities: Facility[];   // array of facility IDs
@@ -44,6 +47,7 @@ export interface Property {
     area?: string
     phaseNo?: string
     isPlanEligible?: boolean
+    events: {event:Event, _id: string, price: number}[]
     tags: { titleAr: string, titleEn: string, _id: string }[]
 }
 

@@ -4,15 +4,17 @@ import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
 import { ArrowLeft, AlertCircle } from "lucide-react";
 import { useTranslation } from "react-i18next";
-import { PricingPlan } from "../types/types";
+import { BookingState, PricingPlan } from "../types/types";
 import { useReservedDates } from "../api/hooks/useReservedDates";
 import i18next from "i18next";
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Info } from 'lucide-react';
 import { TermsCheckbox } from "./TermsCheckbox";
+import { Property } from "../../api/propertiesApi";
 
 interface CalendarStepProps {
   selectedPlan: PricingPlan;
+  booking: BookingState
   startDate: Date | undefined;
   endDate: Date | undefined;
   acceptedTerms: boolean;
@@ -20,7 +22,7 @@ interface CalendarStepProps {
   onTermsChange: (accepted: boolean) => void;
   onNext: () => void;
   onBack: () => void;
-  propertyId: string;
+  property: Property;
 }
 
 // ─── helpers ────────────────────────────────────────────────────────────────
@@ -40,10 +42,10 @@ function addDays(date: Date, days: number): Date {
 }
 
 /** True if any day in [from, to] is reserved. */
-function rangeHasReserved(from: Date, to: Date, reservedSet: Set<string>): boolean {
+function rangeHasReserved(from: Date, to: Date, reservedSet: Set<string>, eventReservedSet: Set<string>): boolean {
   const cur = new Date(from);
   while (cur <= to) {
-    if (reservedSet.has(cur.toDateString())) return true;
+    if (reservedSet.has(cur.toDateString()) || eventReservedSet.has(cur.toDateString())) return true;
     cur.setDate(cur.getDate() + 1);
   }
   return false;
@@ -53,6 +55,7 @@ function rangeHasReserved(from: Date, to: Date, reservedSet: Set<string>): boole
 
 export function CalendarStep({
   selectedPlan,
+  booking,
   startDate,
   endDate,
   acceptedTerms,
@@ -60,12 +63,14 @@ export function CalendarStep({
   onTermsChange,
   onNext,
   onBack,
-  propertyId,
+  property,
 }: CalendarStepProps) {
   const { t } = useTranslation();
 
-  const { reservedDates } = useReservedDates(propertyId);
+  const { reservedDates } = useReservedDates(property._id);
   const isRTL = i18next.language === "ar"
+  
+  
 
   // Pre-compute a Set<string> of reserved date strings for O(1) lookup
   const reservedSet = useMemo<Set<string>>(() => {
@@ -84,9 +89,29 @@ export function CalendarStep({
     return s;
   }, [reservedDates]);
 
+  
+
   const today = useMemo(() => toMidnight(new Date()), []);
 
   const planKey = selectedPlan?.key ?? "";
+  const isEventPlan = planKey === "EVENTS";
+  const selectedEvent = isEventPlan ? property.events.find(e => e._id = booking.eventId as string) : undefined
+
+  const eventReservedSet = useMemo<Set<string>>(() => {
+  if (isEventPlan) return new Set();
+  const s = new Set<string>();
+  (property.events ?? []).forEach(({ event }) => {
+    const start = toMidnight(new Date(event.startDate));
+    const end = toMidnight(new Date(event.endDate));
+    if (isNaN(start.getTime()) || isNaN(end.getTime())) return;
+    const cur = new Date(start);
+    while (cur <= end) {
+      s.add(cur.toDateString());
+      cur.setDate(cur.getDate() + 1);
+    }
+  });
+  return s;
+}, [property.events, isEventPlan]);
 
   // Derive mode from plan
   const isSingleMode = planKey === "DAY_USE" || planKey === "DAILY";
@@ -113,8 +138,11 @@ export function CalendarStep({
    * We pass a custom "reserved" modifier so CalendarDayButton can colour them red.
    */
   const reservedMatcher = useMemo(() => {
-    return (date: Date) => reservedSet.has(toMidnight(date).toDateString());
-  }, [reservedSet]);
+  return (date: Date) => {
+    const d = toMidnight(date).toDateString();
+    return reservedSet.has(d) || eventReservedSet.has(d);
+  };
+}, [reservedSet, eventReservedSet]);
 
   // ─── disabled logic ──────────────────────────────────────────────────────
 
@@ -128,6 +156,7 @@ export function CalendarStep({
    */
   const disabledMatcher = useMemo(() => {
     // Past dates always off
+    if (isEventPlan) return true
     const pastMatcher = { before: today };
 
     if (isSingleMode) {
@@ -140,7 +169,7 @@ export function CalendarStep({
     }
 
     switch (planKey) {
-      case "WHOLE_WEEK":
+      case "WHOLE_WEEK_SUNDAY":
       case "WEEK_DAYS":
         // Only Sundays are valid start days; disable all non-Sundays + past + reserved
         return [
@@ -148,7 +177,7 @@ export function CalendarStep({
           reservedMatcher,
           (date: Date) => date.getDay() !== 0, // not Sunday
         ];
-
+      case "WHOLE_WEEK_THURSDAY":
       case "WEEK_END":
         // Only Thursdays are valid start days
         return [
@@ -160,7 +189,7 @@ export function CalendarStep({
       default:
         return [pastMatcher, reservedMatcher];
     }
-  }, [planKey, isSingleMode, today, reservedMatcher]);
+  }, [planKey, isSingleMode, today, reservedMatcher, isEventPlan]);
 
   // ─── handlers ────────────────────────────────────────────────────────────
 
@@ -182,7 +211,8 @@ export function CalendarStep({
    */
   const computeEndDate = (start: Date): Date => {
     switch (planKey) {
-      case "WHOLE_WEEK":
+      case "WHOLE_WEEK_SUNDAY":
+      case "WHOLE_WEEK_THURSDAY":
         return addDays(start, 6);
       case "WEEK_DAYS":
         return addDays(start, 3);
@@ -194,6 +224,7 @@ export function CalendarStep({
   };
 
   const handleSelectSingle = (date: Date | undefined) => {
+    if (isEventPlan) return
     setReservedError(undefined);
     setSelectedDate(date);
     onDateChange(date, date);
@@ -204,6 +235,7 @@ export function CalendarStep({
    * the range to the fixed end date. We then validate against reservedDates.
    */
   const handleSelectRangeStart = (date: Date | undefined) => {
+    if (isEventPlan) return
     setReservedError(undefined);
 
     if (!date) {
@@ -216,13 +248,14 @@ export function CalendarStep({
     const end = computeEndDate(date);
 
     // Check for reserved days in [date, end]
-    if (rangeHasReserved(date, end, reservedSet)) {
+    if (rangeHasReserved(date, end, reservedSet, eventReservedSet)) {
       setRangeStart(undefined);
       setRangeEnd(undefined);
       onDateChange(undefined, undefined);
 
       switch (planKey) {
-        case "WHOLE_WEEK":
+        case "WHOLE_WEEK_SUNDAY":
+        case "WHOLE_WEEK_THURSDAY":
           setReservedError(
             t("Properties.Reservation.calendar.reservedInWeekly")
           );
@@ -258,7 +291,7 @@ export function CalendarStep({
       <div className="flex items-center justify-between rounded-2xl border border-gray-200 bg-gray-50 px-5 py-4 mb-6">
         <div>
           <p className="font-semibold text-navy">
-            {selectedPlan?.labelKey ? t(selectedPlan.labelKey) : ""}
+            {isEventPlan ? (isRTL ? selectedEvent?.event.nameAr : selectedEvent?.event.nameEn) : selectedPlan?.labelKey ? t(selectedPlan.labelKey) : ""}
           </p>
           <p className="text-sm text-gray-400">
             {t("Properties.Reservation.calendar.selectDates")}
@@ -278,13 +311,13 @@ export function CalendarStep({
 
         <div className="flex items-center gap-3">
           <span className="font-bold text-navy text-base">
-            {selectedPlan?.price} {t("General.kwd")}
+            {selectedPlan?.price || booking.planPrice} {t("General.kwd")}
           </span>
 
           <button
             type="button"
             onClick={handleClearDates}
-            disabled={!hasSelection}
+            disabled={!hasSelection || isEventPlan}
             className="text-sm text-red-500 hover:text-red-600 underline disabled:opacity-40"
           >
             {t("General.clear")}

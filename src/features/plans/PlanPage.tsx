@@ -66,7 +66,7 @@ const PlanPage = () => {
   const isArabic = i18next.language === "ar";
   const [dialogOpen, setDialogOpen] = useState(false);
 
-  const features = isArabic ? plan?.featuresAr : plan?.featuresEn
+
 
   const subscribeToPlanMutation = useSubscribeToPlan()
 
@@ -90,7 +90,11 @@ const PlanPage = () => {
     )
   }
 
-  const sanitized = DOMPurify.sanitize(plan.terms, {
+  const features = isArabic ? plan?.featuresAr : plan?.featuresEn
+  const terms = isArabic ? plan.termsAr : plan.termsAr
+  const isPlanComplete = (plan.capacity && plan.activeSubscription) && plan.capacity === plan.activeSubscription;
+
+  const sanitized = DOMPurify.sanitize(terms, {
     ALLOWED_TAGS: ["p", "br", "strong", "em", "u", "span", "ul", "ol", "li", "h1", "h2", "h3"],
     ALLOWED_ATTR: ["style", "class"],
   });
@@ -181,20 +185,32 @@ const PlanPage = () => {
           </ul>
         </div>
 
-        {plan.terms && <div dir={isArabic ? "rtl" : "ltr"} className="w-full flex flex-col rounded-[10px] p-5 shadow-lg justify-start items-start bg-[#f9f9f9]">
+        {terms && <div dir={isArabic ? "rtl" : "ltr"} className="w-full flex flex-col rounded-[10px] p-5 shadow-lg justify-start items-start bg-[#f9f9f9]">
           <p style={{ lineHeight: "100%", fontSize: "18px", letterSpacing: "2%" }} className={cn("font-normal mt-4", "text-navy")}>
             {t('Plans.policy')}
           </p>
-          <p style={{ lineHeight: "100%", fontSize: "16px", letterSpacing: "2%" }} className={cn("text-xs leading-relaxed mt-3")}>
-            {sanitized}
-          </p>
+          <p style={{ lineHeight: "110%", fontSize: "16px", letterSpacing: "2%" }} className={cn("text-xs leading-relaxed mt-3")} dangerouslySetInnerHTML={{ __html: sanitized }} />
         </div>}
 
-        <div className="w-full mb-19">
-          <button onClick={() => setDialogOpen(true)} type="button" className="w-full h-12 rounded-[8px] bg-navy hover:bg-navy/80 cursor-pointer transition-colors text-white font-medium">
-            {t("Plans.subscribe")}
-          </button>
-        </div>
+        {isPlanComplete ? (
+          <div className='w-full mb-19'>
+            <button
+              disabled
+              className={cn(
+                "mt-6 w-full py-3 rounded-xl text-sm font-medium transition-opacity",
+                "bg-navy/70 text-white"
+              )}
+            >
+              {t("Dashboard.Pricing.complete")}
+            </button>
+          </div>
+        ) : (
+          <div className="w-full mb-19">
+            <button onClick={() => setDialogOpen(true)} type="button" className="w-full h-12 rounded-[8px] bg-navy hover:bg-navy/80 cursor-pointer transition-colors text-white font-medium">
+              {t("Plans.subscribe")}
+            </button>
+          </div>
+        )}
       </div>
 
       <SubscribeConfirmDialog

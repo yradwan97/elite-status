@@ -8,6 +8,8 @@ export type Plan = {
   titleEn: string
   price: number
   terms: string
+  termsAr: string
+  termsEn: string
   reservationDiscount: number
   insuranceDiscount: number
   extraServicesDiscount: number
@@ -16,6 +18,9 @@ export type Plan = {
   featuresAr: string[]
   createdAt: string
   updatedAt: string
+  capacity?: number
+  count?: number
+  activeSubscription?: number
   __v: number
 }
 

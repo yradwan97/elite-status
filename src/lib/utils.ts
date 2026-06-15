@@ -51,10 +51,11 @@ export const checkLoggedIn = (user: User | null): boolean => {
   }
 }
 
-export const hasOffer = (property: Property, startDate?: string, endDate?: string): boolean => {
-  const checkStart = startDate ? startDate : property.offerStartDate
-  const checkEnd = endDate ? endDate : property.offerEndDate
-  const { start, end } = normalizeOfferDates(checkStart, checkEnd)
+export const hasOffer = (property: Property | undefined, startDate?: string, endDate?: string): boolean => {
+  if (!property) return false
+  const start = startDate ? startDate : formatDateStringNoTimeZone(property.offerStartDate)
+  const end = endDate ? endDate : formatDateStringNoTimeZone(property.offerEndDate)
+
   if (!start || !end) return false
   const now = new Date()
   return !!property.offer &&
@@ -63,60 +64,44 @@ export const hasOffer = (property: Property, startDate?: string, endDate?: strin
     !!property.offerRate &&
     !!property.offerStartDate &&
     !!property.offerEndDate &&
-    now >= start
-    && now <= end
+    now >= new Date(start)
+    && now <= new Date(end)
 }
 
-const normalizeOfferDates = (startDate: string | null, endDate: string | null) => {
-  if (!startDate || !endDate) return { start: null, end: null };
+// const normalizeOfferDates = (startDate: string | null, endDate: string | null) => {
+//   if (!startDate || !endDate) return { start: null, end: null };
 
-  const start = new Date(startDate);
-  const end = new Date(endDate);
+//   const start = new Date(startDate);
+//   const end = new Date(endDate);
 
-  // Set start date to 00:00:00 (midnight)
-  const normalizedStart = new Date(Date.UTC(
-    start.getUTCFullYear(),
-    start.getUTCMonth(),
-    start.getUTCDate(),
-    0, 0, 0, 0
-  ));
+//   // Set start date to 00:00:00 (midnight)
+//   const normalizedStart = new Date(Date.UTC(
+//     start.getUTCFullYear(),
+//     start.getUTCMonth(),
+//     start.getUTCDate(),
+//     0, 0, 0, 0
+//   ));
 
-  // Set end date to 23:59:59
-  const normalizedEnd = new Date(Date.UTC(
-    end.getUTCFullYear(),
-    end.getUTCMonth(),
-    end.getUTCDate(),
-    23, 59, 59, 999
-  ));
+//   // Set end date to 23:59:59
+//   const normalizedEnd = new Date(Date.UTC(
+//     end.getUTCFullYear(),
+//     end.getUTCMonth(),
+//     end.getUTCDate(),
+//     23, 59, 59, 999
+//   ));
 
-  return { start: normalizedStart, end: normalizedEnd };
-};
+//   return { start: normalizedStart, end: normalizedEnd };
+// };
 
 export const adjustPriceForOffer = (price: number, property: Property) => {
   if (!property.offer || property.offer === 0) return price;
   if (!property.offerStartDate || !property.offerEndDate) return price;
 
-  const start = new Date(property.offerStartDate);
-  const end = new Date(property.offerEndDate);
+  const start = formatDateStringNoTimeZone(property.offerStartDate);
+  const end = formatDateStringNoTimeZone(property.offerEndDate);
   const now = new Date()
 
-  // Set start date to 00:00:00 (midnight)
-  const normalizedStart = new Date(Date.UTC(
-    start.getUTCFullYear(),
-    start.getUTCMonth(),
-    start.getUTCDate(),
-    0, 0, 0, 0
-  ));
-
-  // Set end date to 23:59:59
-  const normalizedEnd = new Date(Date.UTC(
-    end.getUTCFullYear(),
-    end.getUTCMonth(),
-    end.getUTCDate(),
-    23, 59, 59, 999
-  ));
-
-  if (now < normalizedStart || now > normalizedEnd) return price;
+  if (now < new Date(start) || now > new Date(end)) return price;
 
   if (property.offerRate ==="PERCENTAGE" ) {
     if (property.offer > 1) {
@@ -139,47 +124,16 @@ export const adjustReservationPriceForOffer = (
   if (!property.offerStartDate || !property.offerEndDate) return price;
   if (!startDate || !endDate) return price;
 
-  const start = new Date(property.offerStartDate);
-  const end = new Date(property.offerEndDate);
-  const reservationStart = new Date(startDate);
-  const reservationEnd = new Date(endDate);
+  const start = new Date(formatDateStringNoTimeZone(property.offerStartDate));
+  const end = new Date(formatDateStringNoTimeZone(property.offerEndDate));
+  const reservationStart = new Date(formatDateNoTimeZone(startDate));
+  const reservationEnd = new Date(formatDateNoTimeZone(endDate));
 
-  // Normalize offer start date to 00:00:00 UTC
-  const normalizedStart = new Date(Date.UTC(
-    start.getUTCFullYear(),
-    start.getUTCMonth(),
-    start.getUTCDate(),
-    0, 0, 0, 0
-  ));
-
-  // Normalize offer end date to 23:59:59 UTC
-  const normalizedEnd = new Date(Date.UTC(
-    end.getUTCFullYear(),
-    end.getUTCMonth(),
-    end.getUTCDate(),
-    23, 59, 59, 999
-  ));
-
-  // Normalize reservation start date to 00:00:00 UTC
-  const normalizedReservationStart = new Date(Date.UTC(
-    reservationStart.getUTCFullYear(),
-    reservationStart.getUTCMonth(),
-    reservationStart.getUTCDate(),
-    0, 0, 0, 0
-  ));
-
-  // Normalize reservation end date to 23:59:59 UTC
-  const normalizedReservationEnd = new Date(Date.UTC(
-    reservationEnd.getUTCFullYear(),
-    reservationEnd.getUTCMonth(),
-    reservationEnd.getUTCDate(),
-    23, 59, 59, 999
-  ));
-
+  
   // Check if the entire reservation range falls within the offer range
   if (
-    normalizedReservationStart < normalizedStart ||
-    normalizedReservationEnd > normalizedEnd
+    reservationStart < start ||
+    reservationEnd > end
   ) return price;
 
   if (property.offerRate === "PERCENTAGE") {
@@ -197,13 +151,15 @@ const PRICE_MAP: { key: keyof Property; period: string }[] = [
   { key: "dayUsePrice", period: "dayUse" },
   { key: "dailyPrice", period: "daily" },
   { key: "weekdaysPrice", period: "weekdays" },
-  { key: "wholeWeekPrice", period: "weekly" },
+  { key: "wholeWeekSundayPrice", period: "weeklyS" },
+  { key: "wholeWeekThursdayPrice", period: "weeklyT" },
   { key: "weekendPrice", period: "weekends" },
 ];
 
 const KEY_PREFIX = "Properties.pricePeriods";
 
-export const getFirstPriceAndPeriodKey = (property: Property) => {
+export const getFirstPriceAndPeriodKey = (property: Property | undefined) => {
+  if (!property) return { price: 0, periodKey: "" };
   const match = PRICE_MAP.find(({ key }) => {
     const val = property[key] as number | undefined;
     return !!val && val > 0;
@@ -250,4 +206,18 @@ export const formatTimeTo12Hour = (language: string, time?: string): string => {
 
 export const isPlanActive = (plan: UserPlan | undefined) => {
   return !!plan && new Date(plan.expirationDate) > new Date()
+}
+
+export const formatDateNoTimeZone = (dateStr: Date | undefined): string => {
+  if (!dateStr) return "";
+  const day = dateStr.getDate()
+  const month = (dateStr.getMonth() + 1).toString().padStart(2, '0')
+  const year = dateStr.getFullYear()
+  return `${year}-${month}-${day}T00:00:00.000`
+}
+
+export const formatDateStringNoTimeZone = (dateStr: string | null) => {
+  if (!dateStr) return "";
+  const [datePart,] = dateStr.split("T");
+  return `${datePart}T00:00:00.000`
 }
