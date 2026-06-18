@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { ArrowLeft } from "lucide-react";
-import { adjustReservationPriceForOffer, cn, formatDateNoTimeZone, formatTimeTo12Hour, hasOffer, isPlanActive } from "@/lib/utils";
+import { adjustReservationPriceForOffer, cn, formatTimeTo12Hour, hasOffer, isPlanActive } from "@/lib/utils";
 import { BookingState, PricingPlan, ExtraService } from "../types/types";
 import { useTranslation } from "react-i18next";
 import { Property } from "../../api/propertiesApi";
@@ -66,7 +66,13 @@ function PriceLine({ label, value, bold = true, strong = false }: { label: strin
 }
 
 
-
+/**
+ * 
+ * @param price value to be discounted
+ * @param discountPercentage percentage of price to be used as discount
+ * @returns discount amount
+ * applicable for services, insurance, and rent amount when user has plan and unit is eligible for a plan
+ */
 const getDiscountedPrice = (price: number, discountPercentage: number): number => {
   return price * (discountPercentage / 100)
 }
@@ -85,13 +91,24 @@ export function ConfirmationStep({
   const { t } = useTranslation();
   const paymentOption = booking.paymentOption;
 
+  /**
+   * 
+   * @param price 
+   * @returns full price if full payment, half price if deposit. applicable for rent amount
+   */
   const isDepositPrice = (price: number): number => {
     if (booking.paymentOption === "50") {
       return price / 2
     }
     return price
   }
-
+  
+  /**
+   * 
+   * @param price 
+   * @returns price if full payment, 0 if deposit payment
+   * applicable for insurance and services, not rent
+   */
   const zeroDepositPrice = (price: number): number => {
     if (booking.paymentOption === "50") {
       return 0
@@ -102,7 +119,8 @@ export function ConfirmationStep({
   const user = useSelector(selectUser)
   const userPlan = user?.plan
   
-  const rentAmount = isDepositPrice(adjustReservationPriceForOffer(booking.planPrice, property))
+  const rentAmountDisplay = adjustReservationPriceForOffer(booking.planPrice, property, booking.startDate, booking.endDate)
+  const rentAmount = isDepositPrice(rentAmountDisplay)
   const selectedServicesList = services.filter((s) => booking.services.map(s => s._id).includes(s._id));
   const servicesTotal = zeroDepositPrice(selectedServicesList.reduce((sum, s) => sum + s.price, 0))
   const insuranceAmount = zeroDepositPrice(property.insurance);
@@ -170,11 +188,11 @@ export function ConfirmationStep({
   };
 
   // const hasActiveOffer = true
-  const hasActiveOffer = hasOffer(property, formatDateNoTimeZone(booking.startDate), formatDateNoTimeZone(booking.endDate))
+  const hasActiveOffer = hasOffer(property)
 
   const rentAmountValue = hasActiveOffer ? <span className="flex items-center gap-2">
     <span className="text-gray-400 line-through text-sm">{booking.planPrice} {t("General.kwd")}</span>
-    <span className="text-navy font-bold text-base">{adjustReservationPriceForOffer(booking.planPrice, property, booking.startDate, booking.endDate)} {t("General.kwd")}</span>
+    <span className="text-navy font-bold text-base">{rentAmountDisplay} {t("General.kwd")}</span>
   </span> : <span className="text-navy font-bold text-base">{booking.planPrice} {t("General.kwd")}</span>
 
   

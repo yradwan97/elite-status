@@ -1,5 +1,7 @@
 import api from "@/lib/axios";
 import { uploadApi } from "@/features/auth/api/uploadApi";
+import { ApiResponse } from "@/common/api/commonApi";
+import { Plan } from "./hooks/usePlan";
 
 export type ProfileUpdateData = {
     firstName: string;
@@ -103,7 +105,7 @@ export const profileApi = {
         return response.data;
     },
     
-    getPlans: async () => {
+    getPlans: async (): Promise<ApiResponse<Plan>> => {
         const response = await api.get("/plans");
         return response.data
     },

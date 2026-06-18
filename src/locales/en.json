@@ -507,6 +507,9 @@
       },
       "rentType": {
         "wholeWeek": "Whole Week",
+        "wholeWeekS": "Whole Week (Sun - Sat)",
+        "wholeWeekT": "Whole Week (Thu - Wed)",
+        "events": "Events",
         "weekdays": "Weekdays",
         "weekends": "Weekends",
         "daily": "Daily",

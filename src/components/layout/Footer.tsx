@@ -214,8 +214,8 @@ export function Footer() {
                     {/* {info?.socialMedia?.facebook && (
                     <SocialIcon url={info.socialMedia.facebook} target="_blank" style={{ height: 40, width: 40 }} network="facebook" bgColor="inherit" fgColor="#fff" />
                   )} */}
-                    {info?.socialMedia?.youtube && (
-                      <SocialIcon url={info.socialMedia.youtube} target="_blank" style={{ height: 40, width: 40 }} network="youtube" bgColor="inherit" fgColor="#fff" />
+                    {info?.socialMedia?.facebook && (
+                      <SocialIcon url={info.socialMedia.facebook} target="_blank" style={{ height: 40, width: 40 }} network="youtube" bgColor="inherit" fgColor="#fff" />
                     )}
                     {info?.socialMedia?.tiktok && (
                       <SocialIcon url={info.socialMedia.tiktok} target="_blank" style={{ height: 40, width: 40 }} network="tiktok" bgColor="inherit" fgColor="#fff" />

@@ -19,6 +19,7 @@ export const useReservedDates = (propertyId: string) => {
     queryKey: ["reservedDates", propertyId],
     queryFn: () => reservationApi.getReservedDates(propertyId),
     enabled: !!propertyId,
+    staleTime: Infinity
     // select: (res) => res.data,
   });
 

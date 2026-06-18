@@ -21,8 +21,13 @@ export default function AuthModal({ open, onOpenChange }: Props) {
   const {t} = useTranslation();
   const isArabic = i18next.language === "ar";
 
+  const handleOpenChange = (open: boolean) => {
+    onOpenChange(open)
+    setMode("login")
+  }
+
   return (
-    <Dialog open={open} onOpenChange={onOpenChange} >
+    <Dialog open={open} onOpenChange={handleOpenChange} >
       <DialogContent className="w-235! max-w-[95vw]! p-0 overflow-hidden rounded-2xl">
         <div className="grid grid-cols-2 ">
           

@@ -95,9 +95,16 @@ export function PaymentTab({ booking, isRTL }: {
 }) {
   const { t } = useTranslation();
 
-  const isDepositPrice = (price: number): number => {
+  /**
+   * 
+   * @param price 
+   * @returns 0 if booking is a deposit, actual price if booking is fully paid
+   * applicable to insurance and services amounts
+   */
+
+  const zeroDepositPrice = (price: number): number => {
     if (booking.deposit) {
-      return price / 2
+      return 0
     }
     return price
   }
@@ -106,6 +113,9 @@ export function PaymentTab({ booking, isRTL }: {
 
   const rentTypeLabel: Record<string, string> = {
     WHOLE_WEEK: t(`${NS}.rentType.wholeWeek`),
+    WHOLE_WEEK_SUNDAY: t(`${NS}.rentType.wholeWeekS`),
+    WHOLE_WEEK_SUNDAY_THURSDAY: t(`${NS}.rentType.wholeWeekT`),
+    EVENTS: t(`${NS}.rentType.events`),
     WEEKDAYS: t(`${NS}.rentType.weekdays`),
     WEEKENDS: t(`${NS}.rentType.weekends`),
     DAILY: t(`${NS}.rentType.daily`),
@@ -120,12 +130,12 @@ export function PaymentTab({ booking, isRTL }: {
         </h4>
         <div className="grid grid-cols-2 gap-3">
           <FieldBox icon={<Banknote className="w-3.5 h-3.5" />} label={t(`${NS}.modal.rentType`)} value={rentTypeLabel[booking.reservationType] ?? booking.reservationType} isRTL={isRTL} />
-          <FieldBox icon={<Banknote className="w-3.5 h-3.5" />} label={t(`${NS}.modal.amount`)} value={`${isDepositPrice(booking.reservationPrice)} ${t(`${NS}.currency`)}`} isRTL={isRTL} />
-          <FieldBox icon={<ShieldCheck className="w-3.5 h-3.5" />} label={t(`${NS}.modal.insurance`)} value={`${booking.insurance} ${t(`${NS}.currency`)}`} isRTL={isRTL} />
-          <FieldBox icon={<ShieldCheck className="w-3.5 h-3.5" />} label={t(`${NS}.modal.services`)} value={`${isDepositPrice(servicesTotal)} ${t(`${NS}.currency`)}`} isRTL={isRTL} />
+          <FieldBox icon={<Banknote className="w-3.5 h-3.5" />} label={t(`${NS}.modal.amount`)} value={`${booking.reservationPrice} ${t(`${NS}.currency`)}`} isRTL={isRTL} />
+          <FieldBox icon={<ShieldCheck className="w-3.5 h-3.5" />} label={t(`${NS}.modal.insurance`)} value={`${zeroDepositPrice(booking.insurance)} ${t(`${NS}.currency`)}`} isRTL={isRTL} />
+          <FieldBox icon={<ShieldCheck className="w-3.5 h-3.5" />} label={t(`${NS}.modal.services`)} value={`${zeroDepositPrice(servicesTotal)} ${t(`${NS}.currency`)}`} isRTL={isRTL} />
         </div>
       </section>
-      {booking.services.length > 0 && (
+      {!booking.deposit && booking.services.length > 0 && (
         <section>
           <h4 className={`text-sm font-semibold text-gray-900 mb-3 ${isRTL ? 'text-right' : 'text-left'}`}>
             {t(`${NS}.modal.servicesSelected`)}
@@ -138,7 +148,7 @@ export function PaymentTab({ booking, isRTL }: {
                   {svc.name}
                 </span>
                 <span className="text-sm font-bold text-gray-900">
-                  {isDepositPrice(svc.price)} {t(`${NS}.currency`)}
+                  {zeroDepositPrice(svc.price)} {t(`${NS}.currency`)}
                 </span>
               </div>
             ))}

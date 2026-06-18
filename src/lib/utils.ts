@@ -51,10 +51,10 @@ export const checkLoggedIn = (user: User | null): boolean => {
   }
 }
 
-export const hasOffer = (property: Property | undefined, startDate?: string, endDate?: string): boolean => {
+export const hasOffer = (property: Property | undefined): boolean => {
   if (!property) return false
-  const start = startDate ? startDate : formatDateStringNoTimeZone(property.offerStartDate)
-  const end = endDate ? endDate : formatDateStringNoTimeZone(property.offerEndDate)
+  const start = formatDateStringNoTimeZone(property.offerStartDate)
+  const end = formatDateStringNoTimeZone(property.offerEndDate)
 
   if (!start || !end) return false
   const now = new Date()
@@ -210,7 +210,7 @@ export const isPlanActive = (plan: UserPlan | undefined) => {
 
 export const formatDateNoTimeZone = (dateStr: Date | undefined): string => {
   if (!dateStr) return "";
-  const day = dateStr.getDate()
+  const day = dateStr.getDate().toString().padStart(2, '0')
   const month = (dateStr.getMonth() + 1).toString().padStart(2, '0')
   const year = dateStr.getFullYear()
   return `${year}-${month}-${day}T00:00:00.000`

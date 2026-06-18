@@ -7,12 +7,13 @@ import { useTranslation } from "react-i18next";
 import i18next from "i18next";
 import { X } from "lucide-react";
 import PlanCard, { PlanCardSkeleton } from '@/features/dashboard/components/plan-card';
-import { Plan, usePlans } from "../../api/hooks/usePlans";
+import { usePlans } from "../../api/hooks/usePlans";
 import { useSelector } from "react-redux";
 import { selectUser } from "@/store/slices/authSlice";
 import noFavourites from '@/assets/no-favourites.png';
 import { OptimizedImage } from "@/components/shared/OptimizedImage";
 import { isPlanActive } from "@/lib/utils";
+import { Plan } from "../../api/hooks/usePlan";
 
 interface Props {
   open: boolean;

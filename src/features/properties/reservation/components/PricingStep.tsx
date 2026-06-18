@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { adjustPriceForOffer, cn, hasOffer } from "@/lib/utils";
+import { adjustReservationPriceForOffer, cn } from "@/lib/utils";
 import { BookingState, PricingPlan } from "../types/types";
 import { useTranslation } from "react-i18next";
 import { Switch } from "@/components/ui/switch";
@@ -30,7 +30,6 @@ export function PricingStep({
   property
 }: PricingStepProps) {
   const { t } = useTranslation();
-  const hasActiveOffer = hasOffer(property);
 
   const formatDate = (dateStr: string) => {
     return new Date(dateStr).toLocaleDateString(isRTL ? "ar-KW" : "en-GB", {
@@ -40,13 +39,13 @@ export function PricingStep({
     });
   };
 
-  const hasActivePlans = property.events.filter(({ event }) => {
+  const activePropertyEvents = (property.events || []).filter(({ event }) => {
     const start = new Date(event.startDate);
     start.setHours(0, 0, 0, 0);
     const today = new Date();
     today.setHours(0, 0, 0, 0);
     return start >= today;
-  }).length > 0
+  })
 
   return (
     <div className="w-full max-w-2xl mx-auto">
@@ -88,20 +87,9 @@ export function PricingStep({
               </div>
 
               <div className="flex flex-col items-end gap-3 shrink-0">
-                {hasActiveOffer ? (
-                  <span className="flex items-center gap-2">
-                    <span className="text-gray-400 line-through text-sm">
-                      {plan.price} {t("General.kwd")}
-                    </span>
-                    <span className="text-navy font-bold text-base">
-                      {adjustPriceForOffer(plan.price, property)} {t("General.kwd")}
-                    </span>
-                  </span>
-                ) : (
-                  <span className="text-navy font-bold text-base">
+                <span className="text-navy font-bold text-base">
                     {plan.price} {t("General.kwd")}
                   </span>
-                )}
                 <Switch
                   dir="ltr"
                   className="shrink-0"
@@ -110,7 +98,7 @@ export function PricingStep({
                 />
               </div>
             </div>
-          ) : hasActivePlans ? (
+          ) : activePropertyEvents.length > 0 ? (
             // — Events plan card (collapsible) —
             <Collapsible key={plan.key}>
               <div
@@ -152,47 +140,56 @@ export function PricingStep({
                 {/* Expanded events list */}
                 <CollapsibleContent>
                   <div className="border-t border-gray-100">
-                    {property.events.filter(({ event }) => {
-                      const start = new Date(event.startDate);
-                      start.setHours(0, 0, 0, 0);
-                      const today = new Date();
-                      today.setHours(0, 0, 0, 0);
-                      return start >= today;
-                    })?.length > 0 ? (
+                    {activePropertyEvents?.length > 0 ? (
                       <ul className="p-3 space-y-2">
-                        {property.events
-                          .map(({ _id, event, price }) => (
-                            <li
-                              key={_id}
-                              className={cn(
-                                "flex items-center justify-between rounded-2xl p-4 border transition-all",
-                                booking.eventId === _id
-                                  ? "border-navy bg-navy/5"
-                                  : "border-gray-200 bg-white hover:border-gray-300 hover:bg-gray-50"
-                              )}
-                            >
-                              <div className={cn("flex flex-col", isRTL && "items-start")}>
-                                <p className={cn("font-semibold text-navy text-sm", isRTL && "text-right")}>
-                                  {isRTL ? event.nameAr : event.nameEn}
-                                </p>
-                                <p className="text-xs text-gray-400 mt-0.5">
-                                  {formatDate(event.startDate)} – {formatDate(event.endDate)}
-                                </p>
-                              </div>
+                        {activePropertyEvents
+                          .map(({ _id, event, price }) => {
+                            const offerPrice = adjustReservationPriceForOffer(price, property, new Date(event.startDate), new Date(event.endDate))
+                            const hasMatchingActiveOffer = price !== offerPrice
+                            return (
+                              <li
+                                key={_id}
+                                className={cn(
+                                  "flex items-center justify-between rounded-2xl p-4 border transition-all",
+                                  booking.eventId === _id
+                                    ? "border-navy bg-navy/5"
+                                    : "border-gray-200 bg-white hover:border-gray-300 hover:bg-gray-50"
+                                )}
+                              >
+                                <div className={cn("flex flex-col", isRTL && "items-start")}>
+                                  <p className={cn("font-semibold text-navy text-sm", isRTL && "text-right")}>
+                                    {isRTL ? event.nameAr : event.nameEn}
+                                  </p>
+                                  <p className="text-xs text-gray-400 mt-0.5">
+                                    {formatDate(event.startDate)} – {formatDate(event.endDate)}
+                                  </p>
+                                </div>
 
-                              <div className="flex flex-col items-end gap-3 shrink-0">
-                                <span className="text-navy font-bold text-base">
-                                  {price} {t("General.kwd")}
-                                </span>
-                                <Switch
-                                  dir="ltr"
-                                  className="shrink-0"
-                                  checked={booking.eventId === _id}
-                                  onCheckedChange={() => onPlanSelect("EVENTS", price, _id)}
-                                />
-                              </div>
-                            </li>
-                          ))}
+                                <div className="flex flex-col items-end gap-3 shrink-0">
+                                  {hasMatchingActiveOffer ? (
+                                    <span className="flex items-center gap-2">
+                                      <span className="text-gray-400 line-through text-sm">
+                                        {price} {t("General.kwd")}
+                                      </span>
+                                      <span className="text-navy font-bold text-base">
+                                        {offerPrice} {t("General.kwd")}
+                                      </span>
+                                    </span>
+                                  ) : (
+                                    <span className="text-navy font-bold text-base">
+                                      {price} {t("General.kwd")}
+                                    </span>
+                                  )}
+                                  <Switch
+                                    dir="ltr"
+                                    className="shrink-0"
+                                    checked={booking.eventId === _id}
+                                    onCheckedChange={() => onPlanSelect("EVENTS", price, _id)}
+                                  />
+                                </div>
+                              </li>
+                            )
+                          })}
                       </ul>
                     ) : (
                       <p className="py-4 text-sm text-gray-400 text-center">

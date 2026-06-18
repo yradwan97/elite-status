@@ -119,25 +119,6 @@ export function SignupForm({ onSwitch }: { onSwitch: () => void }) {
           error={errors.confirmPassword?.message}
         />
 
-        <label className="flex items-center self-start gap-2" style={{ fontSize: '1.05rem' }}>
-          <input type="checkbox" {...register('terms')} />
-          <span>
-            {t('Auth.agreeTerms.prefix') ?? 'I agree to the'}
-            {' '}
-            <button
-              type="button"
-              onClick={() => setTermsModalOpen(true)}
-              className="text-navy underline underline-offset-2 font-medium hover:text-turquoise transition-colors bg-transparent border-none p-0 cursor-pointer"
-            >
-              {t('Auth.agreeTerms.link') ?? 'Terms & Conditions'}
-            </button>
-          </span>
-        </label>
-
-        {errors.terms && (
-          <p className="text-red-500 text-sm">{errors.terms.message}</p>
-        )}
-
         <div className="flex flex-col gap-1 pt-2">
           <p className="text-sm font-semibold text-gray-700">
             {t("Auth.idVerification") ?? "ID Verification"}
@@ -169,6 +150,25 @@ export function SignupForm({ onSwitch }: { onSwitch: () => void }) {
             />
           </div>
         </div>
+
+        <label className="flex items-center self-start gap-2" style={{ fontSize: '1.05rem' }}>
+          <input type="checkbox" {...register('terms')} />
+          <span>
+            {t('Auth.agreeTerms.prefix') ?? 'I agree to the'}
+            {' '}
+            <button
+              type="button"
+              onClick={() => setTermsModalOpen(true)}
+              className="text-navy underline underline-offset-2 font-medium hover:text-turquoise transition-colors bg-transparent border-none p-0 cursor-pointer"
+            >
+              {t('Auth.agreeTerms.link') ?? 'Terms & Conditions'}
+            </button>
+          </span>
+        </label>
+
+        {errors.terms && (
+          <p className="text-red-500 text-sm">{errors.terms.message}</p>
+        )}
 
         <button type="submit" disabled={isPending} className="bg-navy cursor-pointer text-white py-3 text-lg rounded-lg font-medium">
           {isPending ? t("Auth.registering") : t("Auth.register")}

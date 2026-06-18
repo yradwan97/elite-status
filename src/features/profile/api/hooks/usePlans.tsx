@@ -1,25 +1,6 @@
 import { QueryObserverResult, RefetchOptions, useQuery } from "@tanstack/react-query";
 import { profileApi } from "../profileApi";
-
-export type Plan = {
-  _id: string
-  icon: string
-  titleAr: string
-  titleEn: string
-  price: number
-  terms: string
-  reservationDiscount: number
-  insuranceDiscount: number
-  extraServicesDiscount: number
-  periodOfTime: number
-  capacity: number
-  activeSubscription: number
-  featuresEn: string[]
-  featuresAr: string[]
-  createdAt: string
-  updatedAt: string
-  __v: number
-}
+import { Plan } from "./usePlan";
 
 export interface PlansResponse {
     plans: Plan[]
@@ -38,7 +19,7 @@ export const usePlans = (): PlansResponse => {
     });
 
     return {
-        plans:  data?.data || [],
+        plans:  data?.data.sort((a, b) => a.price - b.price) || [],
         isLoading:   isFetching,
         error:       error,
         refetch,

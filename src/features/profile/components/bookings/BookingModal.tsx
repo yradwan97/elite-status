@@ -135,7 +135,7 @@ export default function BookingModal({
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent
-        className="max-w-lg max-h-[95vh] overflow-hidden p-0 rounded-3xl"
+        className="!w-[80dvw] max-h-[95vh] overflow-hidden p-0 rounded-3xl"
         dir={isRTL ? 'rtl' : 'ltr'}
         showCloseButton={false}
       >
