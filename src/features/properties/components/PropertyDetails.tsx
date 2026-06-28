@@ -9,7 +9,6 @@ import {
     MapPin,
     FileText,
     ZoomIn,
-    Navigation,
     ArrowRight,
     Home,
     Info,
@@ -43,6 +42,7 @@ import { useAreas } from "../api/hooks/useAreas";
 import areaIcon from "@/assets/area-icon.png";
 import phaseIcon from "@/assets/phase-icon.png";
 import beachRowIcon from "@/assets/beach-row-icon.png";
+import PropertyMap from "@/components/shared/Map";
 
 
 const Skeleton = ({ className }: { className?: string }) => (
@@ -134,10 +134,6 @@ export default function PropertyDetails() {
 
     const descPreview = sanitizedDescription.slice(0, 380);
     const descNeedsExpand = sanitizedDescription.length > 380;
-
-    const GOOGLE_MAPS_API_KEY = import.meta.env.VITE_GOOGLE_MAPS_API_KEY ?? "";
-    const mapEmbedUrl = `https://maps.googleapis.com/maps/api/staticmap?center=${property.lat},${property.long}&zoom=14&size=600x300&markers=color:red%7C${property.lat},${property.long}&key=${GOOGLE_MAPS_API_KEY}`;
-    const navigationUrl = `https://www.google.com/maps/dir/?api=1&destination=${property.lat},${property.long}`;
 
     const maxVisibleFacilities = 4;
     const visibleFacilities = (property.facilities || []).slice(0, showAllFacilities ? property.facilities.length : maxVisibleFacilities);
@@ -587,37 +583,9 @@ export default function PropertyDetails() {
                                         <Skeleton className="w-28 h-8 rounded-md" />
                                     </div>
                                 </div>
-                            ) : <div className="rounded-2xl overflow-hidden border border-gray-200 relative">
-
-                                {GOOGLE_MAPS_API_KEY ? (
-                                    <OptimizedImage
-                                        src={mapEmbedUrl}
-                                        alt="Map"
-                                        className="w-full h-55 object-cover"
-                                    />
-                                ) : (
-                                    <iframe
-                                        title="property-map"
-                                        width="100%"
-                                        height="220"
-                                        style={{ border: 0 }}
-                                        loading="lazy"
-                                        referrerPolicy="no-referrer-when-downgrade"
-                                        src={`https://maps.google.com/maps?q=${property.lat},${property.long}&z=14&output=embed`}
-                                    />
-                                )}
-                                <div className="p-3 bg-white border-t border-gray-100 flex justify-end">
-                                    <Button
-                                        variant="outline"
-                                        size="sm"
-                                        className="text-navy cursor-pointer border-navy hover:bg-navy hover:text-white transition-colors gap-1.5"
-                                        onClick={() => window.open(navigationUrl, "_blank")}
-                                    >
-                                        <Navigation className="w-4 h-4" />
-                                        {t("Properties.Details.map.navigate")}
-                                    </Button>
-                                </div>
-                            </div>}
+                            ) : (
+                                (property.lat && property.long) ? <PropertyMap lat={property.lat} long={property.long} /> : null
+                            )}
                         </div>
                     </div>
 
@@ -640,25 +608,25 @@ export default function PropertyDetails() {
                                             <p className="text-xs text-gray-400">{t("Properties.Details.rent.startFrom")}</p>
                                             <div className="flex flex-row gap-0.5">
                                                 {/* <span className="text-sm font-medium text-navy"> */}
-                                                    <Trans
-                                                        i18nKey="Properties.firstPrice"
-                                                        values={{
-                                                            price: hasActiveOffer ? discountedPrice : originalPrice.price,
-                                                            period: t(originalPrice.periodKey),
-                                                            original: originalPrice.price
-                                                        }}
-                                                        components={{
-                                                            value: (
-                                                                <span className="text-sm font-medium text-amber-500" />
-                                                            ),
-                                                            currency: <span className="text-sm font-medium text-gray-500" />,
-                                                            divider: <span className="text-sm text-gray-400" />,
-                                                            period: <span className="text-sm text-gray-400" />,
-                                                            // New component for strikethrough original price
-                                                            original: <span className={` ${hasActiveOffer ? "" : "hidden"} text-sm text-gray-400 line-through ml-2`} />
-                                                        }}
-                                                    />
-                                                    {/* <span className="text-sm font-medium">{t("General.kwd")}</span> */}
+                                                <Trans
+                                                    i18nKey="Properties.firstPrice"
+                                                    values={{
+                                                        price: hasActiveOffer ? discountedPrice : originalPrice.price,
+                                                        period: t(originalPrice.periodKey),
+                                                        original: originalPrice.price
+                                                    }}
+                                                    components={{
+                                                        value: (
+                                                            <span className="text-sm font-medium text-amber-500" />
+                                                        ),
+                                                        currency: <span className="text-sm font-medium text-gray-500" />,
+                                                        divider: <span className="text-sm text-gray-400" />,
+                                                        period: <span className="text-sm text-gray-400" />,
+                                                        // New component for strikethrough original price
+                                                        original: <span className={` ${hasActiveOffer ? "" : "hidden"} text-sm text-gray-400 line-through ml-2`} />
+                                                    }}
+                                                />
+                                                {/* <span className="text-sm font-medium">{t("General.kwd")}</span> */}
                                                 {/* </span> */}
                                                 <HoverCard openDelay={100} closeDelay={100}>
                                                     <HoverCardTrigger asChild>

@@ -140,6 +140,12 @@
     @apply font-sans;
     scroll-behavior: smooth;
   }
+  .maplibregl-popup-content {
+    @apply bg-transparent! shadow-none! p-0! rounded-none!;
+  }
+  .maplibregl-popup-tip {
+    @apply hidden!;
+  }
 }
 
 input::-webkit-outer-spin-button,
