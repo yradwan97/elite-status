@@ -32,6 +32,7 @@ interface ConfirmationStepProps {
 }
 
 import { ReactNode } from 'react';
+import PropertyMap from "@/components/shared/Map";
 
 function SummaryRow({ icon, label, value }: { icon: string; label: string; value: ReactNode }) {
   return (
@@ -200,10 +201,6 @@ export function ConfirmationStep({
   const selectedPlan = plans.find((p) => p.key === booking.planKey);
   const planLabel = selectedPlan ? t(selectedPlan.labelKey) : booking.planKey ?? "-";
 
-  const GOOGLE_MAPS_API_KEY = import.meta.env.VITE_GOOGLE_MAPS_API_KEY ?? "";
-  const mapEmbedUrl = `https://maps.googleapis.com/maps/api/staticmap?center=${property.lat},${property.long}&zoom=14&size=600x220&markers=color:red%7C${property.lat},${property.long}&key=${GOOGLE_MAPS_API_KEY}`;
-  //   const navigationUrl = `https://www.google.com/maps/dir/?api=1&destination=${property.lat},${property.long}`;
-
   return (
     <div className="w-full max-w-7xl flex flex-col sm:flex-row justify-center gap-6">
       {/* LEFT — Booking Summary */}
@@ -248,7 +245,7 @@ export function ConfirmationStep({
               {t("Properties.Reservation.confirmation.location")}
             </p>
           </div>
-          <div className="rounded-xl overflow-hidden border border-gray-100">
+          {/* <div className="rounded-xl overflow-hidden border border-gray-100">
             {GOOGLE_MAPS_API_KEY ? (
               <img src={mapEmbedUrl} alt="map" className="w-full h-40 object-cover" />
             ) : (
@@ -261,7 +258,9 @@ export function ConfirmationStep({
                 src={`https://maps.google.com/maps?q=${property.lat},${property.long}&z=14&output=embed`}
               />
             )}
-          </div>
+          </div> */
+          }
+          <PropertyMap lat={property.lat} long={property.long} />
         </div>
       </div>
 
