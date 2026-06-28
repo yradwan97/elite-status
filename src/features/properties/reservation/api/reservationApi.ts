@@ -66,6 +66,7 @@ export interface Reservation {
     invoice?: string;
     createdAt: string;
     updatedAt: string;
+    paymentStatus: string
 }
 
 export interface ReservationsResponse {

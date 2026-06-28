@@ -95,6 +95,8 @@ export function PaymentTab({ booking, isRTL }: {
 }) {
   const { t } = useTranslation();
 
+  const isDepositReservation = booking.paymentStatus === "DEPOSIT"
+
   /**
    * 
    * @param price 
@@ -103,7 +105,7 @@ export function PaymentTab({ booking, isRTL }: {
    */
 
   const zeroDepositPrice = (price: number): number => {
-    if (booking.deposit) {
+    if (isDepositReservation) {
       return 0
     }
     return price
@@ -135,7 +137,7 @@ export function PaymentTab({ booking, isRTL }: {
           <FieldBox icon={<ShieldCheck className="w-3.5 h-3.5" />} label={t(`${NS}.modal.services`)} value={`${zeroDepositPrice(servicesTotal)} ${t(`${NS}.currency`)}`} isRTL={isRTL} />
         </div>
       </section>
-      {!booking.deposit && booking.services.length > 0 && (
+      {!isDepositReservation && booking.services.length > 0 && (
         <section>
           <h4 className={`text-sm font-semibold text-gray-900 mb-3 ${isRTL ? 'text-right' : 'text-left'}`}>
             {t(`${NS}.modal.servicesSelected`)}
@@ -162,7 +164,7 @@ export function PaymentTab({ booking, isRTL }: {
 
       <div className={`flex gap-2 items-center ${isRTL ? 'flex-row-reverse' : ''}`}>
         <Info className='size-12 text-amber-600' />
-        <span className='text-md font-alex text-amber-600'>{t(`${NS}.modal.${booking.deposit ? 'isDeposit' : 'isTotal'}`)}</span>
+        <span className='text-md font-alex text-amber-600'>{t(`${NS}.modal.${isDepositReservation ? 'isDeposit' : 'isTotal'}`)}</span>
       </div>
 
 

@@ -139,7 +139,7 @@ export default function PropertyDetails() {
     const mapEmbedUrl = `https://maps.googleapis.com/maps/api/staticmap?center=${property.lat},${property.long}&zoom=14&size=600x300&markers=color:red%7C${property.lat},${property.long}&key=${GOOGLE_MAPS_API_KEY}`;
     const navigationUrl = `https://www.google.com/maps/dir/?api=1&destination=${property.lat},${property.long}`;
 
-    const maxVisibleFacilities = 5;
+    const maxVisibleFacilities = 4;
     const visibleFacilities = (property.facilities || []).slice(0, showAllFacilities ? property.facilities.length : maxVisibleFacilities);
 
 
@@ -489,12 +489,12 @@ export default function PropertyDetails() {
                                         </div>
                                     ))}
 
-                                    <button onClick={() => setShowAllFacilities(!showAllFacilities)} className="flex flex-col items-center justify-center gap-1.5 border border-gray-200 rounded-xl px-5 py-3 min-w-20 text-center cursor-pointer hover:bg-gray-50 transition-colors">
+                                    {property.facilities.length > maxVisibleFacilities && <button onClick={() => setShowAllFacilities(!showAllFacilities)} className="flex flex-col items-center justify-center gap-1.5 border border-gray-200 rounded-xl px-5 py-3 min-w-20 text-center cursor-pointer hover:bg-gray-50 transition-colors">
                                         <span className="text-xl">•••</span>
                                         <span className="text-xs text-gray-600 font-medium">
                                             {showAllFacilities ? t("Properties.Details.facilities.seeLess") : t("Properties.Details.facilities.seeMore")}
                                         </span>
-                                    </button>
+                                    </button>}
 
                                 </div>
                                 :

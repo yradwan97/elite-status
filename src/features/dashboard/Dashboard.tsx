@@ -148,7 +148,7 @@ export default function Dashboard() {
 
           {/* Content overlay */}
           <div className="relative z-10 h-full flex flex-col items-center justify-center text-center px-6 text-white">
-            <h1 className="font-alex text-5xl text-navy font-semibold mb-4" style={{ lineHeight: "105%", letterSpacing: "4%" }}>
+            <h1 className="font-alex text-4xl sm:text-5xl text-navy font-semibold mb-4" style={{ lineHeight: "105%", letterSpacing: "4%" }}>
               {t('Dashboard.escapeTheNoise')}
             </h1>
 

@@ -262,7 +262,7 @@ export default function PropertiesSection() {
                                         <SelectValue placeholder={t('Properties.filter.phase')} />
                                     </SelectTrigger>
                                     <SelectContent>
-                                        {Array.from({ length: 8 }, (_, i) => i + 1).map(phase => (
+                                        {Array.from({ length: 6 }, (_, i) => i + 1).map(phase => (
                                             <SelectItem key={phase} value={phase.toString()}>
                                                 {t(`Properties.filter.phaseValue`, { phase })}
                                             </SelectItem>
@@ -282,7 +282,7 @@ export default function PropertiesSection() {
                                         <SelectValue placeholder={t('Properties.filter.beachRow')} />
                                     </SelectTrigger>
                                     <SelectContent>
-                                        {Array.from({ length: 5 }, (_, i) => i + 1).map(row => (
+                                        {Array.from({ length: 2 }, (_, i) => i + 1).map(row => (
                                             <SelectItem key={row} value={row.toString()}>
                                                 {t(`Properties.filter.row.${row}`)}
                                             </SelectItem>
