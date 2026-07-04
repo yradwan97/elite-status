@@ -64,6 +64,7 @@ export interface Reservation {
     reservationPrice: number;
     deposit: boolean;
     invoice?: string;
+    fullPaymentInvoice?: string
     createdAt: string;
     updatedAt: string;
     paymentStatus: string

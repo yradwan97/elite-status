@@ -169,7 +169,7 @@ export function PaymentTab({ booking, isRTL }: {
 
 
       <a
-        href={booking.invoice}
+        href={isDepositReservation ? booking.invoice : booking.fullPaymentInvoice}
         target="_blank"
         rel="noopener noreferrer"
         className="flex items-center justify-center gap-2 w-full py-3.5 bg-[#1a2550] text-white rounded-2xl font-medium text-sm hover:bg-[#232f63] transition-colors"
