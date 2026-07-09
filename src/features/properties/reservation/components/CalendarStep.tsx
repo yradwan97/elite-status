@@ -81,7 +81,7 @@ export function CalendarStep({
       const end = toMidnight(new Date(reservation.endDate));
       if (isNaN(start.getTime()) || isNaN(end.getTime())) return;
       const cur = new Date(start);
-      while (cur < end) {
+      while (cur <= end) {
         s.add(cur.toDateString());
         cur.setDate(cur.getDate() + 1);
       }
