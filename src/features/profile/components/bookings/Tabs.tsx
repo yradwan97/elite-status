@@ -111,12 +111,14 @@ export function PaymentTab({ booking, isRTL }: {
     return price
   }
 
+  const netAmount = isDepositReservation ? booking.amount : Object.values(booking.totalWithoutPlan).reduce((a, b) => a + b, 0) + (booking.discount ?? 0)
+
   const servicesTotal = booking.services.reduce((a, b) => a + b.price, 0)
 
   const rentTypeLabel: Record<string, string> = {
     WHOLE_WEEK: t(`${NS}.rentType.wholeWeek`),
     WHOLE_WEEK_SUNDAY: t(`${NS}.rentType.wholeWeekS`),
-    WHOLE_WEEK_SUNDAY_THURSDAY: t(`${NS}.rentType.wholeWeekT`),
+    WHOLE_WEEK_THURSDAY: t(`${NS}.rentType.wholeWeekT`),
     EVENTS: t(`${NS}.rentType.events`),
     WEEKDAYS: t(`${NS}.rentType.weekdays`),
     WEEKENDS: t(`${NS}.rentType.weekends`),
@@ -159,7 +161,7 @@ export function PaymentTab({ booking, isRTL }: {
       )}
 
       <div className="grid grid-cols-2 gap-3">
-        <FieldBox icon={<DollarSign className="w-3.5 h-3.5" />} label={t(`${NS}.modal.net`)} value={`${booking.amount} ${t(`${NS}.currency`)}`} wide isRTL={isRTL} />
+        <FieldBox icon={<DollarSign className="w-3.5 h-3.5" />} label={t(`${NS}.modal.net`)} value={`${netAmount} ${t(`${NS}.currency`)}`} wide isRTL={isRTL} />
       </div>
 
       <div className={`flex gap-2 items-center ${isRTL ? 'flex-row-reverse' : ''}`}>

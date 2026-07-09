@@ -68,6 +68,11 @@ export interface Reservation {
     createdAt: string;
     updatedAt: string;
     paymentStatus: string
+    totalWithoutPlan: {
+        reservation: number,
+        insurance: number,
+        services: number
+    }
 }
 
 export interface ReservationsResponse {

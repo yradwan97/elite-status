@@ -91,7 +91,7 @@ const PlanPage = () => {
   }
 
   const features = isArabic ? plan?.featuresAr : plan?.featuresEn
-  const terms = isArabic ? plan.termsAr : plan.termsAr
+  const terms = isArabic ? plan.termsAr : plan.termsEn
   const isPlanComplete = (plan.capacity && plan.activeSubscription) && plan.capacity === plan.activeSubscription;
 
   const sanitized = DOMPurify.sanitize(terms, {
