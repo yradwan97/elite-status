@@ -70,10 +70,9 @@ export interface PropertiesFilters {
 export interface PropertiesResponse {
     data: {
         data: Property[]
+        itemsCount: number;
+        pages: number;
     }
-    itemsCount: number;
-    page?: number;
-    pages: number;
 }
 
 export interface FavouritesResponse {

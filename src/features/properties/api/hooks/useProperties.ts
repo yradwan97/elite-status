@@ -79,7 +79,7 @@ export function useProperties(): UsePropertiesReturn {
 
     return {
         properties: data?.data?.data ?? [],
-        totalPages: data?.pages ?? 1,
+        totalPages: data?.data.pages ?? 1,
         currentPage: filters.page ?? 1,
         isLoading: isFetching,
         error: isError ? 'Failed to load properties. Please try again.' : null,
