@@ -165,7 +165,7 @@ export const getFirstPriceAndPeriodKey = (property: Property | undefined) => {
     return !!val && val > 0;
   });
   if (!match) return { price: 0, periodKey: "" };
-  return { price: property[match.key] as number, periodKey: `${KEY_PREFIX}.${match.period}` };
+  return { price: Number((property[match.key] as number).toFixed(2)), periodKey: `${KEY_PREFIX}.${match.period}` };
 };
 
 export const getRemainingPricesAndPeriodKeys = (property: Property) => {
@@ -176,7 +176,7 @@ export const getRemainingPricesAndPeriodKeys = (property: Property) => {
 
   return PRICE_MAP
     .filter(({ key }) => key !== firstKey && !!(property[key] as number) && (property[key] as number) > 0)
-    .map(({ key, period }) => ({ price: property[key] as number, periodKey: `${KEY_PREFIX}.${period}` }));
+    .map(({ key, period }) => ({ price: Number((property[key] as number).toFixed(2)), periodKey: `${KEY_PREFIX}.${period}` }));
 };
 
 export const isValidUrl = (url: string | undefined | null): boolean => {

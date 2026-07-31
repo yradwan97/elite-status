@@ -333,6 +333,7 @@ export default function PropertiesSection() {
                                     setDateRange={({ from, to }) => setDraft(p => ({ ...p, startDate: from, endDate: to }))}
                                     placeholder={t('Dashboard.selectDates')}
                                     isArabic={isArabic}
+                                    disablePast
                                 />
                             </div>
 

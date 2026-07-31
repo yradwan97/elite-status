@@ -166,6 +166,7 @@ export default function Dashboard() {
                   setDateRange={setDateRange}
                   placeholder={t('Dashboard.selectDates')}
                   isArabic={isArabic}
+                  disablePast
                 />
                 <Counter
                   label={t('Dashboard.addRooms') || t('Properties.filter.guests')}

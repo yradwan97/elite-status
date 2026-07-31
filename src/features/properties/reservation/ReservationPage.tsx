@@ -174,6 +174,14 @@ export default function ReservationPage() {
       return;
     }
 
+    // Open popup synchronously before async call to avoid mobile popup blockers
+    const paymentWindow = window.open("");
+
+    if (!paymentWindow) {
+      toast.error(t("General.popupBlocked"));
+      return;
+    }
+
     const payload: CreateReservationPayload = {
       startDate: formatDate({ date: booking.startDate, format: 'short' }),
       reservationType: booking.planKey,
@@ -187,63 +195,34 @@ export default function ReservationPage() {
     };
 
     try {
-      const html =
-        await createReservation.mutateAsync(
-          payload
-        );
+      const html = await createReservation.mutateAsync(payload);
+      queryClient.invalidateQueries({ queryKey: ['discounted-reservations', 'reservations'] });
 
-      queryClient.invalidateQueries({ queryKey: ['discounted-reservations', 'reservations'] })
-
-      const paymentWindow = window.open(
-        ""
-      );
-
-      if (!paymentWindow) {
-        toast.error(
-          t("General.popupBlocked")
-        );
-
-        return;
-      }
-
-      const blob = new Blob([html], {
-        type: "text/html",
-      });
-
-      const blobUrl =
-        URL.createObjectURL(blob);
-
+      const blob = new Blob([html], { type: "text/html" });
+      const blobUrl = URL.createObjectURL(blob);
       paymentWindow.location.href = blobUrl;
 
       let cleanedUp = false;
 
       const cleanup = () => {
         if (cleanedUp) return;
-
         cleanedUp = true;
-
         clearInterval(popupWatcher);
-
         URL.revokeObjectURL(blobUrl);
       };
 
-      paymentWindow.addEventListener(
-        "load",
-        cleanup
-      );
+      paymentWindow.addEventListener("load", cleanup);
 
       const popupWatcher = setInterval(() => {
         if (paymentWindow.closed) {
           cleanup();
-
-          navigate(
-            "/account",
-            { state: { page: "booking" } }
-          );
+          navigate("/account", { state: { page: "booking" } });
         }
       }, 500);
     } catch (error) {
       console.error(error);
+      paymentWindow.close();
+      toast.error(t("General.popupBlocked"));
     }
   };
 

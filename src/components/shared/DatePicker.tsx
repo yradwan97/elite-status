@@ -15,6 +15,7 @@ interface DatePickerProps {
     setDateRange: (range: { from: Date | undefined; to: Date | undefined }) => void;
     placeholder?: string;
     isArabic?: boolean;
+    disablePast?: boolean;
 }
 
 export function DatePicker({
@@ -22,11 +23,20 @@ export function DatePicker({
     setDateRange,
     placeholder = "Select dates",
     isArabic = false,
+    disablePast = false,
 }: DatePickerProps) {
     const selected: DateRange = {
     from: dateRange.from ?? undefined,
     to: dateRange.to ?? undefined,
 };
+
+    const disabledMatcher = disablePast
+        ? (date: Date) => {
+            const today = new Date();
+            today.setHours(0, 0, 0, 0);
+            return date < today;
+          }
+        : undefined;
 
     const handleSelect = (range: DateRange | undefined) => {
     
@@ -64,6 +74,7 @@ export function DatePicker({
                     selected={selected}
                     onSelect={handleSelect}
                     numberOfMonths={2}
+                    disabled={disabledMatcher}
                 />
             </PopoverContent>
         </Popover>
