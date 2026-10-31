@@ -19,6 +19,7 @@ import { useOnlineStatus } from './hooks/use-is-online';
 import { OfflineBanner } from './components/layout/OfflineBanner';
 import { scrollToTop } from './lib/utils';
 import PlanPage from './features/plans/PlanPage';
+import ComingSoon from './ComingSoon';
 
 function App() {
 
@@ -27,6 +28,9 @@ function App() {
   const dispatch = useDispatch();
   const isOnline = useOnlineStatus()
   const location = useLocation()
+
+  // HARDCODED FOR DOWNTIME
+  const isDowntime = true
 
   useEffect(() => {
     if (!user || !accessToken || (accessToken && !isTokenValid(accessToken))) {
@@ -37,6 +41,8 @@ function App() {
   useEffect(() => {
     scrollToTop()
   }, [location.pathname])
+
+  if (isDowntime) return <ComingSoon />;
 
   return (
     <div className="min-h-screen bg-background flex flex-col">
