@@ -29,8 +29,8 @@ function App() {
   const isOnline = useOnlineStatus()
   const location = useLocation()
 
-  // HARDCODED FOR DOWNTIME
-  const isDowntime = true
+  // Show the Coming Soon page only in production builds
+const isDowntime = import.meta.env.MODE === 'production';
 
   useEffect(() => {
     if (!user || !accessToken || (accessToken && !isTokenValid(accessToken))) {
