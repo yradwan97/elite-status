@@ -1,5 +1,6 @@
 // src/pages/reservation/ReservationPage.tsx
-import { useState, useCallback, useEffect } from "react";
+import { useState, useCallback, useEffect, useMemo } from "react";
+import { useExtraServices } from "./api/hooks/useExtraServices";
 import { useParams, useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import i18next from "i18next";
@@ -29,17 +30,36 @@ import {
 import { toast } from "sonner";
 import { queryClient } from "@/lib/query-client";
 import { useReservationTypesInfo } from "./api/hooks/useReservationTypesInfo";
+import GroupPricingStep, { GroupSelection } from "./components/chalet-group/GroupPricingStep";
+import { isGroupDetails } from "../api/propertiesApi";
 
-const STEPS: Step[] = ["pricing", "calendar", "services", "confirmation"];
+
+
+const ALL_STEPS: Step[] = ["pricing", "calendar", "services", "confirmation"];
 
 export default function ReservationPage() {
   const { id = "" } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const { t } = useTranslation();
   const isRTL = i18next.language === "ar";
-
+  const [servicesPage, setServicesPage] = useState(1);
+  const { services, pages, isLoading: isServicesLoading } = useExtraServices(servicesPage);
+  // Page 1 decides whether the step exists (same query key as above when servicesPage === 1)
+  const { services: firstPageServices } = useExtraServices(1);
+  const hasServices = (firstPageServices?.length ?? 0) > 0;
 
   const { property, isLoading, error } = useProperty(id);
+
+  const isGroup = property && isGroupDetails(property)
+  const STEPS = useMemo<Step[]>(
+    () =>
+      ALL_STEPS.filter((step) => {
+        if (step === "calendar" && isGroup) return false;
+        if (step === "services" && !hasServices) return false;
+        return true;
+      }),
+    [isGroup, hasServices]
+  );
 
   const [paymentModalOpen, setPaymentModalOpen] = useState(false);
 
@@ -47,8 +67,6 @@ export default function ReservationPage() {
     usePaymentMethods();
 
   const { typesInfo } = useReservationTypesInfo()
-
-  console.log(typesInfo)
 
   const [currentStep, setCurrentStep] = useState<Step>("pricing");
   const [booking, setBooking] = useState<BookingState>({
@@ -61,7 +79,8 @@ export default function ReservationPage() {
     paymentMethod: "1",
     paymentOption: "100",
     usePlan: false,
-    eventId: undefined
+    eventId: undefined,
+    unit: undefined
   });
 
   useEffect(() => {
@@ -76,8 +95,12 @@ export default function ReservationPage() {
 
   const goNext = useCallback(() => {
     const idx = STEPS.indexOf(currentStep);
+    if (idx === -1) {
+      setCurrentStep(STEPS[STEPS.length - 1]);
+      return;
+    }
     if (idx < STEPS.length - 1) setCurrentStep(STEPS[idx + 1]);
-  }, [currentStep]);
+  }, [STEPS, currentStep]);
 
   const goBack = useCallback(() => {
     const idx = STEPS.indexOf(currentStep);
@@ -86,7 +109,30 @@ export default function ReservationPage() {
     } else {
       setCurrentStep(STEPS[idx - 1]);
     }
-  }, [currentStep, id, navigate]);
+  }, [STEPS, currentStep, id, navigate]);
+
+  const handleGroupSelect = useCallback((selection: GroupSelection | null) => {
+    setBooking((b) =>
+      selection
+        ? {
+          ...b,
+          planKey: selection.planKey,
+          planPrice: selection.price,
+          startDate: selection.startDate,
+          endDate: selection.endDate,
+          unit: selection.unit,
+          eventId: undefined,
+        }
+        : {
+          ...b,
+          planKey: null,
+          planPrice: 0,
+          startDate: undefined,
+          endDate: undefined,
+          unit: undefined,
+        }
+    );
+  }, []);
 
   if (isLoading) {
     return (
@@ -160,7 +206,7 @@ export default function ReservationPage() {
         checkout: typeInfo?.checkout
       }
     })
-    .filter((p) => (p.price !== null && p.price > 0) || (p.price == null && property.events?.length > 0))
+    .filter((p) => (p.price !== null && p.price > 0) || (p.price == null && property.events && property.events?.length > 0))
     .sort((a, b) => (b.price ?? 0) - (a.price ?? 0));
 
   const onPay = () => {
@@ -182,6 +228,12 @@ export default function ReservationPage() {
       return;
     }
 
+    if (isGroup && !booking.unit) {
+      toast.error(t("Properties.Reservation.confirmation.selectUnit"));
+      paymentWindow.close();
+      return;
+    }
+
     const payload: CreateReservationPayload = {
       startDate: formatDate({ date: booking.startDate, format: 'short' }),
       reservationType: booking.planKey,
@@ -193,6 +245,10 @@ export default function ReservationPage() {
       property: id,
       usePlan: booking.usePlan
     };
+
+    if (isGroup && booking.unit) {
+      payload.chalet = booking.unit._id
+    }
 
     try {
       const html = await createReservation.mutateAsync(payload);
@@ -226,6 +282,8 @@ export default function ReservationPage() {
     }
   };
 
+
+
   return (
     <>
       <PageTitle titleKey="" fallback={title} />
@@ -256,56 +314,67 @@ export default function ReservationPage() {
         </div>
 
         <div className="max-w-6xl mx-auto px-4">
-          <StepBar current={currentStep} />
+          <StepBar current={currentStep} STEPS={STEPS} />
         </div>
 
         <div className="max-w-6xl mx-auto px-4 pb-16">
-          {currentStep === "pricing" && (
-            <PricingStep
-              property={property}
-              plans={plans}
-              booking={booking}
-              onPlanSelect={(key, price, eventId) => {
-                if (key === "EVENTS") {
-                  // Selecting an event — replace whatever was selected
-                  const selectedEvent = property.events.find((e) => e._id === eventId);
-                  if (selectedEvent) {
+          {currentStep === "pricing" ?
+            isGroup ? (
+              <GroupPricingStep
+                property={property}
+                acceptedTerms={booking.acceptedTerms}
+                onTermsChange={(v) => setBooking((b) => ({ ...b, acceptedTerms: v }))}
+                onSelect={handleGroupSelect}
+                onNext={goNext}
+                onBack={goBack}
+              />
+            ) : (
+              <PricingStep
+                property={property}
+                plans={plans}
+                booking={booking}
+                onPlanSelect={(key, price, eventId) => {
+                  if (key === "EVENTS") {
+                    // Selecting an event — replace whatever was selected
+                    const selectedEvent = property.events?.find((e) => e._id === eventId);
+                    if (selectedEvent) {
+                      setBooking((b) => ({
+                        ...b,
+                        planKey: "EVENTS",
+                        planPrice: price as number,
+                        startDate: new Date(selectedEvent.event.startDate),
+                        endDate: new Date(selectedEvent.event.endDate),
+                        eventId,
+                      }));
+                    }
+                  } else if (booking.planKey === key && !booking.eventId) {
+                    // Tapping the same non-event plan — deselect
                     setBooking((b) => ({
                       ...b,
-                      planKey: "EVENTS",
+                      planKey: null,
+                      planPrice: 0,
+                      startDate: undefined,
+                      endDate: undefined,
+                      acceptedTerms: false,
+                    }));
+                  } else {
+                    // Selecting a normal plan — replace any existing selection (plan or event)
+                    setBooking((b) => ({
+                      ...b,
+                      planKey: key,
                       planPrice: price as number,
-                      startDate: new Date(selectedEvent.event.startDate),
-                      endDate: new Date(selectedEvent.event.endDate),
-                      eventId,
+                      startDate: undefined,
+                      endDate: undefined,
+                      eventId: undefined,
+                      acceptedTerms: false,
                     }));
                   }
-                } else if (booking.planKey === key && !booking.eventId) {
-                  // Tapping the same non-event plan — deselect
-                  setBooking((b) => ({
-                    ...b,
-                    planKey: null,
-                    planPrice: 0,
-                    startDate: undefined,
-                    endDate: undefined,
-                    acceptedTerms: false,
-                  }));
-                } else {
-                  // Selecting a normal plan — replace any existing selection (plan or event)
-                  setBooking((b) => ({
-                    ...b,
-                    planKey: key,
-                    planPrice: price as number,
-                    startDate: undefined,
-                    endDate: undefined,
-                    eventId: undefined,
-                    acceptedTerms: false,
-                  }));
-                }
-              }}
-              onNext={goNext}
-              isRTL={isRTL}
-            />
-          )}
+                }}
+                onNext={goNext}
+                isRTL={isRTL}
+              />
+            ) : null}
+
 
           {currentStep === "calendar" && (
             <CalendarStep
@@ -324,12 +393,16 @@ export default function ReservationPage() {
 
           {currentStep === "services" && (
             <ServicesStep
-
+              services={services}
+              pages={pages}
+              isLoading={isServicesLoading}
+              page={servicesPage}
+              onPageChange={setServicesPage}
               selectedServices={booking.services}
               onToggleService={(service) =>
                 setBooking((b) => ({
                   ...b,
-                  services: b.services.some(S => S._id === service._id)
+                  services: b.services.some((S) => S._id === service._id)
                     ? b.services.filter((x) => x._id !== service._id)
                     : [...b.services, service],
                 }))

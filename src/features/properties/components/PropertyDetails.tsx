@@ -19,7 +19,7 @@ import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { useProperty } from "../api/hooks/useProperty";
 import { adjustPriceForOffer, checkLoggedIn, cn, getFirstPriceAndPeriodKey, getRemainingPricesAndPeriodKeys, hasOffer, isValidUrl } from "@/lib/utils";
-import { Facility } from "../api/propertiesApi";
+import { Facility, isGroupDetails } from "../api/propertiesApi";
 import i18next from "i18next";
 import DOMPurify from "dompurify";
 import { OptimizedImage } from "@/components/shared/OptimizedImage";
@@ -43,6 +43,8 @@ import areaIcon from "@/assets/area-icon.png";
 import phaseIcon from "@/assets/phase-icon.png";
 import beachRowIcon from "@/assets/beach-row-icon.png";
 import PropertyMap from "@/components/shared/Map";
+// import { sampleGroup } from "./mockChaletGroup"
+import ChaletGroupRoomCard from "./ChaletGroupRoomCard";
 
 
 const Skeleton = ({ className }: { className?: string }) => (
@@ -94,6 +96,7 @@ export default function PropertyDetails() {
 
     useLayoutEffect(() => {
         if (property) {
+            // eslint-disable-next-line react-hooks/set-state-in-effect
             setIsFavourite(!!property.isFavourite);
         }
     }, [property]);
@@ -113,6 +116,8 @@ export default function PropertyDetails() {
             </div>
         );
     }
+
+    const isGroup = isGroupDetails(property);
 
     // const priceRows = getRemainingPricesAndPeriodKeys(property)
     const priceRows = getRemainingPricesAndPeriodKeys(property).map(item => ({
@@ -266,6 +271,17 @@ export default function PropertyDetails() {
                                 <span>{property.address}</span>
                             )}
                         </div>
+
+                        {isGroup && (
+                            <span
+                                style={{ fontWeight: 400, fontSize: "12px" }}
+                                className="inline-flex items-center justify-center whitespace-nowrap mt-2 py-1.25 px-2.5 rounded-sm text-white bg-turquoise"
+                            >
+                                {t("Properties.Details.group", "Group Chalet")}
+                            </span>
+                            
+                        )}
+
                     </div>
                     <div className="flex items-center gap-2 shrink-0">
                         {(user && property) && <button
@@ -386,7 +402,7 @@ export default function PropertyDetails() {
                                     <MetaStat
                                         iconSrc={villaIcon}
                                         label={t("Properties.Details.meta.type")}
-                                        value={typeof property.propertyType === 'string' ? property.propertyType : t(`Properties.Details.propertyType.${property.propertyType.key}`)}
+                                        value={t(`Properties.Details.propertyType.${property.propertyType.key}`)}
                                     />
                                     <MetaStat
                                         iconSrc={userIcon}
@@ -414,6 +430,9 @@ export default function PropertyDetails() {
 
                         {/* Description */}
                         <div className="flex flex-col justify-start items-start gap-4 p-4 rounded-lg bg-[#f9f9f9]">
+                            <h2 className="text-base font-bold text-navy mb-4">
+                                {t("Properties.Details.section.description")}
+                            </h2>
                             {isLoading ? (
                                 <div className="space-y-2">
                                     <Skeleton className="h-3 w-full" />
@@ -496,6 +515,49 @@ export default function PropertyDetails() {
                                 :
                                 <p>{t("Properties.Details.facilities.none")}</p>}
                         </div>
+
+                        {/* Room Details */}
+                        {isGroup && (
+                            <div className="rounded-lg bg-[#f9f9f9] p-4">
+                                <h2 className="text-base font-bold text-navy mb-4">
+                                    {t("Properties.Details.section.roomDetails")}
+                                </h2>
+                                {!isLoading && property.layout.length > 0 && (
+                                    <div className="flex flex-col gap-4">
+                                        {[...property.layout]
+                                            .sort((a, b) => a.displayOrder - b.displayOrder)
+                                            .map((section) => (
+                                                <ChaletGroupRoomCard
+                                                    key={`${section.displayOrder}-${section.nameEn}`}
+                                                    room={section}
+                                                />
+                                            ))}
+                                    </div>
+                                )}
+                            </div>
+                        )}
+
+                        {/* Nearby Places */}
+                        {isGroup && <div className="rounded-lg bg-[#f9f9f9] p-4">
+                            <h2 className="text-base font-bold text-navy mb-4">
+                                {t("Properties.Details.section.nearbyPlaces")}
+                            </h2>
+                            <div className="grid grid-cols-2 items-center gap-2">
+                                {property.nearbyPlaces.map((place, index) => (
+                                    <div key={index} className="flex bg-white justify-between shadow-md p-2.5 rounded-[10px]">
+                                        <div className="flex justify-start items-center gap-2">
+                                            <MapPin className="w-6 h-6 text-gray-500" />
+                                            <p className="text-sm text-gray-500 font-medium ml-2">
+                                                {isRTL ? place.nameAr : place.nameEn}
+                                            </p>
+                                        </div>
+                                        <p className="text-sm text-gray-600 font-medium ml-2">
+                                            {place.distanceKm} {t("general.km")}
+                                        </p>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>}
 
                         {/* Documents */}
                         <div className="rounded-lg shadow-lg bg-[#f9f9f9] p-4">

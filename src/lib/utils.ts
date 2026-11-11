@@ -1,4 +1,4 @@
-import { Property } from "@/features/properties/api/propertiesApi";
+import { OfferFields, PriceKey, PricedProperty } from "@/features/properties/api/propertiesApi";
 import { User, UserPlan } from "@/store/slices/authSlice";
 import { clsx, type ClassValue } from "clsx"
 import { t } from "i18next";
@@ -51,7 +51,7 @@ export const checkLoggedIn = (user: User | null): boolean => {
   }
 }
 
-export const hasOffer = (property: Property | undefined): boolean => {
+export const hasOffer = (property: OfferFields | undefined): boolean => {
   if (!property) return false
   const start = formatDateStringNoTimeZone(property.offerStartDate)
   const end = formatDateStringNoTimeZone(property.offerEndDate)
@@ -61,11 +61,8 @@ export const hasOffer = (property: Property | undefined): boolean => {
   return !!property.offer &&
     property.offerRate === "PERCENTAGE" &&
     property.offer > 0 &&
-    !!property.offerRate &&
-    !!property.offerStartDate &&
-    !!property.offerEndDate &&
-    now >= new Date(start)
-    && now <= new Date(end)
+    now >= new Date(start) &&
+    now <= new Date(end)
 }
 
 // const normalizeOfferDates = (startDate: string | null, endDate: string | null) => {
@@ -93,7 +90,7 @@ export const hasOffer = (property: Property | undefined): boolean => {
 //   return { start: normalizedStart, end: normalizedEnd };
 // };
 
-export const adjustPriceForOffer = (price: number, property: Property) => {
+export const adjustPriceForOffer = (price: number, property: OfferFields) => {
   if (!property.offer || property.offer === 0) return price;
   if (!property.offerStartDate || !property.offerEndDate) return price;
 
@@ -116,7 +113,7 @@ export const adjustPriceForOffer = (price: number, property: Property) => {
 
 export const adjustReservationPriceForOffer = (
   price: number,
-  property: Property,
+  property: OfferFields,
   startDate?: Date,
   endDate?: Date
 ) => {
@@ -147,7 +144,7 @@ export const adjustReservationPriceForOffer = (
   return price;
 };
 
-const PRICE_MAP: { key: keyof Property; period: string }[] = [
+const PRICE_MAP: { key: PriceKey; period: string }[] = [
   { key: "dayUsePrice", period: "dayUse" },
   { key: "dailyPrice", period: "daily" },
   { key: "weekdaysPrice", period: "weekdays" },
@@ -158,7 +155,7 @@ const PRICE_MAP: { key: keyof Property; period: string }[] = [
 
 const KEY_PREFIX = "Properties.pricePeriods";
 
-export const getFirstPriceAndPeriodKey = (property: Property | undefined) => {
+export const getFirstPriceAndPeriodKey = (property: PricedProperty | undefined) => {
   if (!property) return { price: 0, periodKey: "" };
   const match = PRICE_MAP.find(({ key }) => {
     const val = property[key] as number | undefined;
@@ -168,7 +165,7 @@ export const getFirstPriceAndPeriodKey = (property: Property | undefined) => {
   return { price: Number((property[match.key] as number).toFixed(2)), periodKey: `${KEY_PREFIX}.${match.period}` };
 };
 
-export const getRemainingPricesAndPeriodKeys = (property: Property) => {
+export const getRemainingPricesAndPeriodKeys = (property: PricedProperty) => {
   const firstKey = PRICE_MAP.find(({ key }) => {
     const val = property[key] as number | undefined;
     return !!val && val > 0;

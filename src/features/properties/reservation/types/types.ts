@@ -1,3 +1,6 @@
+import { GroupChalet } from "../../api/propertiesApi";
+import { ExtraService } from "../api/hooks/useExtraServices";
+
 export interface PricingPlan {
   key: 'WEEK_DAYS' | 'DAILY' | 'DAY_USE' | 'WEEK_END' | 'WHOLE_WEEK_SUNDAY' | 'WHOLE_WEEK_THURSDAY' | 'EVENTS';
   labelKey: string;
@@ -16,12 +19,12 @@ export interface Event {
   endDate: string
   active: boolean
 }
-export interface ExtraService {
-  _id: string;
-  titleEn: string;
-  titleAr: string;
-  price: number;
-}
+// export interface ExtraService {
+//   _id: string;
+//   titleEn: string;
+//   titleAr: string;
+//   price: number;
+// }
 
 export interface BookingState {
   planKey: string | null;
@@ -34,6 +37,7 @@ export interface BookingState {
   paymentOption: "50" | "100";
   usePlan: boolean,
   eventId?: string
+  unit?: GroupChalet
 }
 
 export type Step = "pricing" | "calendar" | "services" | "confirmation";

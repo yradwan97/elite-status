@@ -1,5 +1,6 @@
 import { ApiPaginationResponse, ApiResponse } from "@/common/api/commonApi"
 import api from "@/lib/axios"
+import { GroupChalet } from "../../api/propertiesApi"
 
 export interface CreateReservationPayload {
     property: string
@@ -9,6 +10,7 @@ export interface CreateReservationPayload {
     paymentMethod: "1" | "2"
     services: string[]
     usePlan: boolean
+    chalet?: string
 }
 
 export interface CancelReservationPayload {
@@ -73,6 +75,7 @@ export interface Reservation {
         insurance: number,
         services: number
     }
+    chalet?: GroupChalet
 }
 
 export interface ReservationsResponse {
@@ -95,6 +98,11 @@ export const reservationApi = {
         const response = await api.get(`/reservations/${propertyId}/rented-dates`)
         console.log(response.data)
         return response.data?.data
+    },
+
+    getGroupReservedDates: async (propertyId: string) => {
+        const response = await api.get(`/reservations/${propertyId}/chalets/rented-dates`);
+        return response.data?.data;
     },
 
     getReservationPolicies: async () => {

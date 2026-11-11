@@ -32,11 +32,13 @@ const DEFAULT_FILTERS: PropertiesFilters = {
     page: 1,
     limit: 12,
     startDate: undefined,
-    endDate: undefined
+    endDate: undefined,
+    propertyType: 'SINGLE',
 };
 
-export function useProperties(): UsePropertiesReturn {
-    const [filters, setFiltersState] = useState<PropertiesFilters>(DEFAULT_FILTERS);
+export function useProperties({ initialFilters }: { initialFilters?: Partial<PropertiesFilters> }): UsePropertiesReturn {
+    const [baseFilters] = useState<PropertiesFilters>(() => ({ ...DEFAULT_FILTERS, ...initialFilters }));
+    const [filters, setFiltersState] = useState<PropertiesFilters>(baseFilters);
 
     // Strip zero/empty values before sending to the API
     const cleanFilters: PropertiesFilters = {
@@ -51,6 +53,7 @@ export function useProperties(): UsePropertiesReturn {
         beachRow: filters.beachRow || undefined,
         area: filters.area || undefined,
         phaseNo: filters.phaseNo || undefined,
+        propertyType: filters.propertyType || undefined,
         facilities: filters.facilities?.length ? filters.facilities : undefined,
     };
 
@@ -69,9 +72,9 @@ export function useProperties(): UsePropertiesReturn {
         }));
     }, []);
 
-    const resetFilters = useCallback(() => {
-        setFiltersState(DEFAULT_FILTERS);
-    }, []);
+     const resetFilters = useCallback(() => {
+        setFiltersState(baseFilters);
+    }, [baseFilters]);
 
     const setPage = useCallback((page: number) => {
         setFiltersState(prev => ({ ...prev, page }));

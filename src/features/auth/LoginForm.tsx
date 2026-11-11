@@ -66,6 +66,10 @@ export function LoginForm({ setMode, onClose }: { setMode: Dispatch<SetStateActi
         register={register}
         placeholder={t("Auth.email")}
         icon={Mail}
+        inputMode="email"
+        // autoComplete="email"
+        autoCapitalize="none"
+        autoCorrect="on"
         error={errors.email?.message}
       />
 
@@ -75,6 +79,7 @@ export function LoginForm({ setMode, onClose }: { setMode: Dispatch<SetStateActi
         placeholder={t("Auth.password")}
         icon={Lock}
         isPassword
+        autoComplete="current-password"
         error={errors.password?.message}
       />
 

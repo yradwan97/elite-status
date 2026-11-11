@@ -3,13 +3,12 @@ import { Check } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Step } from "../types/types";
 
-const STEPS: Step[] = ["pricing", "calendar", "services", "confirmation"];
-
 interface StepBarProps {
   current: Step;
+  STEPS: Step[];
 }
 
-export function StepBar({ current }: StepBarProps) {
+export function StepBar({ current, STEPS }: StepBarProps) {
   const currentIndex = STEPS.indexOf(current);
 
   return (

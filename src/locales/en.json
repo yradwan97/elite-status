@@ -6,11 +6,30 @@
     "kwd": "KWD",
     "cancel": "Cancel",
     "upgrade": "Upgrade",
+    "daily": "Daily",
+    "weekly": "Weekly",
+    "weekdays": "Weekdays",
+    "weekends": "Weekends",
     "rent": "Rent",
     "close": "Close",
     "closeAd": "Close AD",
     "search": "Search",
-    "year": "YR"
+    "year": "YR",
+    "room": "Room",
+    "rooms": "Rooms",
+    "BUNK": "Bunk Bed",
+    "DOUBLE": "Double Bed",
+    "SINGLE": "Single Bed",
+    "km": "Kilometer",
+    "reservationTypeKeys": {
+      "WHOLE_WEEK_SUNDAY": "Whole Week (Sun - Sat)",
+      "WHOLE_WEEK_THURSDAY": "Whole Week (Thu - Wed)",
+      "WEEK_DAYS": "Weekdays",
+      "WEEK_END": "Weekends",
+      "DAILY": "Daily",
+      "DAY_USE": "Day Use",
+      "EVENTS": "Events"
+    }
   },
   "Offline": {
     "title": "You're offline",
@@ -232,12 +251,15 @@
         "VILLA": "Villa",
         "STUDIO": "Studio",
         "CHALET": "Chalet",
+        "GROUP": "Group",
         "TOWNHOUSE": "Town House"
       },
       "section": {
-        "description": "Description",
+        "description": "Chalet Details",
         "facilities": "Facilities",
         "documents": "Documents",
+        "roomDetails": "Room Details",
+        "nearbyPlaces": "Nearby Places",
         "location": {
           "title": "Location",
           "area": "Area",
@@ -309,6 +331,7 @@
       },
       "error": "Failed to load property.",
       "retry": "Retry",
+      "group": "Group Chalet",
       "Share": {
         "err": "Failed to copy link.",
         "copyLink": "Copy Link",
@@ -324,7 +347,12 @@
     "Reservation": {
       "pricing": {
         "title": "Pricing Plan",
-        "viewEvents": "View Events"
+        "viewEvents": "View Events",
+        "group": {
+          "no-selection-1": "Choose Your Chalet",
+          "no-selection-2": "Explore the chalets within this group and select your preferred one to view its available booking slots.",
+          "packages": "Packages"
+        }
       },
       "calendar": {
         "title": "Select Dates",
@@ -404,6 +432,10 @@
       "weeklyT": "Week (Thu - Wed)",
       "weekdays": "Weekdays",
       "weekends": "Weekends"
+    },
+    "tabs": {
+      "groups": "Group",
+      "single": "Single"
     }
   },
   "Account": {
@@ -522,6 +554,7 @@
         "cancelReservation": "Reservation Cancel",
         "requestService": "Request Service",
         "ownerInfo": "Owner Info",
+        "chletInfo": "Chalet Info",
         "rentPeriod": "Rent Period",
         "startDate": "Start Date",
         "endDate": "End Date",

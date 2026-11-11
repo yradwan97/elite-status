@@ -3,7 +3,7 @@ import { adjustReservationPriceForOffer, cn } from "@/lib/utils";
 import { BookingState, PricingPlan } from "../types/types";
 import { useTranslation } from "react-i18next";
 import { Switch } from "@/components/ui/switch";
-import { Property } from "../../api/propertiesApi";
+import { BasePropertyFields, OfferFields } from "../../api/propertiesApi";
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Info, ChevronDown } from 'lucide-react';
 import {
@@ -12,10 +12,12 @@ import {
   CollapsibleTrigger,
 } from "@/components/ui/collapsible";
 
+type PricingStepProperty = OfferFields & Pick<BasePropertyFields, 'events'>;
+
 interface PricingStepProps {
   plans: PricingPlan[];
-  property: Property
-  booking: BookingState
+  property: PricingStepProperty;
+  booking: BookingState;
   onPlanSelect: (key: string, price: number | null, eventId?: string) => void;
   onNext: () => void;
   isRTL: boolean;

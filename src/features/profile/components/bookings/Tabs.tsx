@@ -39,7 +39,7 @@ function FieldBox({
 export function InfoTab({ booking, isRTL }: { booking: Reservation; isRTL: boolean }) {
   const { t } = useTranslation();
 
-  const {typesInfo} = useReservationTypesInfo()
+  const { typesInfo } = useReservationTypesInfo()
 
   const fmt = (iso: string) =>
     new Date(iso).toLocaleDateString('en-GB').replace(/\//g, '\\');
@@ -49,6 +49,14 @@ export function InfoTab({ booking, isRTL }: { booking: Reservation; isRTL: boole
   const ownerImage = booking.user.image;
 
   const selectedTypeInfo = typesInfo.find((type) => type.type === booking.reservationType)
+
+  const getChaletName = () => {
+    if (!booking.chalet) return ''
+    const propertyName = isRTL ? booking.property.titleAr : booking.property.titleEn
+    const chaletName = 'شاليه 1'
+    // const chaletName = isRTL ? `${booking.chalet.nameAr} - ${booking.chalet.number}` : `${booking.chalet.nameEn} - ${booking.chalet.number}`
+    return <span>{`${propertyName} - ${chaletName}`}</span>
+  }
 
   return (
     <div className="space-y-8">
@@ -69,6 +77,21 @@ export function InfoTab({ booking, isRTL }: { booking: Reservation; isRTL: boole
             <p className="text-sm text-gray-500 mt-0.5">{ownerPhone}</p>
           </div>
         </div>
+      </section>
+
+      {booking?.chalet && <section>
+        <h4 className={`text-sm font-semibold text-gray-900 mb-3 ${isRTL ? 'text-right' : 'text-left'}`}>
+          {t(`${NS}.modal.chaletInfo`)}
+        </h4>
+        <div className={`border border-gray-200 rounded-2xl p-4 flex items-center gap-4 ${isRTL ? 'flex-row-reverse' : 'flex-row justify-start'}`}>
+          <div className={isRTL ? 'text-right' : 'text-left'}>
+            <p className="font-semibold text-gray-900">{getChaletName()}</p>
+            <p className="text-sm text-gray-500 mt-0.5">{isRTL ? booking.chalet?.nameAr : booking.chalet?.nameEn}</p>
+          </div>
+        </div>
+      </section>}
+
+      <section>
       </section>
 
       <section>
@@ -115,17 +138,6 @@ export function PaymentTab({ booking, isRTL }: {
 
   const servicesTotal = booking.services.reduce((a, b) => a + b.price, 0)
 
-  const rentTypeLabel: Record<string, string> = {
-    WHOLE_WEEK: t(`${NS}.rentType.wholeWeek`),
-    WHOLE_WEEK_SUNDAY: t(`${NS}.rentType.wholeWeekS`),
-    WHOLE_WEEK_THURSDAY: t(`${NS}.rentType.wholeWeekT`),
-    EVENTS: t(`${NS}.rentType.events`),
-    WEEKDAYS: t(`${NS}.rentType.weekdays`),
-    WEEKENDS: t(`${NS}.rentType.weekends`),
-    DAILY: t(`${NS}.rentType.daily`),
-    DAY_USE: t(`${NS}.rentType.daily`),
-  };
-
   return (
     <div className="space-y-8 overflow-y-auto">
       <section>
@@ -133,7 +145,7 @@ export function PaymentTab({ booking, isRTL }: {
           {t(`${NS}.modal.rentInfo`)}
         </h4>
         <div className="grid grid-cols-2 gap-3">
-          <FieldBox icon={<Banknote className="w-3.5 h-3.5" />} label={t(`${NS}.modal.rentType`)} value={rentTypeLabel[booking.reservationType] ?? booking.reservationType} isRTL={isRTL} />
+          <FieldBox icon={<Banknote className="w-3.5 h-3.5" />} label={t(`${NS}.modal.rentType`)} value={t(`General.reservationTypeKeys.${booking.reservationType}`)} isRTL={isRTL} />
           <FieldBox icon={<Banknote className="w-3.5 h-3.5" />} label={t(`${NS}.modal.amount`)} value={`${booking.reservationPrice} ${t(`${NS}.currency`)}`} isRTL={isRTL} />
           <FieldBox icon={<ShieldCheck className="w-3.5 h-3.5" />} label={t(`${NS}.modal.insurance`)} value={`${zeroDepositPrice(booking.insurance)} ${t(`${NS}.currency`)}`} isRTL={isRTL} />
           <FieldBox icon={<ShieldCheck className="w-3.5 h-3.5" />} label={t(`${NS}.modal.services`)} value={`${zeroDepositPrice(servicesTotal)} ${t(`${NS}.currency`)}`} isRTL={isRTL} />

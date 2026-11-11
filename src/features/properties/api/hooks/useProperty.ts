@@ -1,25 +1,24 @@
 import { useQuery } from '@tanstack/react-query';
-import { propertiesApi, Property } from '../propertiesApi';
+import { propertiesApi, PropertyDetails } from '../propertiesApi';
 
 interface UsePropertyReturn {
-    property: Property | undefined
-    isLoading: boolean,
-    error: unknown,
-    refetch: () => void
-
+    property: PropertyDetails | undefined;
+    isLoading: boolean;
+    error: string | null;
+    refetch: () => void;
 }
 
 export function useProperty(id: string): UsePropertyReturn {
-
-    const { data, isFetching, isError, refetch: queryRefetch } = useQuery({
+    const { data, isFetching, isError, refetch } = useQuery({
         queryKey: ['property', id],
-        queryFn:  () => propertiesApi.getProperty(id),
+        queryFn: () => propertiesApi.getProperty(id),
+        enabled: !!id,
     });
 
     return {
-        property:  data?.data,
-        isLoading:   isFetching,
-        error:       isError ? 'Failed to load properties. Please try again.' : null,
-        refetch: queryRefetch,
+        property: data?.data,
+        isLoading: isFetching,
+        error: isError ? 'Failed to load property. Please try again.' : null,
+        refetch,
     };
 }

@@ -2,14 +2,18 @@ import { Button } from "@/components/ui/button";
 import { ArrowLeft, Check } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useTranslation } from "react-i18next";
-import { useExtraServices } from "../api/hooks/useExtraServices";
+import { ExtraService } from "../api/hooks/useExtraServices";
 import { useState } from "react";
 import Pagination from "@/components/shared/Pagination";
-import { ExtraService } from "../types/types";
 import DOMPurify from "dompurify";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 
 interface ServicesStepProps {
+  services: ExtraService[];
+  pages?: number;
+  isLoading: boolean;
+  page: number;
+  onPageChange: (page: number) => void;
   selectedServices: ExtraService[];
   onToggleService: (service: ExtraService) => void;
   onNext: () => void;
@@ -18,6 +22,11 @@ interface ServicesStepProps {
 }
 
 export function ServicesStep({
+  services,
+  pages,
+  isLoading,
+  page,
+  onPageChange,
   selectedServices,
   onToggleService,
   onNext,
@@ -25,8 +34,6 @@ export function ServicesStep({
   isRTL,
 }: ServicesStepProps) {
   const { t } = useTranslation();
-  const [page, setPage] = useState(1)
-  const { services, pages, isLoading } = useExtraServices(page)
   const [descriptionModal, setDescriptionModal] = useState<{ title: string; html: string } | null>(null);
 
   return (
@@ -116,7 +123,7 @@ export function ServicesStep({
         <Pagination
           current={page}
           total={pages ?? 1}
-          onPageChange={setPage}
+          onPageChange={onPageChange}
         />
       </div>
 

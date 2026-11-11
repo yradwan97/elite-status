@@ -44,7 +44,7 @@ export default function Dashboard() {
   const { t } = useTranslation();
   const isArabic = i18next.language === 'ar';
 
-  const { properties, isLoading, refetch, setFilters } = useProperties()
+  const { properties, isLoading, refetch, setFilters } = useProperties({ initialFilters: { propertyType: undefined } });
   const { services, isLoading: servicesLoading } = useOwnerServices(1)
   const { plans, isLoading: isPlansLoading } = usePlans()
   const navigate = useNavigate()

@@ -10,11 +10,12 @@ import i18next from "i18next";
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Info } from 'lucide-react';
 import { TermsCheckbox } from "./TermsCheckbox";
-import { Property } from "../../api/propertiesApi";
+import { BasePropertyFields } from "../../api/propertiesApi";
+
 
 interface CalendarStepProps {
   selectedPlan: PricingPlan;
-  booking: BookingState
+  booking: BookingState;
   startDate: Date | undefined;
   endDate: Date | undefined;
   acceptedTerms: boolean;
@@ -22,7 +23,7 @@ interface CalendarStepProps {
   onTermsChange: (accepted: boolean) => void;
   onNext: () => void;
   onBack: () => void;
-  property: Property;
+  property: Pick<BasePropertyFields, '_id' | 'events'>;
 }
 
 // ─── helpers ────────────────────────────────────────────────────────────────
@@ -95,7 +96,7 @@ export function CalendarStep({
 
   const planKey = selectedPlan?.key ?? "";
   const isEventPlan = planKey === "EVENTS";
-  const selectedEvent = isEventPlan ? property.events.find(e => e._id = booking.eventId as string) : undefined
+  const selectedEvent = isEventPlan ? (property.events || []).find(e => e._id === booking.eventId as string) : undefined
 
   const eventReservedSet = useMemo<Set<string>>(() => {
   if (isEventPlan) return new Set();

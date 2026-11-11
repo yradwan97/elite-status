@@ -6,11 +6,30 @@
     "kwd": "د.ك.",
     "cancel": "الغاء",
     "upgrade": "ترقية اشتراكك",
+    "daily": "يومي",
+    "weekly": "أسبوعي",
+    "weekdays": "أيام الأسبوع",
+    "weekends": "الأجازات",
     "rent": "ايجار",
     "close": "اغلاق",
     "closeAd": "اغلاق الأعلان",
     "search": "بحث",
-    "year": "السنة"
+    "year": "السنة",
+    "room": "غرفة",
+    "rooms": "غرف",
+    "DOUBLE": "سرير مزدوج",
+    "SINGLE": "سرير مفرد",
+    "BUNK": "سرير بطابقين",
+    "km": "كيلومتر",
+    "reservationTypeKeys": {
+      "WHOLE_WEEK_SUNDAY": " اسبوع كامل (الأحد - السبت)",
+      "WHOLE_WEEK_THURSDAY": "اسبوع كامل (الخميس - الأربعاء)",
+      "WEEK_DAYS": "أيام الأسبوع",
+      "WEEK_END": "الأجازات",
+      "DAILY": "يومي",
+      "DAY_USE": "استخدام اليوم",
+      "EVENTS": "الأحداث"
+    }
   },
   "Offline": {
     "title": "أنت غير متصل بالإنترنت",
@@ -232,12 +251,15 @@
         "VILLA": "فيلا",
         "STUDIO": "استوديو",
         "CHALET": "شاليه",
+        "GROUP": "مجموعة",
         "TOWNHOUSE": "تاون هاوس"
       },
       "section": {
-        "description": "الوصف",
+        "description": "تفاصيل الشاليه",
         "facilities": "المرافق",
         "documents": "المستندات",
+        "roomDetails": "تفاصيل الغرف",
+        "nearbyPlaces": "الأماكن القريبة",
         "location": {
           "title": "الموقع",
           "area": "المنطقة",
@@ -309,6 +331,7 @@
       },
       "error": "فشل تحميل العقار.",
       "retry": "إعادة المحاولة",
+      "group": "شاليه جماعي",
       "Share": {
         "err": "فشل في نسخ الرابط.",
         "copyLink": "نسخ الرابط",
@@ -324,7 +347,12 @@
     "Reservation": {
       "pricing": {
         "title": "خطة التسعير",
-        "viewEvents": "عرض الفعاليات"
+        "viewEvents": "عرض الفعاليات",
+        "group": {
+          "no-selection-1": "اختر شاليتك",
+          "no-selection-2": "استعرض الشاليات ضمن هذا المجموعة وحدد المفضلة لديك لعرض فترات الحجز المتاحة.",
+          "packages": "الباقات"
+        }
       },
       "calendar": {
         "title": "اختر التواريخ",
@@ -403,6 +431,10 @@
       "weekly": "أسبوع",
       "weekdays": "أيام الأسبوع",
       "weekends": "عطلة نهاية الأسبوع"
+    },
+    "tabs": {
+      "groups": "مجموعات",
+      "single": "شاليهات"
     }
   },
   "Account": {
@@ -515,6 +547,7 @@
         "cancelReservation": "إلغاء الحجز",
         "requestService": "طلب خدمة",
         "ownerInfo": "معلومات المالك",
+        "chaletInfo": "معلومات الشاليه",
         "rentPeriod": "فترة الإيجار",
         "startDate": "تاريخ البدء",
         "endDate": "تاريخ الانتهاء",

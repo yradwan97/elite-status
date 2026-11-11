@@ -13,6 +13,10 @@ type InputFieldProps<T extends FieldValues> = {
   isPassword?: boolean;
   dir?: "ltr" | "rtl";
   disabled?: boolean;
+  inputMode?: React.HTMLAttributes<HTMLInputElement>["inputMode"];
+  autoComplete?: string;
+  autoCorrect?: "on" | "off";
+  autoCapitalize?: string;
 };
 
 export default function InputField<T extends FieldValues>({
@@ -24,6 +28,10 @@ export default function InputField<T extends FieldValues>({
   error,
   isPassword,
   disabled = false,
+  inputMode,
+  autoComplete,
+  autoCapitalize,
+  autoCorrect,
 }: InputFieldProps<T>) {
   const [show, setShow] = useState(false);
 
@@ -42,12 +50,31 @@ export default function InputField<T extends FieldValues>({
           />
         )}
 
+        {/* <input
+          type={inputType}
+          {...register(name)}
+          placeholder={placeholder}
+          disabled={disabled}
+          dir={dir}
+          className={`
+            w-full py-3 rounded-lg border border-gray-200
+            focus:outline-none focus:ring-2 focus:ring-navy
+            ${isRTL ? "text-right pr-10 pl-10" : "text-left pl-10 pr-10"}
+            ${disabled ? "bg-gray-100 text-gray-500 cursor-default" : "bg-white"}
+          `}
+          style={{ fontSize: "1.05rem" }}
+        /> */}
+
         <input
           type={inputType}
           {...register(name)}
           placeholder={placeholder}
           disabled={disabled}
           dir={dir}
+          inputMode={inputMode}
+          autoComplete={autoComplete}
+          autoCapitalize={autoCapitalize}
+          autoCorrect={autoCorrect}
           className={`
             w-full py-3 rounded-lg border border-gray-200
             focus:outline-none focus:ring-2 focus:ring-navy

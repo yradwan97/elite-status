@@ -30,7 +30,8 @@ function App() {
   const location = useLocation()
 
   // Show the Coming Soon page only in production builds
-const isDowntime = import.meta.env.MODE === 'production';
+  const isDowntime = true
+  const isProduction = import.meta.env.MODE === 'production';
 
   useEffect(() => {
     if (!user || !accessToken || (accessToken && !isTokenValid(accessToken))) {
@@ -42,7 +43,7 @@ const isDowntime = import.meta.env.MODE === 'production';
     scrollToTop()
   }, [location.pathname])
 
-  if (isDowntime) return <ComingSoon />;
+  if (isDowntime && isProduction) return <ComingSoon />;
 
   return (
     <div className="min-h-screen bg-background flex flex-col">

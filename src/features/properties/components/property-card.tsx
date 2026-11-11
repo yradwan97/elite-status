@@ -1,6 +1,8 @@
 import { StarIcon } from '@/components/icons/StarIcon';
-import { Property } from '@/features/properties/api/propertiesApi';
+import { isGroupListItem, PropertyListItem } from '@/features/properties/api/propertiesApi';
 import { Heart, MapPin, Users, CircleDollarSign } from 'lucide-react';
+import chaletsIcon from '@/assets/chalets-icon.svg';
+import calendarIcon from '@/assets/availability-calendar.svg';
 import { Trans, useTranslation } from 'react-i18next';
 import {
     HoverCard,
@@ -22,7 +24,7 @@ import {
 import { adjustPriceForOffer, getFirstPriceAndPeriodKey, getRemainingPricesAndPeriodKeys, hasOffer } from '@/lib/utils';
 
 interface PropertyCardProps {
-    property: Property;
+    property: PropertyListItem;
     isFromFavourites?: boolean; // Optional prop to indicate if the card is rendered in the favorites section
 }
 
@@ -34,13 +36,23 @@ export function PropertyCard({ property, isFromFavourites = false }: PropertyCar
 
     const [isFavourite, setIsFavourite] = useState(isFromFavourites ? true : property?.isFavourite || false);
     const toggleFavourite = useToggleFavourite(property?._id || "");
-    
+
     const isMobile = useIsMobile();
     const tagsCutoff = 1
     const visibleTags = property?.tags?.slice(0, tagsCutoff) ?? [];
     const extraTags = property?.tags?.slice(tagsCutoff) ?? [];
 
+    const isGroup = isGroupListItem(property)
 
+    const getAvailablePackagesText = () => {
+        if (!property) return '';
+        const availablePackages = []
+        if (property.dailyPrice) availablePackages.push(t('General.daily'))
+        if (property.wholeWeekSundayPrice || property.wholeWeekThursdayPrice) availablePackages.push(t('General.weekly'))
+        if (property.weekendPrice) availablePackages.push(t('General.weekends'))
+        if (property.weekdaysPrice) availablePackages.push(t('General.weekdays'))
+        return availablePackages.join(', ');
+    }
 
     useLayoutEffect(() => {
         if (property && !isFromFavourites) {
@@ -53,7 +65,7 @@ export function PropertyCard({ property, isFromFavourites = false }: PropertyCar
 
     const title = isArabic ? property.titleAr : property.titleEn;
     const image = property.images[0] ?? '';
-    
+
     const hasActiveOffer = hasOffer(property)
 
     const originalPrice = getFirstPriceAndPeriodKey(property);
@@ -187,7 +199,7 @@ export function PropertyCard({ property, isFromFavourites = false }: PropertyCar
                 </div>
 
                 {/* Price — dailyPrice is the display price */}
-                <div className={`flex mb-1 ${isArabic ? 'text-start' : ''}`}>
+                {!isGroup && <div className={`flex mb-1 ${isArabic ? 'text-start' : ''}`}>
                     <div className={`flex items-center gap-1`}>
                         <CircleDollarSign className="w-4 h-4 text-gray-400 shrink-0" />
                         <span className="text-gray-600 text-sm">{t('Dashboard.startFrom')}</span>
@@ -245,13 +257,22 @@ export function PropertyCard({ property, isFromFavourites = false }: PropertyCar
                             </HoverCardContent>
                         </HoverCard>
                     </div>
-                </div>
+                </div>}
 
                 {/* Capacity */}
-                <div className={`flex items-center gap-1.25 text-sm text-gray-600`}>
+                {!isGroup && <div className={`flex items-center gap-1.25 text-sm text-gray-600`}>
                     <Users className="w-4 h-4 shrink-0" />
                     <span>{property.guests} {t('Dashboard.person')}</span>
-                </div>
+                </div>}
+
+                {isGroup && <div className={`flex items-center gap-1.25 text-sm text-gray-600`}>
+                    <OptimizedImage src={chaletsIcon} className="size-5" alt={`chalets-icon`} />
+                    <span>{property.numberOfChalets} {t('Dashboard.chalets')}</span>
+                </div>}
+                {isGroup && <div className={`flex items-center gap-1.25 text-sm text-gray-600`}>
+                    <OptimizedImage src={calendarIcon} className="size-5" alt={`calendar-icon`} />
+                    <span>{getAvailablePackagesText()}</span>
+                </div>}
             </div>
         </div>
     );

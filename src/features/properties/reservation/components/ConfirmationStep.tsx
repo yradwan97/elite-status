@@ -1,9 +1,9 @@
 import { Button } from "@/components/ui/button";
 import { ArrowLeft } from "lucide-react";
 import { adjustReservationPriceForOffer, cn, formatTimeTo12Hour, hasOffer, isPlanActive } from "@/lib/utils";
-import { BookingState, PricingPlan, ExtraService } from "../types/types";
+import { BookingState, PricingPlan } from "../types/types";
 import { useTranslation } from "react-i18next";
-import { Property } from "../../api/propertiesApi";
+import { BasePropertyFields, OfferFields } from "../../api/propertiesApi";
 import i18next from "i18next";
 import { OptimizedImage } from "@/components/shared/OptimizedImage";
 import planIcon from "@/assets/plan-icon.png"
@@ -20,7 +20,7 @@ import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover
 import { Info } from 'lucide-react';
 
 interface ConfirmationStepProps {
-  property: Property;
+  property: ConfirmationProperty;
   booking: BookingState;
   plans: PricingPlan[];
   services: ExtraService[];
@@ -31,8 +31,9 @@ interface ConfirmationStepProps {
   onPlanSelectionChange: (checked: boolean) => void
 }
 
-import { ReactNode } from 'react';
+import { Fragment, ReactNode } from 'react';
 import PropertyMap from "@/components/shared/Map";
+import { ExtraService } from "../api/hooks/useExtraServices";
 
 function SummaryRow({ icon, label, value }: { icon: string; label: string; value: ReactNode }) {
   return (
@@ -77,6 +78,10 @@ function PriceLine({ label, value, bold = true, strong = false }: { label: strin
 const getDiscountedPrice = (price: number, discountPercentage: number): number => {
   return price * (discountPercentage / 100)
 }
+
+type ConfirmationProperty = OfferFields &
+  Pick<BasePropertyFields, 'insurance' | 'lat' | 'long' | 'isPlanEligible'>;
+
 
 export function ConfirmationStep({
   property,
@@ -269,9 +274,8 @@ export function ConfirmationStep({
         {/* Payment Option */}
         <div className="border border-gray-200 shadow-lg rounded-2xl p-3 h-37 space-y-2 bg-white">
           {(["50", "100"] as const).map((opt) => (
-            <>
-              <button
-                key={opt}
+            <Fragment key={opt}>
+              <div
                 onClick={() => onPaymentOptionChange(opt)}
                 className={cn(
                   "w-full flex items-center justify-between px-4 py-1 rounded-xl transition-all",
@@ -303,9 +307,9 @@ export function ConfirmationStep({
                 >
                   {paymentOption === opt && <div className="w-2 h-2 rounded-full bg-turquoise" />}
                 </div>
-              </button>
+              </div>
               <div className="h-px w-4/5 self-center mx-auto bg-gray-100 last:hidden" />
-            </>
+            </Fragment>
           ))}
         </div>
 

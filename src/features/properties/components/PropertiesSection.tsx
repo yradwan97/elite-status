@@ -16,6 +16,7 @@ import { DatePicker } from '@/components/shared/DatePicker';
 import { PropertyCardSkeleton } from './property-card-skeleton';
 import { useAreas } from '../api/hooks/useAreas';
 import { SelectContent, SelectItem, SelectTrigger, SelectValue, Select } from '@/components/ui/select';
+import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
 
 export default function PropertiesSection() {
@@ -25,7 +26,6 @@ export default function PropertiesSection() {
     const [adPanelOpen, setAdPanelOpen] = useState(false);
     const [adCarouselIndex, setAdCarouselIndex] = useState(0);
     const { areas } = useAreas()
-
 
     const {
         properties,
@@ -37,7 +37,13 @@ export default function PropertiesSection() {
         setFilters,
         resetFilters,
         setPage,
-    } = useProperties();
+    } = useProperties({});
+
+    const propertyType = filters.propertyType ?? 'SINGLE'
+
+    const handleTabChange = (value: string) => {
+        setFilters({ ...filters, propertyType: value as "SINGLE" | "GROUP", page: 1 })
+    }
 
     const { facilities, isLoading: isFacilitiesLoading } = useFacilities();
     const { ads } = useAds()
@@ -109,6 +115,7 @@ export default function PropertiesSection() {
 
     const handleApply = () => {
         setFilters({
+            ...filters,
             guests: draft.guests,
             bedrooms: draft.bedrooms,
             bathrooms: draft.bathrooms,
@@ -422,24 +429,44 @@ export default function PropertiesSection() {
                         )}
 
                         {/* Grid */}
-                        <div className='flex justify-center'>
-                            <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
-                                {isLoading
-                                    ? Array.from({ length: 9 }).map((_, i) => <PropertyCardSkeleton key={i} />)
-                                    : properties?.length > 0
-                                        ? properties.map(property => (
-                                            <PropertyCard
-                                                key={property._id}
-                                                property={property}
-                                            />
-                                        ))
-                                        : (
-                                            <div className="col-span-3 text-center py-20 text-gray-400">
-                                                <p className="text-lg font-medium">{t('Properties.noResults')}</p>
-                                                <p className="text-sm mt-1">{t('Properties.tryDifferent')}</p>
-                                            </div>
-                                        )
-                                }
+                        <div className='flex flex-col justify-center'>
+                            <div className={`flex justify-center mb-6 w-full`}>
+                                <Tabs value={propertyType} onValueChange={handleTabChange} className="flex w-4/5 rounded-lg p-1">
+                                    <TabsList className="flex bg-white min-h-12 w-full">
+                                        <TabsTrigger
+                                            value="GROUP"
+                                            className="text-navy hover:text-navy data-[state=active]:text-white data-[state=active]:hover:text-white"
+                                        >
+                                            {t('Properties.tabs.groups')}
+                                        </TabsTrigger>
+                                        <TabsTrigger
+                                            value="SINGLE"
+                                            className="text-navy hover:text-navy data-[state=active]:text-white data-[state=active]:hover:text-white"
+                                        >
+                                            {t('Properties.tabs.single')}
+                                        </TabsTrigger>
+                                    </TabsList>
+                                </Tabs>
+                            </div>
+                            <div className='flex justify-center'>
+                                <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
+                                    {isLoading
+                                        ? Array.from({ length: 9 }).map((_, i) => <PropertyCardSkeleton key={i} />)
+                                        : properties?.length > 0
+                                            ? properties.map(property => (
+                                                <PropertyCard
+                                                    key={property._id}
+                                                    property={property}
+                                                />
+                                            ))
+                                            : (
+                                                <div className="col-span-3 text-center py-20 text-gray-400">
+                                                    <p className="text-lg font-medium">{t('Properties.noResults')}</p>
+                                                    <p className="text-sm mt-1">{t('Properties.tryDifferent')}</p>
+                                                </div>
+                                            )
+                                    }
+                                </div>
                             </div>
                         </div>
 
