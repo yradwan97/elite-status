@@ -30,7 +30,7 @@ function App() {
   const location = useLocation()
 
   // Show the Coming Soon page only in production builds
-  const isDowntime = true
+  const isDowntime = false
   const isProduction = import.meta.env.MODE === 'production';
 
   useEffect(() => {
