@@ -21,7 +21,8 @@ import {
     PopoverContent,
     PopoverTrigger,
 } from '@/components/ui/popover';
-import { adjustPriceForOffer, getFirstPriceAndPeriodKey, getRemainingPricesAndPeriodKeys, hasOffer } from '@/lib/utils';
+import { adjustPriceForOffer, displayLocalizedNumbes, getFirstPriceAndPeriodKey, getRemainingPricesAndPeriodKeys, hasOffer } from '@/lib/utils';
+import i18next from 'i18next';
 
 interface PropertyCardProps {
     property: PropertyListItem;
@@ -193,7 +194,7 @@ export function PropertyCard({ property, isFromFavourites = false }: PropertyCar
                 </h3>
 
                 {/* Location */}
-                <div className={`flex items-center gap-1.25 text-gray-600 text-sm ${isArabic ? 'text-start' : ''}`}>
+                <div className={`flex items-center gap-1.25 mb-1.5 text-gray-600 text-sm ${isArabic ? 'text-start' : ''}`}>
                     <MapPin className="w-4 h-4 shrink-0" />
                     <span className='line-clamp-1 mx-0 px-0'>{property.address.trim()}</span>
                 </div>
@@ -210,7 +211,7 @@ export function PropertyCard({ property, isFromFavourites = false }: PropertyCar
                                     <Trans
                                         i18nKey="Properties.firstPrice"
                                         values={{
-                                            price: hasActiveOffer ? discountedPrice : originalPrice.price,
+                                            price: hasActiveOffer ? displayLocalizedNumbes(discountedPrice, i18next.language) : displayLocalizedNumbes(originalPrice.price, i18next.language),
                                             period: t(originalPrice.periodKey),
                                             original: originalPrice.price
                                         }}
@@ -238,12 +239,12 @@ export function PropertyCard({ property, isFromFavourites = false }: PropertyCar
                                     {priceRows.map(({ price, discountedPrice, periodKey }, i) => (
                                         <div key={i} className={`flex ${isArabic ? 'flex-row-reverse' : ''} items-center justify-between`}>
                                             <div>
-                                                <span className="text-amber-500">
-                                                    {hasActiveOffer ? discountedPrice : price}
+                                                <span className="text-amber-500 ms-1">
+                                                    {hasActiveOffer ? (displayLocalizedNumbes(discountedPrice, i18next.language)) : (displayLocalizedNumbes(price, i18next.language))}
                                                 </span>
                                                 {hasActiveOffer && (
-                                                    <span className="text-xs text-gray-400 line-through ml-2">
-                                                        {price}
+                                                    <span className="text-xs text-gray-400 line-through ms-2">
+                                                        {displayLocalizedNumbes(price, i18next.language)}
                                                     </span>
                                                 )}
                                                 <span className="text-gray-500 text-xs ml-1">{t("General.kwd")}</span>
@@ -262,12 +263,12 @@ export function PropertyCard({ property, isFromFavourites = false }: PropertyCar
                 {/* Capacity */}
                 {!isGroup && <div className={`flex items-center gap-1.25 text-sm text-gray-600`}>
                     <Users className="w-4 h-4 shrink-0" />
-                    <span>{property.guests} {t('Dashboard.person')}</span>
+                    <span>{displayLocalizedNumbes(property.guests, i18next.language)} {t('Dashboard.person')}</span>
                 </div>}
 
-                {isGroup && <div className={`flex items-center gap-1.25 text-sm text-gray-600`}>
+                {isGroup && <div className={`flex items-center mb-1.5 gap-1.25 text-sm text-gray-600`}>
                     <OptimizedImage src={chaletsIcon} className="size-5" alt={`chalets-icon`} />
-                    <span>{property.numberOfChalets} {t('Dashboard.chalets')}</span>
+                    <span>{displayLocalizedNumbes(property.numberOfChalets, i18next.language)} {t('Dashboard.chalets')}</span>
                 </div>}
                 {isGroup && <div className={`flex items-center gap-1.25 text-sm text-gray-600`}>
                     <OptimizedImage src={calendarIcon} className="size-5" alt={`calendar-icon`} />

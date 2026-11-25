@@ -2,9 +2,9 @@ import { Bed, LayoutSection, Room } from '../api/propertiesApi'
 import i18next, { t } from 'i18next'
 import { ArrowLeft, ArrowRight } from 'lucide-react'
 import roomIcon from '@/assets/room.svg'
-import bunkBedIcon from '@/assets/bunk-beds.png'
-import doubleBedIcon from '@/assets/double-beds.png'
-import singleBedIcon from '@/assets/single-bed.png'
+import bunkBedIcon from '@/assets/bunk_beds.svg'
+import doubleBedIcon from '@/assets/double_beds.svg'
+import singleBedIcon from '@/assets/single_bed.svg'
 
 const ChaletGroupRoomCard = ({ room }: { room: LayoutSection }) => {
     const isRTL = i18next.language === 'ar';
@@ -70,12 +70,14 @@ const ChaletGroupRoomCard = ({ room }: { room: LayoutSection }) => {
                             </div>
                             <div className="flex items-center gap-1">
                                 {subRoom.beds.map((bed, i) => (
-                                    <img
-                                        key={`${bed.bedType}-${i}`}
-                                        src={getBedTypeIcon(bed.bedType)}
-                                        alt={`${bed.bedType} bed icon`}
-                                        className={bed.bedType === 'DOUBLE' ? 'w-10' : 'size-5'}
-                                    />
+                                    Array.from({ length: bed.count }).map((_, j) => (
+                                        <img
+                                            key={`${bed.bedType}-${i}-${j}`}
+                                            src={getBedTypeIcon(bed.bedType)}
+                                            alt={bed.bedType}
+                                            className={bed.bedType === 'DOUBLE' ? 'size-10' : 'size-8 ms-2'}
+                                        />
+                                    ))
                                 ))}
                             </div>
                         </div>

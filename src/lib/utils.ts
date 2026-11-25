@@ -218,3 +218,8 @@ export const formatDateStringNoTimeZone = (dateStr: string | null) => {
   const [datePart,] = dateStr.split("T");
   return `${datePart}T00:00:00.000`
 }
+
+export const displayLocalizedNumbes = (value: number, locale: string) => {
+  const resolvedLocale = locale === 'ar' ? 'ar-KW' : 'en-US';
+  return new Intl.NumberFormat(resolvedLocale).format(value);
+}

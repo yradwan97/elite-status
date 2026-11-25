@@ -10,7 +10,7 @@ import GroupUnitCard from './GroupUnitCard'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Calendar } from '@/components/ui/calendar'
 import { Button } from '@/components/ui/button'
-import { cn } from '@/lib/utils'
+import { cn, displayLocalizedNumbes } from '@/lib/utils'
 import { useIsMobile } from '@/hooks/use-mobile'
 import type { DateRange } from 'react-day-picker'
 import { PricingPlan } from '../../types/types'
@@ -165,6 +165,7 @@ const GRID_COLS: Record<number, string> = {
 
 const PackagesList = ({ property, month, reservedSet, today, isLoading, onPick }: PackagesListProps) => {
     const { t } = useTranslation()
+    const isRTL = i18next.language === 'ar'
     const weeks = useMemo(() => getWeekStarts(month), [month])
     const isMobile = useIsMobile()
     const fmt = (d: Date) =>
@@ -196,6 +197,7 @@ const PackagesList = ({ property, month, reservedSet, today, isLoading, onPick }
 
         return { pkg, cards }
     }).filter((col) => col.cards.length > 0)
+    
 
     if (columns.length === 0) return null
 
@@ -226,7 +228,7 @@ const PackagesList = ({ property, month, reservedSet, today, isLoading, onPick }
                                         </div>
                                     </div>
                                     <div className="text-end shrink-0">
-                                        <p className="font-bold text-navy text-sm">{price} {t('General.kwd')}</p>
+                                        <p className={`font-bold text-navy flex ${isRTL ? 'flex-row-reverse' : ''} text-sm`}>{displayLocalizedNumbes(price, i18next.language)} {t('General.kwd')}</p>
                                         <p className={cn('text-xs', unavailable ? 'text-red-500' : 'text-green-600')}>
                                             {isBooked
                                                 ? t('Properties.Reservation.pricing.group.booked', { defaultValue: 'Booked' }) :
@@ -241,7 +243,7 @@ const PackagesList = ({ property, month, reservedSet, today, isLoading, onPick }
                                     disabled={unavailable}
                                     onClick={() => onPick(pkg.key, price, start, end)}
                                 >
-                                    {t('Properties.Reservation.pricing.group.select', { defaultValue: 'Select' })}
+                                    {t('General.select', { defaultValue: 'Select' })}
                                 </Button>
                             </div>
 
@@ -470,7 +472,7 @@ type FannedChaletsProps = {
 
 const FannedArc = ({ chalets, renderCard, selectedId }: FannedChaletsProps) => {
     const n = chalets.length
-    const maxAngle = 28 // tilt at the very edge of the full-width arc
+    const maxAngle = 10 // tilt at the very edge of the full-width arc
     const depth = 38    // px the center rises above the edges of the full-width arc
 
     // How much of the full arc these cards cover (cards are capped at 1.5× slot width)
@@ -563,11 +565,7 @@ const GroupPricingStep = ({ property, acceptedTerms, onTermsChange, onSelect, on
                 )}
             </div>
 
-            {/* {isMobile && (
-                
-            )} */}
-
-            <div className={isMobile ? 'mt-6' : 'mt-32'}>
+            <div className={isMobile ? 'mt-6' : 'mt-10'}>
                 {selectedUnit ? (
                     <UnitBooking
                         key={selectedUnit._id}

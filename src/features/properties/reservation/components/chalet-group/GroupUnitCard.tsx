@@ -61,7 +61,7 @@ const GroupUnitCard = ({ unit, onSelect, isSelected = false }: GroupUnitCardProp
                         className={`mt-1 md:mt-2 py-1 px-1 md:px-2 lg:px-3 rounded-md font-normal whitespace-nowrap transition-colors duration-200 ${isSelected ? 'bg-[#14194D] text-white' : 'bg-white text-black'}`}
                         style={{ fontSize: 'clamp(9px, 1.4vw, 14px)' }}
                     >
-                        {`${first} ${second}`}
+                        {`${first[0]} ${second}`}
                     </span>
                 </div>
             </div>

@@ -5,6 +5,7 @@
     "chatWithUs": "💬 Chat with us on WhatsApp",
     "kwd": "KWD",
     "cancel": "Cancel",
+    "select": "Select",
     "upgrade": "Upgrade",
     "daily": "Daily",
     "weekly": "Weekly",
@@ -15,6 +16,7 @@
     "closeAd": "Close AD",
     "search": "Search",
     "year": "YR",
+    "days": "Days",
     "room": "Room",
     "rooms": "Rooms",
     "BUNK": "Bunk Bed",
@@ -351,7 +353,13 @@
         "group": {
           "no-selection-1": "Choose Your Chalet",
           "no-selection-2": "Explore the chalets within this group and select your preferred one to view its available booking slots.",
-          "packages": "Packages"
+          "packages": "Packages",
+          "weekdays": "Weekdays",
+          "wholeWeekSunday": "Whole Week (Sunday)",
+          "weekend": "Weekend",
+          "wholeWeekThursday": "Whole Week (Thursday)",
+          "booked": "Booked",
+          "available": "Available"
         }
       },
       "calendar": {

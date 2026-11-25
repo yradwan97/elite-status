@@ -552,7 +552,7 @@ export default function PropertyDetails() {
                                             </p>
                                         </div>
                                         <p className="text-sm text-gray-600 font-medium ml-2">
-                                            {place.distanceKm} {t("general.km")}
+                                            {place.distanceKm} {t("General.km")}
                                         </p>
                                     </div>
                                 ))}
